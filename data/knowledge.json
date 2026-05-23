@@ -1,0 +1,114 @@
+[
+  {
+    "id": "04_app_registro",
+    "doc": "04_registro_app_serfinanza.pdf",
+    "seccion": "3. Pasos para Registrarte",
+    "tags": ["app", "registro", "serfinanza virtual", "ingreso", "nuevo usuario"],
+    "contenido": "Descarga la App (App Store iOS 14+/Google Play Android 8+, desarrollador Banco Serfinanza S.A.). Toca '¿Eres nuevo? Regístrate aquí', ingresa tu cédula sin puntos, valida identidad con OTP por SMS o correo, crea clave de 6 dígitos. Opcional: biometría."
+  },
+  {
+    "id": "05_extracto_generar",
+    "doc": "05_extracto_credito_canales.pdf",
+    "seccion": "4.1 App / 3. Contenido",
+    "tags": ["extracto", "generar", "leer", "factura", "credito"],
+    "contenido": "En la App: selecciona el producto de crédito, 'Documentos'/'Extractos', elige mes y año (hasta 24 meses), 'Generar' → PDF. Contiene: cupo total/disponible/utilizado, movimientos, saldo total a pagar, pago mínimo, fecha límite, intereses y tasa, puntos."
+  },
+  {
+    "id": "02_actualizacion_canales",
+    "doc": "02_actualizacion_datos_procesos.pdf",
+    "seccion": "4. Resumen de Canales",
+    "tags": ["actualizar", "datos", "canal", "telefono", "laboral"],
+    "contenido": "Teléfono/correo/dirección: App, Web, WhatsApp, Call Center y Sucursal (inmediato). Información laboral/financiera: Web (con documentos) o Sucursal; la App NO. Cédula/estado civil/PEP: solo Sucursal. Gratuito en todos los canales."
+  },
+  {
+    "id": "03_cdt_beneficios",
+    "doc": "03_cdt_caracteristicas_beneficios.pdf",
+    "seccion": "5. Beneficios",
+    "tags": ["cdt", "supercdt", "inversion", "fogafin", "beneficios", "rentabilidad"],
+    "contenido": "El CDT (también llamado superCDT) ofrece: rentabilidad fija, protección Fogafín hasta $50.000.000 por titular, plazos de 30 días a 5 años, renovación automática, uso como garantía para crédito, sin cuota de manejo, certificado electrónico. Monto mínimo $500.000."
+  },
+  {
+    "id": "01_tarjeta_tipos",
+    "doc": "01_tarjeta_credito_beneficios.pdf",
+    "seccion": "2. Tipos de Tarjeta",
+    "tags": ["tarjeta", "tasa", "cupo", "clasica", "gold", "platinum"],
+    "contenido": "Clásica: hasta $3.000.000, 26,22% E.A., cuota $18.900. Gold: hasta $10.000.000, 24,50%, $28.500. Platinum: hasta $30.000.000, 22,00%, $38.000. Respaldo Mastercard."
+  },
+  {
+    "id": "01_tarjeta_bloqueo",
+    "doc": "01_tarjeta_credito_beneficios.pdf",
+    "seccion": "6. FAQ",
+    "tags": ["bloquear", "robo", "perdida", "cupo", "aumento"],
+    "contenido": "Bloqueo por pérdida/robo: App ('Tarjetas > Bloquear'), WhatsApp enviando BLOQUEAR, o Call Center 01 8000 123 456 (instantáneo, sin costo). Aumento de cupo: tras 6 meses de uso responsable, desde App/Web/Sucursal."
+  },
+  {
+    "id": "03_cdt_tasas",
+    "doc": "03_cdt_caracteristicas_beneficios.pdf",
+    "seccion": "3. Tasas",
+    "tags": ["cdt", "tasas", "rentabilidad", "ea", "supercdt"],
+    "contenido": "Tasas E.A. según plazo: 30 días 7,50%-8,10%, 60 días 8,00%-8,60%, 90 días 8,50%-9,10%, 180 días 9,20%-9,80%, 360 días 10,00%-10,60%, 730 días 10,50%-11,10%, 1095+ días 11,00%-11,60%. Rentabilidad fija garantizada."
+  },
+  {
+    "id": "03_cdt_simulador",
+    "doc": "03_cdt_caracteristicas_beneficios.pdf",
+    "seccion": "8. Simulador",
+    "tags": ["simulador", "cdt", "interes", "rentabilidad", "supercdt"],
+    "contenido": "Simulador CDT: para $5.000.000 a 180 días con tasa 9,20% E.A., interés bruto ~$218.630, retención en la fuente 7% ~$15.304, neto ~$203.326, total al vencimiento $5.203.326."
+  },
+  {
+    "id": "02_actualizacion_datos_basicos",
+    "doc": "02_actualizacion_datos_procesos.pdf",
+    "seccion": "2. Datos Básicos",
+    "tags": ["actualizar", "telefono", "correo", "direccion", "datos basicos"],
+    "contenido": "Puedes actualizar teléfono, correo electrónico y dirección desde la App, Web, WhatsApp, Call Center o Sucursal de forma inmediata y sin costo. Solo necesitas tener tus datos registrados actualizados."
+  },
+  {
+    "id": "02_actualizacion_datos_laborales",
+    "doc": "02_actualizacion_datos_procesos.pdf",
+    "seccion": "3. Datos Laborales",
+    "tags": ["actualizar", "laboral", "trabajo", "empresa", "ingresos"],
+    "contenido": "La actualización de información laboral y financiera requiere documentos soporte y se realiza por Web o Sucursal. La App no permite actualizar datos laborales. Tiempo de procesamiento: 24-48 horas."
+  },
+  {
+    "id": "04_app_funciones",
+    "doc": "04_registro_app_serfinanza.pdf",
+    "seccion": "4. Funciones Principales",
+    "tags": ["app", "funciones", "transferencias", "pagos", "consultas"],
+    "contenido": "La App permite: consultar saldos y movimientos, transferencias a otros bancos, pagos de servicios y créditos, gestión de tarjetas, generación de extractos, bloqueo de tarjetas, actualización de datos básicos. Disponible 24/7."
+  },
+  {
+    "id": "05_extracto_canales",
+    "doc": "05_extracto_credito_canales.pdf",
+    "seccion": "2. Canales de Consulta",
+    "tags": ["extracto", "canales", "sucursal", "web", "call center"],
+    "contenido": "Puedes consultar tu extracto de crédito en: App (PDF histórico hasta 24 meses), Web (descarga inmediata), Sucursal (asistencia personalizada), Call Center (01 8000 123 456). Todos los canales son gratuitos."
+  },
+  {
+    "id": "01_tarjeta_pagos",
+    "doc": "01_tarjeta_credito_beneficios.pdf",
+    "seccion": "4. Pagos y Cuotas",
+    "tags": ["pago", "cuota", "minimo", "total", "tarjeta"],
+    "contenido": "Pago mínimo: 5% del saldo + intereses causados. Pago total: saldo dispuesto + intereses + seguros. Fecha límite: 20 de cada mes. Puedes pagar por App, Web, ACH, Sucursal o correspondencia bancaria."
+  },
+  {
+    "id": "01_tarjeta_beneficios_adicionales",
+    "doc": "01_tarjeta_credito_beneficios.pdf",
+    "seccion": "5. Beneficios Adicionales",
+    "tags": ["seguro", "proteccion", "asistencia", "mastercard", "tarjeta"],
+    "contenido": "Todas las tarjetas incluyen: seguro de viaje (en compras >$200.000), asistencia médica en viajes (hasta $1.000.000), protección de compras (90 días), acceso a ofertas Mastercard, líneas de atención 24/7."
+  },
+  {
+    "id": "04_app_seguridad",
+    "doc": "04_registro_app_serfinanza.pdf",
+    "seccion": "5. Seguridad",
+    "tags": ["seguridad", "biometria", "clave", "otp", "app"],
+    "contenido": "La App usa: clave de 6 dígitos, biometría (huella/face ID), token dinámico para transacciones mayores. Banco Serfinanza nunca solicita OTP, claves o datos sensibles por teléfono o correo."
+  },
+  {
+    "id": "02_debito_automatico",
+    "doc": "02_actualizacion_datos_procesos.pdf",
+    "seccion": "5. Débito Automático",
+    "tags": ["debito automatico", "automatico", "pagos", "cuenta"],
+    "contenido": "Activa débito automático desde tu cuenta Serfinanza para pagar tu crédito de consumo. Así nunca perderás una cuota y evitarás intereses de mora. Puedes activarlo por App, Web o Sucursal."
+  }
+]

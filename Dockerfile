@@ -1,11 +1,10 @@
-# Build context: raíz del repo hackathon-bqia
+# Build context: raíz del repo hackathon-qia
 #
 #   docker compose up --build
 #
-# Requiere la red y PostgreSQL del stack banco:
-#   docker compose -f ../BACKEND\ 2026/biofood-solution/postgres/docker-compose.banco.yml up -d
+# Requiere la red banco-agent-net (ver docker-compose.yml)
 
-FROM golang:1.24-alpine AS builder
+FROM golang:1.22-alpine AS builder
 
 RUN apk add --no-cache git ca-certificates
 

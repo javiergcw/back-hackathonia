@@ -1,0 +1,191 @@
+{
+  "info": {
+    "name": "Hackathon QIA - Serfinanza API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/health",
+          "host": ["{{base_url}}"],
+          "path": ["health"]
+        }
+      }
+    },
+    {
+      "name": "Ask - Cliente",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"question\": \"¿Qué beneficios tiene un superCDT?\",\n  \"channel\": \"cliente\",\n  \"sessionId\": \"test-001\"\n}"
+        },
+        "url": {"raw": "{{base_url}}/ask", "host": ["{{base_url}}"], "path": ["ask"]}
+      }
+    },
+    {
+      "name": "Ask - Asesor",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"question\": \"¿Cuáles son las tasas del CDT para montos mayores a $50M?\",\n  \"channel\": \"asesor\",\n  \"sessionId\": \"test-002\"\n}"
+        },
+        "url": {"raw": "{{base_url}}/ask", "host": ["{{base_url}}"], "path": ["ask"]}
+      }
+    },
+    {
+      "name": "Ask - WhatsApp",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"question\": \"¿Cómo me registro en la app?\",\n  \"channel\": \"whatsapp\",\n  \"sessionId\": \"573024158002\"\n}"
+        },
+        "url": {"raw": "{{base_url}}/ask", "host": ["{{base_url}}"], "path": ["ask"]}
+      }
+    },
+    {
+      "name": "Ask - Sin canal (default cliente)",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"question\": \"¿Cómo bloqueo mi tarjeta por robo?\"\n}"
+        },
+        "url": {"raw": "{{base_url}}/ask", "host": ["{{base_url}}"], "path": ["ask"]}
+      }
+    },
+    {
+      "name": "Ask - Pregunta sin info (fallback)",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"question\": \"¿Cómo activo el débito automático para el servicio de agua?\",\n  \"channel\": \"cliente\",\n  \"sessionId\": \"test-003\"\n}"
+        },
+        "url": {"raw": "{{base_url}}/ask", "host": ["{{base_url}}"], "path": ["ask"]}
+      }
+    },
+    {
+      "name": "Simulate CDT - $5M / 180 días",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"monto\": 5000000,\n  \"plazoDias\": 180\n}"
+        },
+        "url": {"raw": "{{base_url}}/simulate-cdt", "host": ["{{base_url}}"], "path": ["simulate-cdt"]}
+      }
+    },
+    {
+      "name": "Simulate CDT - $15M / 360 días",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"monto\": 15000000,\n  \"plazoDias\": 360\n}"
+        },
+        "url": {"raw": "{{base_url}}/simulate-cdt", "host": ["{{base_url}}"], "path": ["simulate-cdt"]}
+      }
+    },
+    {
+      "name": "Simulate CDT - $60M / 730 días",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"monto\": 60000000,\n  \"plazoDias\": 730\n}"
+        },
+        "url": {"raw": "{{base_url}}/simulate-cdt", "host": ["{{base_url}}"], "path": ["simulate-cdt"]}
+      }
+    },
+    {
+      "name": "Simulate CDT - Error monto mínimo",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"monto\": 100000,\n  \"plazoDias\": 90\n}"
+        },
+        "url": {"raw": "{{base_url}}/simulate-cdt", "host": ["{{base_url}}"], "path": ["simulate-cdt"]}
+      }
+    },
+    {
+      "name": "Recommend - C001 (solo cuenta ahorros)",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"profileId\": \"C001\"\n}"
+        },
+        "url": {"raw": "{{base_url}}/recommend", "host": ["{{base_url}}"], "path": ["recommend"]}
+      }
+    },
+    {
+      "name": "Recommend - C002 (tarjeta +6 meses)",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"profileId\": \"C002\"\n}"
+        },
+        "url": {"raw": "{{base_url}}/recommend", "host": ["{{base_url}}"], "path": ["recommend"]}
+      }
+    },
+    {
+      "name": "Recommend - C003 (crédito consumo)",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"profileId\": \"C003\"\n}"
+        },
+        "url": {"raw": "{{base_url}}/recommend", "host": ["{{base_url}}"], "path": ["recommend"]}
+      }
+    },
+    {
+      "name": "WhatsApp Webhook - Evento",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"event\": \"MESSAGES_UPSERT\",\n  \"instance\": \"serfinanza\",\n  \"phone\": \"573024158002\",\n  \"message\": \"¿Qué beneficios tiene un CDT?\"\n}"
+        },
+        "url": {"raw": "{{base_url}}/whatsapp/webhook", "host": ["{{base_url}}"], "path": ["whatsapp", "webhook"]}
+      }
+    },
+    {
+      "name": "WhatsApp Webhook - Verificación GET",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {"raw": "{{base_url}}/whatsapp/webhook", "host": ["{{base_url}}"], "path": ["whatsapp", "webhook"]}
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080",
+      "type": "string"
+    }
+  ]
+}

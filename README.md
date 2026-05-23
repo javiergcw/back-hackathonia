@@ -1,59 +1,57 @@
-# Hackathon BQIA - Backend Go
+# Hackathon QIA - Backend Serfinanza
 
-Backend en Go con Clean Architecture, GORM y PostgreSQL.
+Backend del Agente 360 para Banco Serfinanza.
 
-## Requisitos
+## Stack
 
-- Go 1.24.2+
-- PostgreSQL
+- Go 1.22+ (chi router)
+- Anthropic Claude API (LLM)
+- RAG con knowledge.json
 
 ## Estructura
 
 ```
-├── commands/                 # Scripts de ejecución
-├── cmd/migrate/              # Migraciones GORM
-├── internal/features/          # Módulos por funcionalidad
-├── internal/infrastructure/  # Config, DB, HTTP
-├── internal/shared/          # Utilidades compartidas
-├── .env.dev                  # Configuración desarrollo
-├── .env.prod                 # Configuración producción
-└── main.go
+hackathon-qia/
+├── main.go
+├── go.mod
+├── .env.example
+├── internal/
+│   ├── server/router.go
+│   ├── handlers/handlers.go
+│   ├── llm/anthropic.go
+│   ├── rag/retrieve.go
+│   ├── session/store.go
+│   └── domain/types.go
+└── data/
+    ├── knowledge.json
+    └── profiles.json
 ```
 
 ## Inicio rápido
 
-1. Copia y ajusta las variables en `.env.dev`
-2. Crea la base de datos PostgreSQL:
+1. Copiar `.env.example` a `.env.dev` y configurar variables
+2. `go mod tidy`
+3. `go run main.go`
+
+## Docker
 
 ```bash
-createdb hackathon_bqia
+docker compose up --build -d
 ```
 
-3. Ejecuta en desarrollo:
+API expuesta en `http://localhost:8090`
 
-```bash
-chmod +x commands/*.sh
-./commands/dev.sh
-```
-
-## Comandos
-
-```bash
-./commands/dev.sh      # Desarrollo
-./commands/start.sh   # Producción
-./commands/migrate.sh # Solo migraciones
-```
-
-## API
+## Endpoints
 
 | Método | Ruta | Descripción |
 |--------|------|-------------|
 | GET | `/health` | Health check |
-| GET | `/api/v1/users` | Listar usuarios |
-| POST | `/api/v1/users` | Crear usuario |
-| GET | `/api/v1/users/{id}` | Obtener usuario |
+| POST | `/ask` | Pregunta al Agente 360 |
+| POST | `/simulate-cdt` | Simulador CDT |
+| POST | `/recommend` | Recomendación producto |
+| POST | `/whatsapp/webhook` | Webhook WhatsApp |
 
-## Stack
+## API Envelope
 
-- Go 1.24.2 + GORM + PostgreSQL
-- Gorilla Mux
+- Éxito: `{ "data": <payload> }`
+- Error: `{ "error": { "code", "message" } }`

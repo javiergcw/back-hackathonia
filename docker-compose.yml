@@ -1,20 +1,17 @@
-# Backend hackathon-bqia — misma red que PostgreSQL (banco-agent-net).
+# Backend Hackathon QIA - Serfinanza
 #
-# 1) Levantar Postgres (solo una vez):
-#    docker compose -f "/ruta/biofood-solution/postgres/docker-compose.banco.yml" up -d
+# Levineantar:
+#   docker compose up --build -d
 #
-# 2) Levantar backend:
-#    docker compose up --build -d
-#
-# API expuesta en http://localhost:8090 (8080 interno, sin chocar con biofood:3001 ni postgres:5437)
+# API expuesta en http://localhost:8090 (8080 interno)
 
 services:
-  hackathon-bqia-backend:
+  hackathon-qia-backend:
     build:
       context: .
       dockerfile: Dockerfile
-    image: hackathon-bqia-backend:latest
-    container_name: hackathon-bqia-backend
+    image: hackathon-qia-backend:latest
+    container_name: hackathon-qia-backend
     ports:
       - "8090:8080"
     env_file:

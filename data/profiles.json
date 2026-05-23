@@ -1,0 +1,23 @@
+[
+  {
+    "id": "C001",
+    "nombre": "María López",
+    "productos": ["cuenta_ahorros"],
+    "tarjeta": null,
+    "meses_tarjeta": 0
+  },
+  {
+    "id": "C002",
+    "nombre": "Carlos Ruiz",
+    "productos": ["cuenta_ahorros", "tarjeta_clasica"],
+    "tarjeta": "clasica",
+    "meses_tarjeta": 8
+  },
+  {
+    "id": "C003",
+    "nombre": "Ana Torres",
+    "productos": ["credito_consumo"],
+    "tarjeta": null,
+    "meses_tarjeta": 0
+  }
+]
