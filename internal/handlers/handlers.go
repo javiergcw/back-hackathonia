@@ -37,7 +37,6 @@ func (h *Handler) Health(w http.ResponseWriter, r *http.Request) {
 
 type AskRequest struct {
 	Question  string `json:"question"`
-	Channel   string `json:"channel"`
 	SessionID string `json:"sessionId"`
 }
 
@@ -53,36 +52,19 @@ func (h *Handler) Ask(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	channel := req.Channel
-	if channel == "" {
-		channel = "cliente"
-	}
-
 	sessionID := req.SessionID
 	if sessionID == "" {
 		sessionID = fmt.Sprintf("session-%d", time.Now().UnixNano())
 	}
 
 	chunks := h.ragClient.Retrieve(req.Question, 3)
-
-	var answer string
-	var err error
-
-	answer, err = h.llmClient.Generate(r.Context(), req.Question, channel, chunks)
-	if err != nil {
-		answer = buildFallbackAnswer(chunks, channel)
-	}
-
-	h.store.AddMessage(sessionID, "user", req.Question)
-	h.store.AddMessage(sessionID, "assistant", answer)
-
-	citations := extractCitations(chunks)
+	answer := h.generateWhatsAppAnswer(r.Context(), req.Question, chunks, sessionID)
 
 	h.ok(w, map[string]interface{}{
-		"answer":     answer,
-		"citations":  citations,
-		"grounded":   len(citations) > 0,
-		"sessionId":  sessionID,
+		"answer":    answer,
+		"citations": extractCitations(chunks),
+		"grounded":  len(chunks) > 0,
+		"sessionId": sessionID,
 	})
 }
 
@@ -269,7 +251,7 @@ func (h *Handler) WhatsAppWebhook(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	answer := h.processAsk(incomingText, "whatsapp", phone)
+	answer := h.processAsk(incomingText, phone)
 
 	mockWhatsapp := os.Getenv("MOCK_WHATSAPP") == "true"
 	if !mockWhatsapp {
@@ -291,16 +273,22 @@ func extractIncomingText(payload domain.WhatsAppPayload) (string, string, bool) 
 	return payload.Phone, payload.Message, true
 }
 
-func (h *Handler) processAsk(text, channel, sessionID string) string {
+func (h *Handler) processAsk(text, sessionID string) string {
 	chunks := h.ragClient.Retrieve(text, 3)
+	return h.generateWhatsAppAnswer(context.Background(), text, chunks, sessionID)
+}
 
-	answer, err := h.llmClient.Generate(context.Background(), text, channel, chunks)
+func (h *Handler) generateWhatsAppAnswer(ctx context.Context, question string, chunks []domain.Chunk, sessionID string) string {
+	const channel = "whatsapp"
+
+	answer, err := h.llmClient.Generate(ctx, question, channel, chunks)
 	if err != nil {
 		answer = buildFallbackAnswer(chunks, channel)
 	}
+	answer = llm.FormatForWhatsApp(answer)
 
 	if sessionID != "" {
-		h.store.AddMessage(sessionID, "user", text)
+		h.store.AddMessage(sessionID, "user", question)
 		h.store.AddMessage(sessionID, "assistant", answer)
 	}
 
@@ -309,12 +297,15 @@ func (h *Handler) processAsk(text, channel, sessionID string) string {
 
 func buildFallbackAnswer(chunks []domain.Chunk, channel string) string {
 	if len(chunks) == 0 {
-		return "No tengo esa información en mis fuentes oficiales. Te recomiendo contactar a un asesor de Banco Serfinanza."
+		return "No tengo ese dato a la mano, pero un asesor de Banco Serfinanza puede ayudarte con gusto."
 	}
 
 	best := chunks[0]
 	if channel == "asesor" {
 		return fmt.Sprintf("Información recuperada de %s (%s): %s", best.Doc, best.Seccion, best.Contenido)
+	}
+	if channel == "whatsapp" {
+		return fmt.Sprintf("Te cuento: %s", best.Contenido)
 	}
 	return fmt.Sprintf("Según la información oficial de Serfinanza: %s", best.Contenido)
 }

@@ -8,6 +8,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -63,14 +64,26 @@ type messagesResponse struct {
 const systemPrompt = `Eres el Agente 360 de Banco Serfinanza. Ayudas a ASESORES del banco y a CLIENTES a obtener información de productos y procesos de forma precisa.
 
 REGLAS:
-1. Responde ÚNICAMENTE con la información del CONTEXTO de abajo. Si no está, di exactamente: "No tengo esa información en mis fuentes oficiales" y sugiere el canal adecuado o hablar con un asesor. NUNCA inventes tasas, costos, plazos ni fechas.
-2. Cita SIEMPRE la fuente al final de cada respuesta de conocimiento.
-   - channel "asesor": formato [Fuente: <doc>, <seccion>].
-   - channel "cliente"/"whatsapp": cita suave, ej. "(según la información oficial de Serfinanza)".
-3. NUNCA pidas OTP, claves, contraseñas ni datos sensibles. Si te los piden/ofrecen, recházalo: "Banco Serfinanza nunca solicita claves ni OTP".
-4. Tono claro, en español. "cliente"/"whatsapp": cálido y breve. "asesor": directo y preciso.
-5. "superCDT" = CDT Serfinanza (mismo producto).
-6. Responde de forma concisa: máximo 150 palabras. Usa listas cortas solo si ayudan.
+1. Responde ÚNICAMENTE con la información del CONTEXTO de abajo. Si no está, di exactamente: "No tengo esa información en mis fuentes oficiales" y sugiere hablar con un asesor. NUNCA inventes tasas, costos, plazos ni fechas.
+2. NUNCA pidas OTP, claves, contraseñas ni datos sensibles. Si te los piden/ofrecen, recházalo: "Banco Serfinanza nunca solicita claves ni OTP".
+3. "superCDT" = CDT Serfinanza (mismo producto).
+
+CONTEXTO:
+%s`
+
+const whatsappSystemPrompt = `Eres el asesor virtual de Banco Serfinanza en WhatsApp. Hablas directamente con el cliente.
+
+Tu misión: orientarlo con claridad, calidez y confianza, como un buen asesor del banco.
+
+REGLAS:
+1. El CONTEXTO de abajo es la documentación oficial vigente de Serfinanza. Preséntala con seguridad: afirma los datos, no los supongas ni los cuestiones.
+2. NO digas "según el PDF", "según la información oficial", "según Serfinanza" ni nombres de archivos (.pdf). El cliente no necesita ver referencias internas.
+3. NO uses frases dubitativas ("podría", "quizás", "creo que"). Si está en el contexto, dilo con convicción.
+4. Si la información NO está en el contexto, dilo con honestidad: "No tengo ese dato a la mano, pero un asesor de Serfinanza puede ayudarte" y sugiere el canal adecuado.
+5. NUNCA inventes tasas, costos, plazos ni fechas. NUNCA pidas OTP, claves ni datos sensibles.
+6. Tono: cercano, profesional, en segunda persona ("te", "tu"). Como un asesor que quiere ayudar de verdad.
+7. "superCDT" = CDT Serfinanza (mismo producto).
+8. Un solo párrafo fluido, máximo 2-4 oraciones. Sin saltos de línea, listas ni viñetas. Énfasis con *negrita* (formato WhatsApp) solo si aporta.
 
 CONTEXTO:
 %s`
@@ -82,7 +95,12 @@ func (c *Client) Generate(ctx context.Context, question, channel string, chunks 
 
 	contextText := buildContext(chunks)
 
-	system := fmt.Sprintf(systemPrompt, contextText)
+	var system string
+	if channel == "whatsapp" {
+		system = fmt.Sprintf(whatsappSystemPrompt, contextText)
+	} else {
+		system = fmt.Sprintf(systemPrompt, contextText)
+	}
 
 	messages := []messageItem{
 		{Role: "user", Content: question},
@@ -130,9 +148,40 @@ func (c *Client) Generate(ctx context.Context, question, channel string, chunks 
 	}
 
 	answer := result.Content[0].Text
-	answer = addCitation(answer, chunks, channel)
+	if channel != "whatsapp" {
+		answer = addCitation(answer, chunks, channel)
+	}
 
 	return answer, nil
+}
+
+var (
+	markdownBold    = regexp.MustCompile(`\*\*([^*]+)\*\*`)
+	citationTail    = regexp.MustCompile(`(?i)\s*\(según[^)]*\)\s*$`)
+	pdfCitationTail = regexp.MustCompile(`(?i)\s*\(según\s+[\w._-]+\.pdf\)\s*$`)
+)
+
+func FormatForWhatsApp(text string) string {
+	text = strings.ReplaceAll(text, "\\n", " ")
+	text = strings.ReplaceAll(text, "\r\n", " ")
+	text = strings.ReplaceAll(text, "\n", " ")
+	text = markdownBold.ReplaceAllString(text, "*$1*")
+	text = strings.ReplaceAll(text, "• ", "")
+	text = strings.ReplaceAll(text, "- ", "")
+	text = strings.ReplaceAll(text, "(según la información oficial de Serfinanza)", "")
+	text = strings.ReplaceAll(text, "(según la información oficial de serfinanza)", "")
+	for strings.Contains(text, "  ") {
+		text = strings.ReplaceAll(text, "  ", " ")
+	}
+	for {
+		cleaned := citationTail.ReplaceAllString(text, "")
+		cleaned = pdfCitationTail.ReplaceAllString(cleaned, "")
+		if cleaned == text {
+			break
+		}
+		text = cleaned
+	}
+	return strings.TrimSpace(text)
 }
 
 func buildContext(chunks []domain.Chunk) string {
