@@ -16,7 +16,7 @@ func NewRouter(h *handlers.Handler) *chi.Mux {
 	r.Use(middleware.RequestID)
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.Logger)
-	r.Use(middleware.Timeout(30 * time.Second))
+	r.Use(middleware.Timeout(50 * time.Second))
 
 	allowedOrigin := os.Getenv("ALLOWED_ORIGIN")
 	if allowedOrigin == "" {
@@ -41,6 +41,7 @@ func NewRouter(h *handlers.Handler) *chi.Mux {
 	r.Post("/simulate-cdt", h.SimulateCDT)
 	r.Post("/recommend", h.Recommend)
 	r.Post("/whatsapp/webhook", h.WhatsAppWebhook)
+	r.Post("/whatsapp/webhook/{number}", h.WhatsAppWebhook)
 
 	return r
 }

@@ -17,6 +17,9 @@ func main() {
 
 	store := session.NewStore()
 	ragClient := rag.NewRetrieve("data/knowledge.json")
+	if err := ragClient.LoadProfiles("data/profiles.json"); err != nil {
+		log.Printf("profiles: %v", err)
+	}
 	llmClient := llm.NewClient()
 
 	h := handlers.NewHandler(llmClient, ragClient, store)

@@ -19,5 +19,12 @@
     "productos": ["credito_consumo"],
     "tarjeta": null,
     "meses_tarjeta": 0
+  },
+  {
+    "id": "C004",
+    "nombre": "Usuario Serfinanza",
+    "productos": ["cuenta_ahorros", "tarjeta_clasica"],
+    "tarjeta": "clasica",
+    "meses_tarjeta": 3
   }
 ]

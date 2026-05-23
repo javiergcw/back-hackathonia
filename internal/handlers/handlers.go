@@ -11,10 +11,12 @@ import (
 	"os"
 	"time"
 
+	"github.com/go-chi/chi/v5"
 	"github.com/javierg/hackathon-bqia/internal/domain"
 	"github.com/javierg/hackathon-bqia/internal/llm"
 	"github.com/javierg/hackathon-bqia/internal/rag"
 	"github.com/javierg/hackathon-bqia/internal/session"
+	"github.com/javierg/hackathon-bqia/internal/whatsapp"
 )
 
 type Handler struct {
@@ -38,6 +40,7 @@ func (h *Handler) Health(w http.ResponseWriter, r *http.Request) {
 type AskRequest struct {
 	Question  string `json:"question"`
 	SessionID string `json:"sessionId"`
+	ProfileID string `json:"profileId"`
 }
 
 func (h *Handler) Ask(w http.ResponseWriter, r *http.Request) {
@@ -57,15 +60,21 @@ func (h *Handler) Ask(w http.ResponseWriter, r *http.Request) {
 		sessionID = fmt.Sprintf("session-%d", time.Now().UnixNano())
 	}
 
-	chunks := h.ragClient.Retrieve(req.Question, 3)
-	answer := h.generateWhatsAppAnswer(r.Context(), req.Question, chunks, sessionID)
+	profile, _ := h.ragClient.GetProfile(req.ProfileID)
+	retrieval := h.ragClient.RetrieveForClient(req.Question, profile, 4)
+	answer := h.generateClientAnswer(r.Context(), req.Question, retrieval, profile, sessionID)
 
-	h.ok(w, map[string]interface{}{
+	response := map[string]interface{}{
 		"answer":    answer,
-		"citations": extractCitations(chunks),
-		"grounded":  len(chunks) > 0,
+		"citations": extractCitations(retrieval.Chunks),
+		"grounded":  len(retrieval.Chunks) > 0 && rag.IsInScope(req.Question, retrieval),
 		"sessionId": sessionID,
-	})
+	}
+	if profile != nil {
+		response["cliente"] = profile.Nombre
+	}
+
+	h.ok(w, response)
 }
 
 func (h *Handler) SimulateCDT(w http.ResponseWriter, r *http.Request) {
@@ -177,33 +186,7 @@ func (h *Handler) Recommend(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var recomendacion, producto, accion string
-	var citations []domain.Citation
-
-	switch {
-	case hasProduct(profile.Productos, "cuenta_ahorros") && !hasAnyProduct(profile.Productos, "cdt"):
-		recomendacion = "Tienes una cuenta de ahorros y aún no inviertes. Un CDT te da rentabilidad fija con protección Fogafín hasta $50.000.000. ¿Te lo simulo?"
-		producto = "cdt"
-		accion = "simulate-cdt"
-		chunks := h.ragClient.Retrieve("beneficios cdt supercdt", 3)
-		citations = extractCitations(chunks)
-	case hasProduct(profile.Productos, "tarjeta_clasica") && profile.MesesTarjeta >= 6:
-		recomendacion = "Veo que tienes tu tarjeta hace más de 6 meses. Puedes solicitar un aumento de cupo. ¿Te ayudo?"
-		producto = "tarjeta"
-		accion = "aumento-cupo"
-		chunks := h.ragClient.Retrieve("aumento cupo tarjeta", 3)
-		citations = extractCitations(chunks)
-	case hasProduct(profile.Productos, "credito_consumo"):
-		recomendacion = "Tienes un crédito de consumo. ¿Ya conoces el débito automático desde tu cuenta Serfinanza para no perderte ningún pago?"
-		producto = "credito_consumo"
-		accion = "info-debito-automatico"
-		chunks := h.ragClient.Retrieve("debito automatico", 3)
-		citations = extractCitations(chunks)
-	default:
-		recomendacion = "Visitaré tu perfil para sugerirte los mejores productos cuando tengas más productos activos."
-		producto = ""
-		accion = ""
-	}
+	recomendacion, producto, accion, citations := h.clientRecommendation(profile)
 
 	h.ok(w, domain.RecommendResponse{
 		Recomendacion: recomendacion,
@@ -213,24 +196,20 @@ func (h *Handler) Recommend(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func hasProduct(productos []string, product string) bool {
-	for _, p := range productos {
-		if p == product {
-			return true
-		}
+func (h *Handler) clientRecommendation(profile *domain.Profile) (string, string, string, []domain.Citation) {
+	switch {
+	case rag.HasProduct(profile.Productos, "cuenta_ahorros") && !rag.HasAnyProduct(profile.Productos, "cdt"):
+		chunks := h.ragClient.RetrieveForClient("beneficios cdt supercdt", profile, 3).Chunks
+		return "Veo que tienes cuenta de ahorros y aún no inviertes. Con nuestro *superCDT* tu plata crece con rentabilidad fija y protección Fogafín. ¿Te gustaría que te cuente más?", "cdt", "simulate-cdt", extractCitations(chunks)
+	case rag.HasProduct(profile.Productos, "tarjeta_clasica") && profile.MesesTarjeta >= 6:
+		chunks := h.ragClient.RetrieveForClient("aumento cupo tarjeta", profile, 3).Chunks
+		return "Llevas más de 6 meses con tu tarjeta y puedes solicitar un *aumento de cupo* desde la App. ¿Te explico cómo?", "tarjeta", "aumento-cupo", extractCitations(chunks)
+	case rag.HasProduct(profile.Productos, "credito_consumo"):
+		chunks := h.ragClient.RetrieveForClient("debito automatico", profile, 3).Chunks
+		return "Tienes crédito de consumo con nosotros. Te recomiendo activar el *débito automático* para no perder ningún pago. ¿Quieres saber cómo hacerlo?", "credito_consumo", "info-debito-automatico", extractCitations(chunks)
+	default:
+		return "Cuando quieras, con gusto te oriento sobre los productos de Serfinanza.", "", "", nil
 	}
-	return false
-}
-
-func hasAnyProduct(productos []string, targets ...string) bool {
-	for _, p := range productos {
-		for _, target := range targets {
-			if p == target {
-				return true
-			}
-		}
-	}
-	return false
 }
 
 func (h *Handler) WhatsAppWebhook(w http.ResponseWriter, r *http.Request) {
@@ -239,81 +218,124 @@ func (h *Handler) WhatsAppWebhook(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var payload domain.WhatsAppPayload
-	if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
-		h.error(w, http.StatusBadRequest, "INVALID_JSON", "cuerpo JSON inválido")
+	if keyNumber := chi.URLParam(r, "number"); keyNumber != "" {
+		if whatsapp.NormalizePhone(keyNumber) != whatsapp.AllowedNumber() {
+			h.error(w, http.StatusForbidden, "UNAUTHORIZED_WEBHOOK", "número de webhook no autorizado")
+			return
+		}
+	}
+
+	raw, err := io.ReadAll(r.Body)
+	if err != nil {
+		h.error(w, http.StatusBadRequest, "INVALID_BODY", "no se pudo leer el cuerpo")
 		return
 	}
 
-	phone, incomingText, ok := extractIncomingText(payload)
+	incoming, ok := whatsapp.ParseWebhook(raw)
 	if !ok {
 		h.ok(w, map[string]interface{}{"received": true, "action": "ignored"})
 		return
 	}
 
-	answer := h.processAsk(incomingText, phone)
+	if !whatsapp.IsAllowedPhone(incoming.Phone) {
+		h.ok(w, map[string]interface{}{
+			"received": true,
+			"action":   "ignored",
+			"reason":   "unauthorized_number",
+		})
+		return
+	}
+
+	profileID := whatsapp.UserProfileID()
+	var payload domain.WhatsAppPayload
+	_ = json.Unmarshal(raw, &payload)
+	if payload.ProfileID != "" {
+		profileID = payload.ProfileID
+	}
+
+	profile, _ := h.ragClient.GetProfile(profileID)
+	answer := h.processClientAsk(incoming.Text, incoming.Phone, profile)
 
 	mockWhatsapp := os.Getenv("MOCK_WHATSAPP") == "true"
 	if !mockWhatsapp {
-		go h.sendWhatsAppMessage(phone, answer)
+		go h.sendWhatsAppMessage(incoming.Phone, answer)
 	}
 
-	h.ok(w, map[string]interface{}{
+	response := map[string]interface{}{
 		"received":      true,
-		"from":          phone,
-		"incoming_text": incomingText,
+		"from":          incoming.Phone,
+		"incoming_text": incoming.Text,
 		"answer":        answer,
-	})
-}
-
-func extractIncomingText(payload domain.WhatsAppPayload) (string, string, bool) {
-	if payload.Message == "" {
-		return "", "", false
+		"profileId":     profileID,
 	}
-	return payload.Phone, payload.Message, true
+	if profile != nil {
+		response["cliente"] = profile.Nombre
+	}
+
+	h.ok(w, response)
 }
 
-func (h *Handler) processAsk(text, sessionID string) string {
-	chunks := h.ragClient.Retrieve(text, 3)
-	return h.generateWhatsAppAnswer(context.Background(), text, chunks, sessionID)
+func (h *Handler) processClientAsk(text, sessionID string, profile *domain.Profile) string {
+	retrieval := h.ragClient.RetrieveForClient(text, profile, 4)
+	return h.generateClientAnswer(context.Background(), text, retrieval, profile, sessionID)
 }
 
-func (h *Handler) generateWhatsAppAnswer(ctx context.Context, question string, chunks []domain.Chunk, sessionID string) string {
-	const channel = "whatsapp"
+func (h *Handler) generateClientAnswer(ctx context.Context, question string, retrieval rag.RetrieveResult, profile *domain.Profile, sessionID string) string {
+	if rag.IsGreeting(question) {
+		answer := llm.FormatForWhatsApp(rag.GreetingReply)
+		h.saveSession(sessionID, question, answer)
+		return answer
+	}
+	if !rag.IsInScope(question, retrieval) {
+		answer := llm.FormatForWhatsApp(rag.OutOfScopeReply)
+		h.saveSession(sessionID, question, answer)
+		return answer
+	}
 
-	answer, err := h.llmClient.Generate(ctx, question, channel, chunks)
+	history := h.store.GetMessages(sessionID)
+
+	answer, err := h.llmClient.GenerateForClient(ctx, llm.ClientRequest{
+		Question:       question,
+		Chunks:         retrieval.Chunks,
+		ProfileContext: rag.ProfileContext(profile),
+		ProactiveHint:  rag.ProactiveHint(profile, question),
+		History:        history,
+	})
 	if err != nil {
-		answer = buildFallbackAnswer(chunks, channel)
+		answer = buildClientFallback(retrieval.Chunks)
 	}
 	answer = llm.FormatForWhatsApp(answer)
+	h.saveSession(sessionID, question, answer)
+	return answer
+}
 
+func (h *Handler) saveSession(sessionID, question, answer string) {
 	if sessionID != "" {
 		h.store.AddMessage(sessionID, "user", question)
 		h.store.AddMessage(sessionID, "assistant", answer)
 	}
-
-	return answer
 }
 
-func buildFallbackAnswer(chunks []domain.Chunk, channel string) string {
+func buildClientFallback(chunks []domain.Chunk) string {
 	if len(chunks) == 0 {
-		return "No tengo ese dato a la mano, pero un asesor de Banco Serfinanza puede ayudarte con gusto."
+		return "No tengo ese dato a la mano, pero un asesor de Banco Serfinanza puede ayudarte con gusto por WhatsApp, la App o en sucursal."
 	}
-
-	best := chunks[0]
-	if channel == "asesor" {
-		return fmt.Sprintf("Información recuperada de %s (%s): %s", best.Doc, best.Seccion, best.Contenido)
-	}
-	if channel == "whatsapp" {
-		return fmt.Sprintf("Te cuento: %s", best.Contenido)
-	}
-	return fmt.Sprintf("Según la información oficial de Serfinanza: %s", best.Contenido)
+	return fmt.Sprintf("Te cuento: %s", chunks[0].Contenido)
 }
 
 func (h *Handler) sendWhatsAppMessage(to, text string) error {
 	evolutionURL := os.Getenv("WHATSAPP_EVOLUTION_URL")
+	if evolutionURL == "" {
+		evolutionURL = os.Getenv("EVOLUTION_API_URL")
+	}
 	instance := os.Getenv("WHATSAPP_EVOLUTION_INSTANCE")
+	if instance == "" {
+		instance = os.Getenv("EVOLUTION_INSTANCE")
+	}
 	token := os.Getenv("WHATSAPP_EVOLUTION_TOKEN")
+	if token == "" {
+		token = os.Getenv("EVOLUTION_API_KEY")
+	}
 
 	if evolutionURL == "" || instance == "" || token == "" {
 		return fmt.Errorf("configuración de WhatsApp incompleta")

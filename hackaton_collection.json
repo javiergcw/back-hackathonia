@@ -23,7 +23,7 @@
         "header": [{"key": "Content-Type", "value": "application/json"}],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"question\": \"¿Qué beneficios tiene un superCDT?\",\n  \"sessionId\": \"test-001\"\n}"
+          "raw": "{\n  \"question\": \"¿Qué beneficios tiene un superCDT?\",\n  \"sessionId\": \"test-001\",\n  \"profileId\": \"C001\"\n}"
         },
         "url": {"raw": "{{base_url}}/ask", "host": ["{{base_url}}"], "path": ["ask"]}
       }
@@ -143,7 +143,7 @@
         "header": [{"key": "Content-Type", "value": "application/json"}],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"event\": \"MESSAGES_UPSERT\",\n  \"instance\": \"serfinanza\",\n  \"phone\": \"573024158002\",\n  \"message\": \"¿Qué beneficios tiene un CDT?\"\n}"
+          "raw": "{\n  \"event\": \"MESSAGES_UPSERT\",\n  \"instance\": \"javierg\",\n  \"phone\": \"573168731521\",\n  \"message\": \"¿Qué beneficios tiene un CDT?\"\n}"
         },
         "url": {"raw": "{{base_url}}/whatsapp/webhook", "host": ["{{base_url}}"], "path": ["whatsapp", "webhook"]}
       }

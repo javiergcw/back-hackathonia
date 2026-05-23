@@ -62,10 +62,11 @@ type Profile struct {
 }
 
 type WhatsAppPayload struct {
-	Event    string `json:"event"`
-	Instance string `json:"instance"`
-	Phone    string `json:"phone"`
-	Message  string `json:"message"`
+	Event     string `json:"event"`
+	Instance  string `json:"instance"`
+	Phone     string `json:"phone"`
+	Message   string `json:"message"`
+	ProfileID string `json:"profileId"`
 }
 
 type ErrorResponse struct {

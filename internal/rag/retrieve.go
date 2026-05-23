@@ -3,7 +3,6 @@ package rag
 import (
 	"encoding/json"
 	"os"
-	"regexp"
 	"strings"
 	"unicode"
 
@@ -27,12 +26,17 @@ func NewRetrieve(path string) *Client {
 }
 
 func (c *Client) Retrieve(query string, k int) []domain.Chunk {
+	return c.RetrieveForClient(query, nil, k).Chunks
+}
+
+func (c *Client) RetrieveForClient(query string, profile *domain.Profile, k int) RetrieveResult {
 	if len(c.chunks) == 0 {
-		return nil
+		return RetrieveResult{}
 	}
 
 	queryNorm := normalize(query)
-	queryTerms := tokenize(queryNorm)
+	queryTerms := expandTerms(tokenize(queryNorm))
+	profileTags := ProfileBoostTags(profile)
 
 	scored := make([]struct {
 		chunk *domain.Chunk
@@ -40,7 +44,7 @@ func (c *Client) Retrieve(query string, k int) []domain.Chunk {
 	}, len(c.chunks))
 
 	for i := range c.chunks {
-		score := c.scoreChunk(&c.chunks[i], queryTerms)
+		score := c.scoreChunk(&c.chunks[i], queryTerms, profileTags)
 		scored[i] = struct {
 			chunk *domain.Chunk
 			score float64
@@ -55,6 +59,11 @@ func (c *Client) Retrieve(query string, k int) []domain.Chunk {
 		}
 	}
 
+	topScore := 0.0
+	if len(scored) > 0 {
+		topScore = scored[0].score
+	}
+
 	result := make([]domain.Chunk, 0, k)
 	for i := 0; i < k && i < len(scored); i++ {
 		if scored[i].score > 0 {
@@ -62,34 +71,41 @@ func (c *Client) Retrieve(query string, k int) []domain.Chunk {
 		}
 	}
 
-	if len(result) == 0 {
-		return c.chunks[:min(k, len(c.chunks))]
-	}
-
-	return result
+	return RetrieveResult{Chunks: result, TopScore: topScore}
 }
 
-func (c *Client) scoreChunk(chunk *domain.Chunk, queryTerms []string) float64 {
+func (c *Client) scoreChunk(chunk *domain.Chunk, queryTerms []string, profileTags []string) float64 {
 	var score float64
 
-	tagScore := 0
 	for _, term := range queryTerms {
 		for _, tag := range chunk.Tags {
-			if strings.Contains(strings.ToLower(tag), term) {
-				tagScore++
+			tagLower := strings.ToLower(tag)
+			if strings.Contains(tagLower, term) || strings.Contains(term, tagLower) {
+				score += 2.0
 			}
 		}
 	}
-	score += float64(tagScore) * 2.0
 
 	contentNorm := normalize(chunk.Contenido)
 	for _, term := range queryTerms {
+		if len(term) < 3 {
+			continue
+		}
 		count := countOccurrences(contentNorm, term)
-		score += float64(count)
+		score += float64(count) * 1.5
 	}
 
 	if containsSuperCDT(queryTerms) && hasSuperCDTTag(chunk.Tags) {
 		score += 5.0
+	}
+
+	for _, pTag := range profileTags {
+		for _, tag := range chunk.Tags {
+			if strings.Contains(strings.ToLower(tag), pTag) {
+				score += 3.0
+				break
+			}
+		}
 	}
 
 	return score
@@ -111,8 +127,24 @@ func tokenize(s string) []string {
 }
 
 func countOccurrences(text, term string) int {
-	re := regexp.MustCompile(`(?i)` + term)
-	return len(re.FindAllStringIndex(text, -1))
+	if term == "" {
+		return 0
+	}
+	lower := strings.ToLower(text)
+	needle := strings.ToLower(term)
+	n := 0
+	for {
+		i := strings.Index(lower, needle)
+		if i < 0 {
+			return n
+		}
+		n++
+		start := i + len(needle)
+		if start >= len(lower) {
+			return n
+		}
+		lower = lower[start:]
+	}
 }
 
 func containsSuperCDT(terms []string) bool {
