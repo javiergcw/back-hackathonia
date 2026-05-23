@@ -8,16 +8,18 @@ NETWORK="banco-agent-net"
 
 usage() {
   cat <<EOF
-Uso: ./commands/deploy.sh <comando>
+Uso: ./commands/deploy.sh [comando]
 
 Comandos:
-  up        Baja, reconstruye y levanta el contenedor (docker compose up --build -d)
+  up        Levanta el contenedor (default: docker compose up --build -d)
   down      Detiene y elimina el contenedor (docker compose down)
   restart   down + up
   logs      Ver logs en vivo del backend
   status    Estado del contenedor y healthcheck
+  help      Muestra esta ayuda
 
 Ejemplo:
+  ./commands/deploy.sh
   ./commands/deploy.sh up
   ./commands/deploy.sh logs
 EOF
@@ -69,11 +71,12 @@ cmd_status() {
   docker inspect --format='{{.State.Health.Status}}' "$SERVICE" 2>/dev/null || true
 }
 
-case "${1:-}" in
+case "${1:-up}" in
   up) cmd_up ;;
   down) cmd_down ;;
   restart) cmd_restart ;;
   logs) cmd_logs ;;
   status) cmd_status ;;
-  *) usage; exit 1 ;;
+  help|-h|--help) usage ;;
+  *) echo "Comando desconocido: $1"; echo ""; usage; exit 1 ;;
 esac
