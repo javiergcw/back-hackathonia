@@ -7,8 +7,8 @@ import (
 	"github.com/javierg/hackathon-bqia/internal/handlers"
 	"github.com/javierg/hackathon-bqia/internal/llm"
 	"github.com/javierg/hackathon-bqia/internal/rag"
-	"github.com/javierg/hackathon-bqia/internal/session"
 	"github.com/javierg/hackathon-bqia/internal/server"
+	"github.com/javierg/hackathon-bqia/internal/session"
 	"github.com/joho/godotenv"
 )
 
