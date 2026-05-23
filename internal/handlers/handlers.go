@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"math"
 	"net/http"
 	"os"
@@ -233,11 +234,13 @@ func (h *Handler) WhatsAppWebhook(w http.ResponseWriter, r *http.Request) {
 
 	incoming, ok := whatsapp.ParseWebhook(raw)
 	if !ok {
+		log.Printf("whatsapp webhook: payload no reconocido (%d bytes)", len(raw))
 		h.ok(w, map[string]interface{}{"received": true, "action": "ignored"})
 		return
 	}
 
 	if !whatsapp.IsAllowedPhone(incoming.Phone) {
+		log.Printf("whatsapp webhook: número no autorizado %s", incoming.Phone)
 		h.ok(w, map[string]interface{}{
 			"received": true,
 			"action":   "ignored",
@@ -245,6 +248,8 @@ func (h *Handler) WhatsAppWebhook(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
+
+	log.Printf("whatsapp webhook: mensaje de %s: %q", incoming.Phone, incoming.Text)
 
 	profileID := whatsapp.UserProfileID()
 	var payload domain.WhatsAppPayload
@@ -258,7 +263,11 @@ func (h *Handler) WhatsAppWebhook(w http.ResponseWriter, r *http.Request) {
 
 	mockWhatsapp := os.Getenv("MOCK_WHATSAPP") == "true"
 	if !mockWhatsapp {
-		go h.sendWhatsAppMessage(incoming.Phone, answer)
+		go func(phone, reply string) {
+			if err := h.sendWhatsAppMessage(phone, reply); err != nil {
+				log.Printf("whatsapp send error to %s: %v", phone, err)
+			}
+		}(incoming.Phone, answer)
 	}
 
 	response := map[string]interface{}{
@@ -357,7 +366,10 @@ func (h *Handler) sendWhatsAppMessage(to, text string) error {
 		return err
 	}
 	defer resp.Body.Close()
-	_, _ = io.ReadAll(resp.Body)
+	respBody, _ := io.ReadAll(resp.Body)
+	if resp.StatusCode >= 300 {
+		return fmt.Errorf("evolution respondió %d: %s", resp.StatusCode, string(respBody))
+	}
 	return nil
 }
 

@@ -28,6 +28,7 @@ WORKDIR /app
 
 COPY --from=builder /out/main .
 COPY .env.docker .env.docker
+COPY data/ data/
 
 RUN chown -R appuser:appuser /app
 USER appuser
@@ -38,6 +39,6 @@ ENV PORT=8080
 ENV ENV_FILE=.env.docker
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
-  CMD wget --no-verbose --tries=1 --spider http://localhost:8080/health || exit 1
+  CMD wget --no-verbose --tries=1 -O /dev/null http://localhost:8080/health || exit 1
 
 CMD ["./main"]

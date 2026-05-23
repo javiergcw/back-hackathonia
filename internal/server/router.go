@@ -37,10 +37,13 @@ func NewRouter(h *handlers.Handler) *chi.Mux {
 	})
 
 	r.Get("/health", h.Health)
+	r.Head("/health", h.Health)
 	r.Post("/ask", h.Ask)
 	r.Post("/simulate-cdt", h.SimulateCDT)
 	r.Post("/recommend", h.Recommend)
+	r.Get("/whatsapp/webhook", h.WhatsAppWebhook)
 	r.Post("/whatsapp/webhook", h.WhatsAppWebhook)
+	r.Get("/whatsapp/webhook/{number}", h.WhatsAppWebhook)
 	r.Post("/whatsapp/webhook/{number}", h.WhatsAppWebhook)
 
 	return r
