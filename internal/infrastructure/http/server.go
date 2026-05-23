@@ -13,7 +13,7 @@ type Server struct {
 }
 
 func NewServer(cfg *config.Config, db *gorm.DB) *Server {
-	router := NewRouter(db)
+	router := NewRouter(cfg, db)
 
 	return &Server{
 		httpServer: &http.Server{
