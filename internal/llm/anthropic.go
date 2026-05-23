@@ -8,6 +8,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 
@@ -15,9 +16,10 @@ import (
 )
 
 type Client struct {
-	apiKey string
-	model  string
-	client *http.Client
+	apiKey    string
+	model     string
+	maxTokens int
+	client    *http.Client
 }
 
 func NewClient() *Client {
@@ -26,10 +28,17 @@ func NewClient() *Client {
 	if model == "" {
 		model = "claude-sonnet-4-20250514"
 	}
+	maxTokens := 400
+	if v := os.Getenv("ANTHROPIC_MAX_TOKENS"); v != "" {
+		if n, err := strconv.Atoi(v); err == nil && n > 0 {
+			maxTokens = n
+		}
+	}
 	return &Client{
-		apiKey: apiKey,
-		model:  model,
-		client: &http.Client{Timeout: 15 * time.Second},
+		apiKey:    apiKey,
+		model:     model,
+		maxTokens: maxTokens,
+		client:    &http.Client{Timeout: 15 * time.Second},
 	}
 }
 
@@ -59,8 +68,9 @@ REGLAS:
    - channel "asesor": formato [Fuente: <doc>, <seccion>].
    - channel "cliente"/"whatsapp": cita suave, ej. "(según la información oficial de Serfinanza)".
 3. NUNCA pidas OTP, claves, contraseñas ni datos sensibles. Si te los piden/ofrecen, recházalo: "Banco Serfinanza nunca solicita claves ni OTP".
-4. Tono claro, en español. "cliente"/"whatsapp": cálido. "asesor": directo y preciso.
+4. Tono claro, en español. "cliente"/"whatsapp": cálido y breve. "asesor": directo y preciso.
 5. "superCDT" = CDT Serfinanza (mismo producto).
+6. Responde de forma concisa: máximo 150 palabras. Usa listas cortas solo si ayudan.
 
 CONTEXTO:
 %s`
@@ -80,7 +90,7 @@ func (c *Client) Generate(ctx context.Context, question, channel string, chunks 
 
 	body, _ := json.Marshal(messagesRequest{
 		Model:     c.model,
-		MaxTokens: 1024,
+		MaxTokens: c.maxTokens,
 		System:    system,
 		Messages:  messages,
 	})

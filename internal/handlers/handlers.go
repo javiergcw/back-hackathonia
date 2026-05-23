@@ -63,7 +63,7 @@ func (h *Handler) Ask(w http.ResponseWriter, r *http.Request) {
 		sessionID = fmt.Sprintf("session-%d", time.Now().UnixNano())
 	}
 
-	chunks := h.ragClient.Retrieve(req.Question, 6)
+	chunks := h.ragClient.Retrieve(req.Question, 3)
 
 	var answer string
 	var err error
@@ -292,7 +292,7 @@ func extractIncomingText(payload domain.WhatsAppPayload) (string, string, bool) 
 }
 
 func (h *Handler) processAsk(text, channel, sessionID string) string {
-	chunks := h.ragClient.Retrieve(text, 6)
+	chunks := h.ragClient.Retrieve(text, 3)
 
 	answer, err := h.llmClient.Generate(context.Background(), text, channel, chunks)
 	if err != nil {
