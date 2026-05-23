@@ -1,0 +1,9 @@
+.git
+.gitignore
+.context-course
+bin/
+*.md
+.env.dev
+.env.prod
+.env.local
+.env

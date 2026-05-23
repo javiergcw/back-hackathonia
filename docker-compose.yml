@@ -1,0 +1,38 @@
+# Backend hackathon-bqia — misma red que PostgreSQL (banco-agent-net).
+#
+# 1) Levantar Postgres (solo una vez):
+#    docker compose -f "/ruta/biofood-solution/postgres/docker-compose.banco.yml" up -d
+#
+# 2) Levantar backend:
+#    docker compose up --build -d
+#
+# API expuesta en http://localhost:8090 (8080 interno, sin chocar con biofood:3001 ni postgres:5437)
+
+services:
+  hackathon-bqia-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: hackathon-bqia-backend:latest
+    container_name: hackathon-bqia-backend
+    ports:
+      - "8090:8080"
+    env_file:
+      - .env.docker
+    environment:
+      - PORT=8080
+      - ENV_FILE=.env.docker
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - banco-agent
+
+networks:
+  banco-agent:
+    external: true
+    name: banco-agent-net
