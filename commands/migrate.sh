@@ -11,4 +11,5 @@ set -a
 source "$ENV_FILE"
 set +a
 
+echo "→ Migraciones SQL en migrations/ (env: ${ENV_FILE})"
 go run ./cmd/migrate

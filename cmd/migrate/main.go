@@ -18,6 +18,8 @@ func main() {
 		log.Fatalf("database: %v", err)
 	}
 
+	log.Printf("connected to database %s@%s:%s/%s", cfg.DBUser, cfg.DBHost, cfg.DBPort, cfg.DBName)
+
 	if err := database.Migrate(db); err != nil {
 		log.Fatalf("migrate: %v", err)
 	}

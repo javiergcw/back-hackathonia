@@ -2,6 +2,7 @@ package database
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/javierg/hackathon-bqia/internal/infrastructure/config"
 	"gorm.io/driver/postgres"
@@ -21,5 +22,15 @@ func Connect(cfg *config.Config) (*gorm.DB, error) {
 }
 
 func Migrate(db *gorm.DB) error {
-	return db.AutoMigrate()
+	sqlDB, err := db.DB()
+	if err != nil {
+		return fmt.Errorf("get sql db: %w", err)
+	}
+
+	dir := os.Getenv("MIGRATIONS_DIR")
+	if dir == "" {
+		dir = "migrations"
+	}
+
+	return RunSQLMigrations(sqlDB, dir)
 }
