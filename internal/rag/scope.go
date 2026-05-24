@@ -37,6 +37,10 @@ const OutOfScopeReply = "Ese tema no lo manejo yo, pero con gusto te ayudo con S
 
 const CasualFallbackReply = "Cuéntame qué necesitas y te oriento: CDT, tarjeta, crédito, pagos, extractos o la App de Serfinanza. También puedes llamar al 01 8000 123 456 o escribir por WhatsApp oficial del banco."
 
+const PlanAhorroReply = "Para radicar un plan de ahorro con débito automático, un asesor puede confirmarte el proceso vigente: llama al 01 8000 123 456 o visita una sucursal. Si ya tienes cuenta de ahorros, también puedes revisar domiciliaciones en la App o en Banca en Línea en www.serfinanza.com."
+
+const PortalAccessReply = "Para ingresar a Serfinanza Virtual (Banca en Línea): entra a www.serfinanza.com, sección Banca en Línea, con tu usuario y contraseña. Si aún no tienes acceso, regístrate primero en la App Serfinanza (descárgala en App Store o Google Play) con tu cédula y el celular registrado en el banco."
+
 const UrgentCardReply = "Entiendo, vamos de inmediato. Bloquea tu tarjeta ya: (1) App Serfinanza → Tarjetas → Bloquear tarjeta, (2) WhatsApp oficial escribiendo BLOQUEAR, o (3) llama al 01 8000 123 456. El bloqueo es instantáneo y sin costo. ¿Ya pudiste bloquearla?"
 
 const ConfusedReply = "Sin problema, lo vemos más simple. ¿Tu consulta es sobre tarjeta, CDT, crédito, la App o un trámite? Cuéntame en una frase y te guío paso a paso."
@@ -82,14 +86,8 @@ func IsConversational(query string) bool {
 
 // RetrieveQuery amplía la búsqueda RAG según la intención del mensaje.
 func RetrieveQuery(query string) string {
-	q := strings.TrimSpace(query)
-	if IsUrgentCard(q) {
-		return "bloquear tarjeta robo perdida app whatsapp BLOQUEAR call center"
-	}
-	if IsConversational(q) && !HasBankIntent(q) {
-		return "serfinanza banco productos servicios canales atencion app web sucursal"
-	}
-	return q
+	retrieveQ, _ := ResolveQuery(query)
+	return retrieveQ
 }
 
 // BestChunkForKeywords devuelve el contenido del fragmento que mencione alguna palabra clave.

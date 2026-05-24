@@ -463,10 +463,10 @@ func (h *Handler) processAskWithProfile(text, channel, sessionID string, allowed
 }
 
 func (h *Handler) generateChatAnswer(ctx context.Context, question, sessionID string, allowedTags []string, profileContext string) (string, []domain.Chunk) {
-	retrieveQuery := rag.RetrieveQuery(question)
-	chunks := h.ragClient.RetrieveWithTags(retrieveQuery, 6, allowedTags)
+	_, intent := rag.ResolveQuery(question)
+	chunks := h.ragClient.RetrieveWithTags(question, 8, allowedTags)
 	if len(chunks) == 0 && rag.HasBankIntent(question) {
-		chunks = h.ragClient.RetrieveWithTags(question, 8, allowedTags)
+		chunks = h.ragClient.RetrieveWithTags(rag.RetrieveQuery(question), 8, allowedTags)
 	}
 
 	history := h.store.GetMessages(sessionID)
@@ -480,13 +480,13 @@ func (h *Handler) generateChatAnswer(ctx context.Context, question, sessionID st
 
 	answer, err := h.llmClient.GenerateForClient(ctx, req)
 	if err != nil {
-		answer = buildFallbackAnswer(question, chunks)
+		answer = buildFallbackAnswer(question, chunks, intent)
 	}
 
 	return answer, chunks
 }
 
-func buildFallbackAnswer(question string, chunks []domain.Chunk) string {
+func buildFallbackAnswer(question string, chunks []domain.Chunk, intent rag.QueryIntent) string {
 	switch {
 	case rag.IsUrgentCard(question):
 		if text := rag.BestChunkForKeywords(chunks, "bloque", "robo", "BLOQUEAR"); text != "" {
@@ -505,19 +505,57 @@ func buildFallbackAnswer(question string, chunks []domain.Chunk) string {
 		return rag.ConfusedReply
 	}
 
-	if rag.HasBankIntent(question) {
-		if text := rag.BestChunkForKeywords(chunks, "bloque", "tarjeta", "cdt", "app", "extracto"); text != "" {
-			return truncateFallback(text, 520)
+	switch intent.ID {
+	case "portal_access":
+		if text := rag.SelectBestChunk(intent, chunks); text != "" {
+			return formatHelpfulAnswer("Para ingresar a Serfinanza Virtual / Banca en Línea:", text)
+		}
+		return rag.PortalAccessReply
+	case "plan_ahorro":
+		if text := rag.SelectBestChunk(intent, chunks); text != "" {
+			return formatHelpfulAnswer("Sobre plan de ahorro y débito automático:", text)
+		}
+		return rag.PlanAhorroReply
+	case "extracto":
+		if text := rag.SelectBestChunk(intent, chunks); text != "" {
+			return formatHelpfulAnswer("Para generar y leer tu extracto:", text)
+		}
+	case "actualizacion_datos":
+		if text := rag.SelectBestChunk(intent, chunks); text != "" {
+			return formatHelpfulAnswer("Puedes actualizar tus datos por estos canales:", text)
+		}
+	case "cdt_beneficios":
+		if text := rag.SelectBestChunk(intent, chunks); text != "" {
+			return formatHelpfulAnswer("Estos son los beneficios del CDT Serfinanza (superCDT):", text)
 		}
 	}
 
-	for _, chunk := range chunks {
-		if hasUsefulContent(chunk.Contenido) {
-			return truncateFallback(chunk.Contenido, 480)
+	if rag.HasBankIntent(question) {
+		if text := rag.SelectBestChunk(intent, chunks); text != "" {
+			return formatHelpfulAnswer("", text)
 		}
 	}
 
 	return rag.CasualFallbackReply
+}
+
+func formatHelpfulAnswer(prefix, body string) string {
+	body = cleanChunkForDisplay(body)
+	body = truncateFallback(body, 520)
+	if prefix == "" {
+		return body
+	}
+	return prefix + " " + body
+}
+
+func cleanChunkForDisplay(text string) string {
+	text = strings.ReplaceAll(text, " n ", ". ")
+	text = strings.ReplaceAll(text, "® ", "\n• ")
+	text = strings.ReplaceAll(text, " ", "")
+	for strings.Contains(text, "  ") {
+		text = strings.ReplaceAll(text, "  ", " ")
+	}
+	return strings.TrimSpace(text)
 }
 
 func formatUrgentCardAnswer(raw string) string {
@@ -541,6 +579,9 @@ func truncateFallback(text string, maxLen int) string {
 }
 
 func hasUsefulContent(content string) bool {
+	if rag.IsBoilerplate(content) {
+		return false
+	}
 	if len(content) < 30 {
 		return false
 	}

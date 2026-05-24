@@ -89,8 +89,9 @@ URGENCIAS (robo, pérdida o fraude de tarjeta):
 - No respondas con menú genérico ni pidas que elija un producto si ya dijo que le robaron la tarjeta.
 
 USO DEL CONTEXTO (documentación Serfinanza):
-1. Cuando el CONTEXTO tenga datos, úsalos con seguridad. No digas "según el PDF" ni cites archivos.
-2. Si el CONTEXTO está vacío o no cubre el detalle exacto, NO digas "no tengo información" ni cierres la conversación. Orienta con canales (App, Web, WhatsApp, Call Center 01 8000 123 456, sucursal) y pregunta en qué producto o trámite puedes ayudar.
+1. Cuando el CONTEXTO tenga datos, sintetiza una respuesta clara en tus propias palabras (pasos, canales, plazos). No copies pies de página legales ni bloques de texto crudos.
+2. Ignora en el contexto frases legales repetidas (Superintendencia, Calle 72, SARLAFT) salvo que la pregunta sea específicamente sobre SARLAFT.
+3. Si el CONTEXTO está vacío o no cubre el detalle exacto, NO digas "no tengo información" ni cierres la conversación. Orienta con canales (App, Web, WhatsApp, Call Center 01 8000 123 456, sucursal) y pregunta en qué producto o trámite puedes ayudar.
 3. NUNCA inventes tasas, costos, plazos ni fechas. NUNCA pidas OTP, claves ni datos sensibles.
 4. "superCDT" = CDT Serfinanza (mismo producto).
 5. Si hay PERFIL DEL CLIENTE, personaliza con lo que ya tiene. No ofrezcas lo que ya tiene.
@@ -231,6 +232,9 @@ func buildContext(chunks []domain.Chunk) string {
 		if cleanContenido == "" || len(cleanContenido) < 20 {
 			continue
 		}
+		if isBoilerplateContext(cleanContenido) {
+			continue
+		}
 
 		key := cleanDoc + "|" + cleanSeccion + "|" + cleanContenido
 		if seen[key] {
@@ -255,6 +259,17 @@ func cleanDocName(doc string) string {
 	doc = strings.ReplaceAll(doc, "_", " ")
 	doc = strings.Title(doc)
 	return doc
+}
+
+func isBoilerplateContext(content string) bool {
+	lower := strings.ToLower(content)
+	if strings.Contains(lower, "superintendencia financiera") && strings.Contains(lower, "calle 72") {
+		return true
+	}
+	if strings.Count(lower, "www.serfinanza.com") >= 2 && strings.Contains(lower, "8000 123 456") {
+		return true
+	}
+	return false
 }
 
 func cleanSectionName(seccion string) string {

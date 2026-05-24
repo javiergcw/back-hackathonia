@@ -65,8 +65,13 @@ func (c *Client) RetrieveWithTags(query string, k int, allowedTags []string) []d
 		return nil
 	}
 
+	retrieveQ, intent := ResolveQuery(query)
 	queryNorm := normalize(query)
-	queryTerms := expandTerms(tokenize(queryNorm))
+	retrieveNorm := normalize(retrieveQ)
+	queryTerms := mergeTerms(
+		expandTerms(tokenize(queryNorm)),
+		expandTerms(tokenize(retrieveNorm)),
+	)
 
 	filteredChunks := c.chunks
 
@@ -92,7 +97,7 @@ func (c *Client) RetrieveWithTags(query string, k int, allowedTags []string) []d
 	}, len(filteredChunks))
 
 	for i := range filteredChunks {
-		score := c.scoreChunk(&filteredChunks[i], queryTerms)
+		score := c.scoreChunk(&filteredChunks[i], queryTerms, intent)
 		scored[i] = struct {
 			chunk *domain.Chunk
 			score float64
@@ -117,11 +122,29 @@ func (c *Client) RetrieveWithTags(query string, k int, allowedTags []string) []d
 		}
 	}
 
-	if !hasRelevant && len(scored) > 0 && scored[0].score > 0 {
-		return nil
+	if len(result) == 0 && intent.ID != "" {
+		for i := 0; i < k && i < len(scored); i++ {
+			if scored[i].score > 0 && !IsBoilerplate(scored[i].chunk.Contenido) {
+				result = append(result, *scored[i].chunk)
+			}
+		}
 	}
 
 	return result
+}
+
+func mergeTerms(a, b []string) []string {
+	seen := make(map[string]bool)
+	var out []string
+	for _, list := range [][]string{a, b} {
+		for _, t := range list {
+			if !seen[t] {
+				seen[t] = true
+				out = append(out, t)
+			}
+		}
+	}
+	return out
 }
 
 func (c *Client) filterByTags(chunks []domain.Chunk, allowedTags []string) []domain.Chunk {
@@ -134,7 +157,11 @@ func (c *Client) filterByTags(chunks []domain.Chunk, allowedTags []string) []dom
 	return result
 }
 
-func (c *Client) scoreChunk(chunk *domain.Chunk, queryTerms []string) float64 {
+func (c *Client) scoreChunk(chunk *domain.Chunk, queryTerms []string, intent QueryIntent) float64 {
+	if IsBoilerplate(chunk.Contenido) {
+		return -20
+	}
+
 	var score float64
 
 	tagScore := 0
@@ -148,13 +175,35 @@ func (c *Client) scoreChunk(chunk *domain.Chunk, queryTerms []string) float64 {
 	score += float64(tagScore) * 2.0
 
 	contentNorm := normalize(chunk.Contenido)
+	seccionNorm := normalize(chunk.Seccion)
 	for _, term := range queryTerms {
+		if len(term) < 3 {
+			continue
+		}
 		count := countOccurrences(contentNorm, term)
 		score += float64(count)
+		if strings.Contains(seccionNorm, term) {
+			score += 3
+		}
+	}
+
+	docLower := strings.ToLower(chunk.Doc)
+	for _, hint := range intent.DocHints {
+		if strings.Contains(docLower, strings.ToLower(hint)) {
+			score += 8
+		}
+	}
+	for _, kw := range intent.Keywords {
+		if strings.Contains(contentNorm, strings.ToLower(kw)) {
+			score += 2
+		}
 	}
 
 	if containsSuperCDT(queryTerms) && hasSuperCDTTag(chunk.Tags) {
 		score += 5.0
+	}
+	if intent.ID == "cdt_beneficios" && strings.Contains(docLower, "03_cdt") {
+		score += 6
 	}
 
 	return score
