@@ -85,11 +85,6 @@ func (h *Handler) Ask(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	channel := req.Channel
-	if channel == "" {
-		channel = "cliente"
-	}
-
 	sessionID := req.SessionID
 	if sessionID == "" {
 		sessionID = fmt.Sprintf("session-%d", time.Now().UnixNano())
@@ -116,20 +111,7 @@ func (h *Handler) Ask(w http.ResponseWriter, r *http.Request) {
 		allowedTags = []string{"publico", "general"}
 	}
 
-	chunks := h.ragClient.RetrieveWithTags(req.Question, 6, allowedTags)
-
-	var answer string
-	var err error
-
-	if profileContext != "" {
-		answer, err = h.llmClient.GenerateWithProfile(r.Context(), req.Question, channel, chunks, profileContext)
-	} else {
-		answer, err = h.llmClient.Generate(r.Context(), req.Question, channel, chunks)
-	}
-
-	if err != nil {
-		answer = buildFallbackAnswer(chunks, channel)
-	}
+	answer, chunks := h.generateChatAnswer(r.Context(), req.Question, sessionID, allowedTags, profileContext)
 
 	h.store.AddMessage(sessionID, "user", req.Question)
 	h.store.AddMessage(sessionID, "assistant", answer)
@@ -470,20 +452,7 @@ func (h *Handler) processAskWithTags(text, channel, sessionID string, allowedTag
 }
 
 func (h *Handler) processAskWithProfile(text, channel, sessionID string, allowedTags []string, profileContext string) string {
-	chunks := h.ragClient.RetrieveWithTags(text, 6, allowedTags)
-
-	var answer string
-	var err error
-
-	if profileContext != "" {
-		answer, err = h.llmClient.GenerateWithProfile(context.Background(), text, channel, chunks, profileContext)
-	} else {
-		answer, err = h.llmClient.Generate(context.Background(), text, channel, chunks)
-	}
-
-	if err != nil {
-		answer = buildFallbackAnswer(chunks, channel)
-	}
+	answer, _ := h.generateChatAnswer(context.Background(), text, sessionID, allowedTags, profileContext)
 
 	if sessionID != "" {
 		h.store.AddMessage(sessionID, "user", text)
@@ -493,18 +462,56 @@ func (h *Handler) processAskWithProfile(text, channel, sessionID string, allowed
 	return answer
 }
 
-func buildFallbackAnswer(chunks []domain.Chunk, channel string) string {
-	if len(chunks) == 0 {
-		return "No tengo información sobre eso en este momento. ¿Puedes reformular tu pregunta o contactar a un asesor de Serfinanza?"
+func (h *Handler) generateChatAnswer(ctx context.Context, question, sessionID string, allowedTags []string, profileContext string) (string, []domain.Chunk) {
+	retrieveQuery := rag.RetrieveQuery(question)
+	chunks := h.ragClient.RetrieveWithTags(retrieveQuery, 6, allowedTags)
+
+	history := h.store.GetMessages(sessionID)
+
+	req := llm.ClientRequest{
+		Question:       question,
+		Chunks:         chunks,
+		ProfileContext: profileContext,
+		History:        history,
 	}
 
-	best := chunks[0]
-
-	if !hasUsefulContent(best.Contenido) {
-		return "No tengo información sobre eso en este momento. ¿Puedes reformular tu pregunta o contactar a un asesor de Serfinanza?"
+	answer, err := h.llmClient.GenerateForClient(ctx, req)
+	if err != nil {
+		answer = buildFallbackAnswer(question, chunks)
 	}
 
-	return best.Contenido
+	return answer, chunks
+}
+
+func buildFallbackAnswer(question string, chunks []domain.Chunk) string {
+	switch {
+	case rag.IsGreeting(question):
+		return rag.GreetingReply
+	case rag.IsThanks(question):
+		return rag.ThanksReply
+	case rag.IsFarewell(question):
+		return rag.FarewellReply
+	}
+
+	for _, chunk := range chunks {
+		if hasUsefulContent(chunk.Contenido) {
+			return truncateFallback(chunk.Contenido, 480)
+		}
+	}
+
+	return rag.CasualFallbackReply
+}
+
+func truncateFallback(text string, maxLen int) string {
+	text = strings.TrimSpace(text)
+	if len(text) <= maxLen {
+		return text
+	}
+	cut := text[:maxLen]
+	if idx := strings.LastIndex(cut, " "); idx > maxLen/2 {
+		cut = cut[:idx]
+	}
+	return cut + "…"
 }
 
 func hasUsefulContent(content string) bool {
