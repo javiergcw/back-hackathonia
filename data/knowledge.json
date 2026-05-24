@@ -1,114 +1,1342 @@
 [
   {
-    "id": "04_app_registro",
-    "doc": "04_registro_app_serfinanza.pdf",
-    "seccion": "3. Pasos para Registrarte",
-    "tags": ["app", "registro", "serfinanza virtual", "ingreso", "nuevo usuario"],
-    "contenido": "Descarga la App (App Store iOS 14+/Google Play Android 8+, desarrollador Banco Serfinanza S.A.). Toca '¿Eres nuevo? Regístrate aquí', ingresa tu cédula sin puntos, valida identidad con OTP por SMS o correo, crea clave de 6 dígitos. Opcional: biometría."
+    "id": "01_tarjeta_credito_beneficios_PDF__PRODUCTOS___TARJETA_DE_CRÉDITO_0",
+    "doc": "01_tarjeta_credito_beneficios.pdf",
+    "seccion": "[PDF] PRODUCTOS · TARJETA DE CRÉDITO",
+    "tags": [
+      "dito",
+      "serfinanza",
+      "tarjeta",
+      "ofrecerte",
+      "todo"
+    ],
+    "contenido": "todo lo que tu tarjeta de crédito Serfinanza tiene para ofrecerte. Tarjeta de Crédito Serfinanza Guía completa de beneficios, características y condiciones. Conoce todo lo que tu tarjeta de crédito Serfinanza tiene para ofrecerte."
   },
   {
-    "id": "05_extracto_generar",
+    "id": "01_tarjeta_credito_beneficios_PDF___Qué_es_la_Tarjeta_de_Crédito_Serfinanza_1",
+    "doc": "01_tarjeta_credito_beneficios.pdf",
+    "seccion": "[PDF] ¿Qué es la Tarjeta de Crédito Serfinanza?",
+    "tags": [
+      "establecimientos",
+      "cupos",
+      "desde",
+      "hasta",
+      "perfil"
+    ],
+    "contenido": "cupos desde $500.000 hasta $30.000.000 según tu perfil crediticio. La Tarjeta de Crédito Serfinanza es un instrumento financiero que te permite realizar compras, pagos y transacciones en establecimientos físicos y en línea, utilizando un cupo de crédito preaprobado por el banco. Está respaldada por la red Mastercard, lo que garantiza aceptación en más de 90 millones de establecimientos en Colombia y en el mundo. n Disponible en las modalidades Clásica, Gold y Platinum, con cupos desde $500.000 hasta $30.000.000 según tu perfil crediticio."
+  },
+  {
+    "id": "01_tarjeta_credito_beneficios_PDF__Tipo_2",
+    "doc": "01_tarjeta_credito_beneficios.pdf",
+    "seccion": "[PDF] Tipo",
+    "tags": [
+      "cuota",
+      "manejo",
+      "cupo",
+      "ximo",
+      "tasa"
+    ],
+    "contenido": "Cupo Máximo Tasa de Interés (E.A.) Cuota de Manejo / mes Cupo Máximo Tasa de Interés (E.A.) Cuota de Manejo / mes"
+  },
+  {
+    "id": "01_tarjeta_credito_beneficios_PDF__Clásica_3",
+    "doc": "01_tarjeta_credito_beneficios.pdf",
+    "seccion": "[PDF] Clásica",
+    "tags": [
+      "hasta"
+    ],
+    "contenido": "Hasta $3.000.000 26,22% $18.900 Hasta $3.000.000 26,22% $18.900"
+  },
+  {
+    "id": "01_tarjeta_credito_beneficios_PDF__Gold_4",
+    "doc": "01_tarjeta_credito_beneficios.pdf",
+    "seccion": "[PDF] Gold",
+    "tags": [
+      "hasta"
+    ],
+    "contenido": "Hasta $10.000.000 24,50% $28.500 Hasta $10.000.000 24,50% $28.500"
+  },
+  {
+    "id": "01_tarjeta_credito_beneficios_PDF__Platinum_5",
+    "doc": "01_tarjeta_credito_beneficios.pdf",
+    "seccion": "[PDF] Platinum",
+    "tags": [
+      "tasa",
+      "efectiva",
+      "aplicada",
+      "cliente",
+      "puede"
+    ],
+    "contenido": "La tasa efectiva aplicada puede variar según el perfil del cliente. Hasta $30.000.000 22,00% $38.000 n Las tasas corresponden al máximo legal vigente certificado por la SFC. La tasa efectiva aplicada puede variar según el perfil del cliente."
+  },
+  {
+    "id": "01_tarjeta_credito_beneficios_PDF__1_Programa_de_Puntos_Serfinanza_6",
+    "doc": "01_tarjeta_credito_beneficios.pdf",
+    "seccion": "[PDF] 1 Programa de Puntos Serfinanza",
+    "tags": [
+      "serfinanza",
+      "virtual",
+      "acumulas",
+      "nicos",
+      "compras"
+    ],
+    "contenido": "electrónicos y electrodomésticos en el catálogo virtual Serfinanza. Por cada $1.000 pesos en compras nacionales acumulas 1 punto Serfinanza, y por compras internacionales acumulas 1,5 puntos. Los puntos pueden ser redimidos en:  Millas aéreas con aerolíneas aliadas (Avianca LifeMiles, LATAM Pass).  Descuentos en establecimientos aliados (supermercados Olímpica, Éxito, Jumbo).  Abono a la deuda de la tarjeta de crédito.  Productos electrónicos y electrodomésticos en el catálogo virtual Serfinanza."
+  },
+  {
+    "id": "01_tarjeta_credito_beneficios_PDF__2_Seguro_de_Vida_y_Protección_de_Compras_7",
+    "doc": "01_tarjeta_credito_beneficios.pdf",
+    "seccion": "[PDF] 2 Seguro de Vida y Protección de Compras",
+    "tags": [
+      "seguro",
+      "cubre",
+      "productos",
+      "durante",
+      "adquiridos"
+    ],
+    "contenido": "de productos adquiridos con la tarjeta durante los primeros 90 días. Todas las tarjetas cuentan con seguro de vida integrado que cubre hasta $20.000.000 en caso de fallecimiento o incapacidad total y permanente del titular. Adicionalmente, el seguro de protección de compras cubre robo o daño accidental de productos adquiridos con la tarjeta durante los primeros 90 días."
+  },
+  {
+    "id": "01_tarjeta_credito_beneficios_PDF__3_Cuotas_Sin_Interés_con_Establecimientos_Aliados_8",
+    "doc": "01_tarjeta_credito_beneficios.pdf",
+    "seccion": "[PDF] 3 Cuotas Sin Interés con Establecimientos Aliados",
+    "tags": [
+      "cuotas",
+      "comercio",
+      "compra",
+      "dependiendo",
+      "monto"
+    ],
+    "contenido": "12 y hasta 24 cuotas dependiendo del comercio y el monto de la compra. Realiza tus compras en cuotas diferidas sin interés en más de 200 establecimientos aliados en Colombia. Los plazos disponibles son 3, 6, 12 y hasta 24 cuotas dependiendo del comercio y el monto de la compra."
+  },
+  {
+    "id": "01_tarjeta_credito_beneficios_PDF__4_Avances_en_Efectivo_9",
+    "doc": "01_tarjeta_credito_beneficios.pdf",
+    "seccion": "[PDF] 4 Avances en Efectivo",
+    "tags": [
+      "sobre",
+      "valor",
+      "nimo",
+      "retirado",
+      "avance"
+    ],
+    "contenido": "por avance es del 3% sobre el valor retirado con un mínimo de $5.000. Puedes realizar avances en efectivo en cajeros automáticos Servibanca, ATH y corresponsales bancarios hasta el 50% de tu cupo disponible. La comisión por avance es del 3% sobre el valor retirado con un mínimo de $5.000."
+  },
+  {
+    "id": "01_tarjeta_credito_beneficios_PDF__5_Beneficios_Tarjeta_Platinum_10",
+    "doc": "01_tarjeta_credito_beneficios.pdf",
+    "seccion": "[PDF] 5 Beneficios Tarjeta Platinum",
+    "tags": [
+      "comisi",
+      "adicional",
+      "internacionales",
+      "conversi",
+      "moneda"
+    ],
+    "contenido": "internacionales: sin comisión adicional por conversión de moneda.  Acceso a sala VIP en el Aeropuerto El Dorado (Bogotá) y José María Córdova (Medellín).  Seguro de viaje internacional: cobertura médica hasta USD $50.000.  Concierge 24/7: asistencia personalizada para reservas, eventos y trámites.  Protección de precio: si encuentras el mismo producto más barato, Serfinanza te devuelve la diferencia.  Tasa preferencial para compras internacionales: sin comisión adicional por conversión de moneda."
+  },
+  {
+    "id": "01_tarjeta_credito_beneficios_PDF__Disponibilidad_11",
+    "doc": "01_tarjeta_credito_beneficios.pdf",
+    "seccion": "[PDF] Disponibilidad",
+    "tags": [
+      "sucursales",
+      "presenciales",
+      "mites",
+      "bancario",
+      "todos"
+    ],
+    "contenido": "Sucursales Físicas Horario bancario Todos los trámites presenciales Funciones Principales App Serfinanza 24/7 Saldo, movimientos, pagos, bloqueo de tarjeta Portal Web 24/7 Extractos, diferido de cuotas, solicitud de avances WhatsApp Serfinanza 24/7 (bot) Saldo disponible, último movimiento, alertas Call Center Lun-Sáb 7am-9pm Asesoría, bloqueo, incremento de cupo Sucursales Físicas Horario bancario Todos los trámites presenciales"
+  },
+  {
+    "id": "01_tarjeta_credito_beneficios_PDF__Variable_12",
+    "doc": "01_tarjeta_credito_beneficios.pdf",
+    "seccion": "[PDF] Variable",
+    "tags": [
+      "pagos",
+      "consulta",
+      "saldo"
+    ],
+    "contenido": "Pagos y consulta de saldo Pagos y consulta de saldo"
+  },
+  {
+    "id": "01_tarjeta_credito_beneficios_PDF__1_Requisitos_para_solicitar_13",
+    "doc": "01_tarjeta_credito_beneficios.pdf",
+    "seccion": "[PDF] 1 Requisitos para solicitar",
+    "tags": [
+      "meses",
+      "empleados",
+      "laboral",
+      "nima",
+      "independientes"
+    ],
+    "contenido": "laboral mínima de 6 meses (empleados) o 12 meses (independientes).  Ser persona natural colombiana mayor de 18 años.  Tener cédula de ciudadanía vigente.  Ingresos mensuales demostrables desde $800.000.  No registrar reportes negativos activos en centrales de riesgo.  Antigüedad laboral mínima de 6 meses (empleados) o 12 meses (independientes)."
+  },
+  {
+    "id": "01_tarjeta_credito_beneficios_PDF__2_Fecha_de_Corte_y_Fecha_Límite_de_Pago_14",
+    "doc": "01_tarjeta_credito_beneficios.pdf",
+    "seccion": "[PDF] 2 Fecha de Corte y Fecha Límite de Pago",
+    "tags": [
+      "fecha",
+      "mite",
+      "intereses",
+      "corrientes",
+      "corte"
+    ],
+    "contenido": "antes de la fecha límite evita el cobro de intereses corrientes. El cliente puede seleccionar su fecha de corte entre los días 1 al 25 de cada mes. La fecha límite de pago es 15 días calendario después de la fecha de corte. Pagar el total de la factura antes de la fecha límite evita el cobro de intereses corrientes."
+  },
+  {
+    "id": "01_tarjeta_credito_beneficios_PDF__3_Opciones_de_Pago_15",
+    "doc": "01_tarjeta_credito_beneficios.pdf",
+    "seccion": "[PDF] 3 Opciones de Pago",
+    "tags": [
+      "opci",
+      "pago"
+    ],
+    "contenido": "Opción de Pago Opción de Pago"
+  },
+  {
+    "id": "01_tarjeta_credito_beneficios_PDF__Descripción_16",
+    "doc": "01_tarjeta_credito_beneficios.pdf",
+    "seccion": "[PDF] Descripción",
+    "tags": [
+      "pago",
+      "total",
+      "tico",
+      "intereses",
+      "nimo"
+    ],
+    "contenido": "automático desde cuenta de ahorros Serfinanza el día límite. Pago Total Cancela el total de la factura, evita intereses. Pago Mínimo Pago del 5% del saldo total (mínimo $30.000). Genera intereses sobre saldo restante. Pago Libre Cualquier valor entre el mínimo y el total. Genera intereses proporcionales. Pago Automático Débito automático desde cuenta de ahorros Serfinanza el día límite."
+  },
+  {
+    "id": "01_tarjeta_credito_beneficios_PDF__Preguntas_Frecuentes_17",
+    "doc": "01_tarjeta_credito_beneficios.pdf",
+    "seccion": "[PDF] Preguntas Frecuentes",
+    "tags": [
+      "cupo",
+      "perfil",
+      "puedes",
+      "sucursal",
+      "tarjeta"
+    ],
+    "contenido": "web o en sucursal. El banco evaluará tu perfil crediticio actual. n ¿Cómo bloqueo mi tarjeta en caso de pérdida o robo? Puedes bloquearla de inmediato desde la App Serfinanza en la opción 'Tarjetas \u003e Bloquear tarjeta', por WhatsApp enviando el mensaje BLOQUEAR o llamando al 01 8000 123 456. El bloqueo es instantáneo y sin costo. n ¿Puedo aumentar mi cupo de crédito? Sí, después de 6 meses de uso responsable puedes solicitar un incremento de cupo desde la App, el portal web o en sucursal. El banco evaluará tu perfil crediticio actual."
+  },
+  {
+    "id": "01_tarjeta_credito_beneficios_PDF__Preguntas_Frecuentes_18",
+    "doc": "01_tarjeta_credito_beneficios.pdf",
+    "seccion": "[PDF] Preguntas Frecuentes",
+    "tags": [
+      "pidos",
+      "clave",
+      "pagos",
+      "hasta",
+      "chip"
+    ],
+    "contenido": "contactless para pagos rápidos hasta $200.000 sin necesidad de clave. n ¿Qué hago si no reconozco un cobro en mi tarjeta? Comunícate con el Call Center en máximo 30 días hábiles desde la fecha de la transacción para radicar una reclamación. El banco investigará y responderá en máximo 15 días hábiles. n ¿La tarjeta tiene chip y pago sin contacto (NFC)? Sí. Todas las tarjetas Serfinanza cuentan con chip EMV para mayor seguridad y tecnología contactless para pagos rápidos hasta $200.000 sin necesidad de clave."
+  },
+  {
+    "id": "01_tarjeta_credito_beneficios_PDF__Preguntas_Frecuentes_19",
+    "doc": "01_tarjeta_credito_beneficios.pdf",
+    "seccion": "[PDF] Preguntas Frecuentes",
+    "tags": [
+      "cambio",
+      "condiciones",
+      "previo",
+      "aviso",
+      "serfinanza"
+    ],
+    "contenido": "y de entrenamiento. Condiciones sujetas a cambio sin previo aviso. Banco Serfinanza S.A· Vigilado Superintendencia Financiera de Colombia · Calle 72 No 10-07, Bogotá D.C· www.serfinanza.com · Línea de atención: 01 8000 123 456 Este documento tiene carácter informativo y de entrenamiento. Condiciones sujetas a cambio sin previo aviso."
+  },
+  {
+    "id": "02_actualizacion_datos_procesos_PDF__PROCESOS___ATENCIÓN_AL_CLIENTE_0",
+    "doc": "02_actualizacion_datos_procesos.pdf",
+    "seccion": "[PDF] PROCESOS · ATENCIÓN AL CLIENTE",
+    "tags": [
+      "banco",
+      "financiera",
+      "serfinanza",
+      "informaci",
+      "personal"
+    ],
+    "contenido": "tu información personal y financiera actualizada en Banco Serfinanza. Actualización de Datos del Cliente Conoce los procesos, documentos requeridos y canales disponibles para mantener tu información personal y financiera actualizada en Banco Serfinanza."
+  },
+  {
+    "id": "02_actualizacion_datos_procesos_PDF___Por_qué_es_importante_mantener_tus_datos_actualizados_1",
+    "doc": "02_actualizacion_datos_procesos.pdf",
+    "seccion": "[PDF] ¿Por qué es importante mantener tus datos actualizados?",
+    "tags": [
+      "productos",
+      "valor",
+      "recibir",
+      "comunicaciones",
+      "importantes"
+    ],
+    "contenido": "valor.  No recibir comunicaciones importantes sobre tus productos. Banco Serfinanza está obligado por la normativa SARLAFT (Sistema de Administración del Riesgo de Lavado de Activos y Financiación del Terrorismo) y las instrucciones de la Superintendencia Financiera de Colombia a mantener la información de sus clientes vigente y verificada. Tener datos desactualizados puede generar:  Bloqueo temporal de productos financieros.  Imposibilidad de realizar transacciones de alto valor.  No recibir comunicaciones importantes sobre tus productos."
+  },
+  {
+    "id": "02_actualizacion_datos_procesos_PDF___Por_qué_es_importante_mantener_tus_datos_actualizados_2",
+    "doc": "02_actualizacion_datos_procesos.pdf",
+    "seccion": "[PDF] ¿Por qué es importante mantener tus datos actualizados?",
+    "tags": [
+      "cuando",
+      "banco",
+      "riesgo",
+      "cambios",
+      "perfil"
+    ],
+    "contenido": "o cuando el banco lo solicite por cambios en tu perfil de riesgo.  Retrasos en procesos de crédito o apertura de nuevos productos. n La actualización de datos es requerida al menos una vez cada dos (2) años, o cuando el banco lo solicite por cambios en tu perfil de riesgo."
+  },
+  {
+    "id": "02_actualizacion_datos_procesos_PDF__Tipos_de_Datos_que_Puedes_Actualizar_3",
+    "doc": "02_actualizacion_datos_procesos.pdf",
+    "seccion": "[PDF] Tipos de Datos que Puedes Actualizar",
+    "tags": [
+      "tipo",
+      "dato"
+    ],
+    "contenido": "Tipo de Dato Tipo de Dato"
+  },
+  {
+    "id": "02_actualizacion_datos_procesos_PDF__Ejemplos_4",
+    "doc": "02_actualizacion_datos_procesos.pdf",
+    "seccion": "[PDF] Ejemplos",
+    "tags": [
+      "declaraci",
+      "renta",
+      "bancarios",
+      "informaci",
+      "pasivos"
+    ],
+    "contenido": "egresos, activos, pasivos Extractos bancarios, declaración de renta Documentos Requeridos Datos de Contacto Dirección, teléfono, correo electrónico Ninguno adicional (autogestión) Información Laboral Empresa, cargo, ingresos, tipo de vinculación Carta laboral o declaración de renta Información Financiera Ingresos, egresos, activos, pasivos Extractos bancarios, declaración de renta"
+  },
+  {
+    "id": "02_actualizacion_datos_procesos_PDF__Identificación_5",
+    "doc": "02_actualizacion_datos_procesos.pdf",
+    "seccion": "[PDF] Identificación",
+    "tags": [
+      "escrita",
+      "firmada",
+      "declaraci",
+      "dula",
+      "civil"
+    ],
+    "contenido": "Vinculación o desvinculación como PEP Declaración escrita firmada Cambio de cédula por vencimiento o corrección Nueva cédula de ciudadanía original Estado Civil Soltero, casado, divorciado, viudo Registro civil de matrimonio o sentencia Persona Políticamente Expuesta (PEP) Vinculación o desvinculación como PEP Declaración escrita firmada"
+  },
+  {
+    "id": "02_actualizacion_datos_procesos_PDF__1_App_Serfinanza__Canal_Digital___Autogestión_6",
+    "doc": "02_actualizacion_datos_procesos.pdf",
+    "seccion": "[PDF] 1 App Serfinanza (Canal Digital – Autogestión)",
+    "tags": [
+      "correo",
+      "fono",
+      "direcci",
+      "edita",
+      "campo"
+    ],
+    "contenido": "® Edita el campo que deseas cambiar (dirección, teléfono o correo). La actualización de datos básicos (dirección, teléfono celular, correo electrónico) puede realizarse directamente desde la App Serfinanza en pocos pasos, sin necesidad de desplazamiento ni documentación adicional. ® Ingresa a la App Serfinanza con tu usuario y contraseña. ® Selecciona el menú principal ® 'Mi Perfil'. ® Toca 'Actualizar datos de contacto'. ® Edita el campo que deseas cambiar (dirección, teléfono o correo)."
+  },
+  {
+    "id": "02_actualizacion_datos_procesos_PDF__1_App_Serfinanza__Canal_Digital___Autogestión_7",
+    "doc": "02_actualizacion_datos_procesos.pdf",
+    "seccion": "[PDF] 1 App Serfinanza (Canal Digital – Autogestión)",
+    "tags": [
+      "identificaci",
+      "disponible",
+      "canal",
+      "financieras"
+    ],
+    "contenido": "financieras, identificación), este canal no está disponible. ® Confirma el cambio ingresando el código OTP enviado a tu celular registrado. ® El sistema actualiza la información de forma inmediata. n Para actualizaciones que requieren validación documental (laborales, financieras, identificación), este canal no está disponible."
+  },
+  {
+    "id": "02_actualizacion_datos_procesos_PDF__2_Portal_Web_Serfinanza_8",
+    "doc": "02_actualizacion_datos_procesos.pdf",
+    "seccion": "[PDF] 2 Portal Web Serfinanza",
+    "tags": [
+      "mites",
+      "secci",
+      "responde",
+      "ximo",
+      "plazo"
+    ],
+    "contenido": " El banco responde en un plazo máximo de 3 días hábiles. Accede a www.serfinanza.com, sección 'Banca en Línea'. Desde el portal puedes actualizar datos de contacto y descargar el formulario de actualización completo para trámites que requieran documentación.  Disponible 24/7 para datos de autogestión.  Para trámites documentales: descarga el formulario, diligéncialo y cárgalo en la sección 'Mis Trámites'.  El banco responde en un plazo máximo de 3 días hábiles."
+  },
+  {
+    "id": "02_actualizacion_datos_procesos_PDF__3_WhatsApp_Serfinanza__Chatbot_9",
+    "doc": "02_actualizacion_datos_procesos.pdf",
+    "seccion": "[PDF] 3 WhatsApp Serfinanza (Chatbot)",
+    "tags": [
+      "mero",
+      "redireccionar",
+      "humano",
+      "actualizar",
+      "mites"
+    ],
+    "contenido": "trámites complejos, el bot te redireccionará a un asesor humano. Escribe al número oficial +57 300 987 6543. El chatbot de Serfinanza te guiará en el proceso de actualización de datos básicos con un flujo conversacional simple.  Envía la palabra ACTUALIZAR para iniciar el proceso.  El bot solicitará confirmación de tu identidad mediante número de cédula y fecha de nacimiento.  Podrás actualizar: dirección, correo electrónico y teléfono de contacto.  Para trámites complejos, el bot te redireccionará a un asesor humano."
+  },
+  {
+    "id": "02_actualizacion_datos_procesos_PDF__4_Call_Center_10",
+    "doc": "02_actualizacion_datos_procesos.pdf",
+    "seccion": "[PDF] 4 Call Center",
+    "tags": [
+      "biles",
+      "correo",
+      "call",
+      "tiene",
+      "center"
+    ],
+    "contenido": "por call center tiene tiempo de respuesta de 1 a 2 días hábiles. Llama al 01 8000 123 456 (línea gratuita nacional) o al (601) 321-0000 (Bogotá). Disponible de lunes a sábado de 7:00 a.m. a 9:00 p.m.  Actualización de teléfono y correo: proceso inmediato con autenticación por preguntas de seguridad.  Para otros tipos de datos: el asesor genera un ticket y te envía los pasos por correo.  El servicio de actualización por call center tiene tiempo de respuesta de 1 a 2 días hábiles."
+  },
+  {
+    "id": "02_actualizacion_datos_procesos_PDF__5_Sucursales_Físicas_11",
+    "doc": "02_actualizacion_datos_procesos.pdf",
+    "seccion": "[PDF] 5 Sucursales Físicas",
+    "tags": [
+      "actualizaci",
+      "mismo",
+      "mayor",
+      "documentos",
+      "mites"
+    ],
+    "contenido": "se completa en el mismo día para la mayoría de los trámites. Visita cualquiera de nuestras 45 sucursales a nivel nacional. Es el canal habilitado para TODAS las categorías de actualización, incluyendo las que requieren presentación de documentos originales.  Lleva tu cédula de ciudadanía original y los documentos requeridos según el tipo de actualización.  El asesor diligenciará contigo el formulario de actualización de datos.  El proceso se completa en el mismo día para la mayoría de los trámites."
+  },
+  {
+    "id": "02_actualizacion_datos_procesos_PDF__5_Sucursales_Físicas_12",
+    "doc": "02_actualizacion_datos_procesos.pdf",
+    "seccion": "[PDF] 5 Sucursales Físicas",
+    "tags": [
+      "cumplimiento",
+      "plazo",
+      "biles"
+    ],
+    "contenido": "del área de cumplimiento, el plazo es de 3 a 5 días hábiles.  Para actualizaciones que requieren validación del área de cumplimiento, el plazo es de 3 a 5 días hábiles."
+  },
+  {
+    "id": "02_actualizacion_datos_procesos_PDF__6_Corresponsales_Bancarios_13",
+    "doc": "02_actualizacion_datos_procesos.pdf",
+    "seccion": "[PDF] 6 Corresponsales Bancarios",
+    "tags": [
+      "pueden",
+      "cambios",
+      "requieran",
+      "adicional",
+      "procesar"
+    ],
+    "contenido": "No pueden procesar cambios que requieran documentación adicional. Los corresponsales bancarios Serfinanza están habilitados únicamente para la actualización de datos básicos de contacto (teléfono y dirección). No pueden procesar cambios que requieran documentación adicional."
+  },
+  {
+    "id": "02_actualizacion_datos_procesos_PDF__Resumen_de_Canales_por_Tipo_de_Actualización_14",
+    "doc": "02_actualizacion_datos_procesos.pdf",
+    "seccion": "[PDF] Resumen de Canales por Tipo de Actualización",
+    "tags": [
+      "actualizaci",
+      "tipo"
+    ],
+    "contenido": "Tipo de Actualización Tipo de Actualización"
+  },
+  {
+    "id": "02_actualizacion_datos_procesos_PDF__WhatsApp_15",
+    "doc": "02_actualizacion_datos_procesos.pdf",
+    "seccion": "[PDF] WhatsApp",
+    "tags": [
+      "call",
+      "center"
+    ],
+    "contenido": "Call Center Call Center"
+  },
+  {
+    "id": "02_actualizacion_datos_procesos_PDF__Sucursal_16",
+    "doc": "02_actualizacion_datos_procesos.pdf",
+    "seccion": "[PDF] Sucursal",
+    "tags": [
+      "fono",
+      "correo"
+    ],
+    "contenido": "Teléfono / Correo n n n n n Teléfono / Correo n n n n n"
+  },
+  {
+    "id": "02_actualizacion_datos_procesos_PDF__Dirección_17",
+    "doc": "02_actualizacion_datos_procesos.pdf",
+    "seccion": "[PDF] Dirección",
+    "tags": [
+      "presencial",
+      "caso",
+      "banco",
+      "puede",
+      "solicitar"
+    ],
+    "contenido": "banco puede solicitar verificación presencial dependiendo del caso. n n n n n Información Laboral n n* n n* n Info. Financiera n n* n n* n Cambio de Cédula n n n n n Estado Civil n n n n n Declaración PEP n n n n n n n* Requiere carga de documentos digitales. El banco puede solicitar verificación presencial dependiendo del caso."
+  },
+  {
+    "id": "02_actualizacion_datos_procesos_PDF__Proceso_de_Actualización_Masiva_por_SARLAFT_18",
+    "doc": "02_actualizacion_datos_procesos.pdf",
+    "seccion": "[PDF] Proceso de Actualización Masiva por SARLAFT",
+    "tags": [
+      "actualizaci",
+      "banco",
+      "sucursal",
+      "puedes",
+      "realizar"
+    ],
+    "contenido": " Puedes realizar la actualización masiva por App, Web o Sucursal. Periódicamente el banco notifica a grupos de clientes la obligación de actualizar su información. Si recibes esta notificación:  Tendrás un plazo de 30 días calendario para completar el proceso.  Recibirás recordatorios por correo electrónico, SMS y notificación en la App.  Si no actualizas en el plazo indicado, el banco puede restringir temporalmente tus productos hasta que completes el proceso.  Puedes realizar la actualización masiva por App, Web o Sucursal."
+  },
+  {
+    "id": "02_actualizacion_datos_procesos_PDF__Preguntas_Frecuentes_19",
+    "doc": "02_actualizacion_datos_procesos.pdf",
+    "seccion": "[PDF] Preguntas Frecuentes",
+    "tags": [
+      "datos",
+      "todos",
+      "actualizaci",
+      "clientes",
+      "serfinanza"
+    ],
+    "contenido": "los clientes de Banco Serfinanza, en todos los canales disponibles. n ¿Cuánto tiempo tarda la actualización de datos? Los datos de contacto (teléfono, correo, dirección) se actualizan de forma inmediata a través de la App, Web o WhatsApp. Para cambios que requieren documentación, el plazo es de 1 a 5 días hábiles según el canal y el tipo de dato. n ¿Tiene algún costo actualizar mis datos? No. La actualización de datos es un servicio completamente gratuito para todos los clientes de Banco Serfinanza, en todos los canales disponibles."
+  },
+  {
+    "id": "02_actualizacion_datos_procesos_PDF__Preguntas_Frecuentes_20",
+    "doc": "02_actualizacion_datos_procesos.pdf",
+    "seccion": "[PDF] Preguntas Frecuentes",
+    "tags": [
+      "serfinanza",
+      "atenci",
+      "8000"
+    ],
+    "contenido": "D.C. · www.serfinanza.com · Línea de atención: 01 8000 123 456 n ¿Qué pasa si mis datos están bloqueados por SARLAFT? Recibirás una notificación indicando el bloqueo. Debes dirigirte a una sucursal con los documentos requeridos o comunicarte con el Call Center. El desbloqueo se gestiona en un plazo de 24 a 72 horas hábiles. Banco Serfinanza S.A. · Vigilado Superintendencia Financiera de Colombia · Calle 72 No. 10-07, Bogotá D.C. · www.serfinanza.com · Línea de atención: 01 8000 123 456"
+  },
+  {
+    "id": "02_actualizacion_datos_procesos_PDF__Preguntas_Frecuentes_21",
+    "doc": "02_actualizacion_datos_procesos.pdf",
+    "seccion": "[PDF] Preguntas Frecuentes",
+    "tags": [
+      "cambio",
+      "entrenamientocondiciones",
+      "previo",
+      "aviso",
+      "sujetas"
+    ],
+    "contenido": "y de entrenamientoCondiciones sujetas a cambio sin previo aviso. Este documento tiene carácter informativo y de entrenamientoCondiciones sujetas a cambio sin previo aviso."
+  },
+  {
+    "id": "03_cdt_caracteristicas_beneficios_PDF__PRODUCTOS___INVERSIONES_0",
+    "doc": "03_cdt_caracteristicas_beneficios.pdf",
+    "seccion": "[PDF] PRODUCTOS · INVERSIONES",
+    "tags": [
+      "inter",
+      "funciona",
+      "tasas",
+      "plazos",
+      "beneficios"
+    ],
+    "contenido": "cómo funciona, tasas de interés, plazos, beneficios y condiciones. Certificado de Depósito a Término (CDT) Serfinanza Todo lo que necesitas saber sobre el CDT: qué es, cómo funciona, tasas de interés, plazos, beneficios y condiciones."
+  },
+  {
+    "id": "03_cdt_caracteristicas_beneficios_PDF___Qué_es_un_CDT_1",
+    "doc": "03_cdt_caracteristicas_beneficios.pdf",
+    "seccion": "[PDF] ¿Qué es un CDT?",
+    "tags": [
+      "fogaf",
+      "cubre",
+      "hasta",
+      "plazo",
+      "financieras"
+    ],
+    "contenido": "Financieras (Fogafín), que cubre hasta $50.000.000 por titular. El Certificado de Depósito a Término (CDT) es un producto de captación mediante el cual depositas una suma de dinero en el banco durante un plazo determinado, a cambio de una tasa de interés pactada desde el inicio. Al vencimiento del plazo, recibes tu capital más los intereses generados. Es una inversión segura, respaldada por el Fondo de Garantías de Instituciones Financieras (Fogafín), que cubre hasta $50.000.000 por titular."
+  },
+  {
+    "id": "03_cdt_caracteristicas_beneficios_PDF___Qué_es_un_CDT_2",
+    "doc": "03_cdt_caracteristicas_beneficios.pdf",
+    "seccion": "[PDF] ¿Qué es un CDT?",
+    "tags": [
+      "inversiones",
+      "mercado",
+      "colombiano",
+      "seguras",
+      "financiero"
+    ],
+    "contenido": "una de las inversiones más seguras del mercado financiero colombiano. n El CDT Serfinanza está protegido por Fogafín hasta $50.000.000 por titularEs una de las inversiones más seguras del mercado financiero colombiano."
+  },
+  {
+    "id": "03_cdt_caracteristicas_beneficios_PDF__Detalle_3",
+    "doc": "03_cdt_caracteristicas_beneficios.pdf",
+    "seccion": "[PDF] Detalle",
+    "tags": [
+      "disponibles",
+      "hasta",
+      "monto",
+      "plazos"
+    ],
+    "contenido": "Plazos disponibles 30, 60, 90, 120, 180, 360 días y hasta 5 años Monto mínimo de inversión $500.000 Monto máximo Sin límite Plazos disponibles 30, 60, 90, 120, 180, 360 días y hasta 5 años"
+  },
+  {
+    "id": "03_cdt_caracteristicas_beneficios_PDF__Moneda_4",
+    "doc": "03_cdt_caracteristicas_beneficios.pdf",
+    "seccion": "[PDF] Moneda",
+    "tags": [
+      "disponible",
+      "intereses",
+      "certificado",
+      "digital",
+      "sico"
+    ],
+    "contenido": "Certificado físico Disponible en sucursal o digital desde la App Pesos colombianos (COP) Tasa de interés Fija, pactada en el momento de la apertura Pago de intereses Al vencimiento, mensual, trimestral o semestral Renovación automática Disponible (capital + intereses o solo capital) Disponibilidad anticipada Posible con penalización de intereses Certificado físico Disponible en sucursal o digital desde la App"
+  },
+  {
+    "id": "03_cdt_caracteristicas_beneficios_PDF__Tasas_de_Interés_Vigentes_5",
+    "doc": "03_cdt_caracteristicas_beneficios.pdf",
+    "seccion": "[PDF] Tasas de Interés Vigentes",
+    "tags": [
+      "tasas",
+      "condiciones",
+      "mercado",
+      "variar",
+      "monto"
+    ],
+    "contenido": "Las tasas pueden variar según el monto y las condiciones del mercado: Las siguientes tasas aplican para CDTs constituidos en el período actual. Las tasas pueden variar según el monto y las condiciones del mercado:"
+  },
+  {
+    "id": "03_cdt_caracteristicas_beneficios_PDF__Plazo_6",
+    "doc": "03_cdt_caracteristicas_beneficios.pdf",
+    "seccion": "[PDF] Plazo",
+    "tags": [
+      "tasa",
+      "monto",
+      "antes",
+      "mercado",
+      "consulta"
+    ],
+    "contenido": "del mercado. Consulta la tasa vigente antes de constituir tu CDT. Tasa E.A. (Monto \u003c $10M) Tasa E.A. (Monto $10M - $50M) Tasa E.A. (Monto \u003e $50M) 30 días 7,50% 7,80% 8,10% 60 días 8,00% 8,30% 8,60% 90 días 8,50% 8,80% 9,10% 180 días 9,20% 9,50% 9,80% 360 días 10,00% 10,30% 10,60% 2 años 10,50% 10,80% 11,10% 3-5 años 11,00% 11,30% 11,60% n Tasas sujetas a cambio según política del Banco de la República y condiciones del mercado. Consulta la tasa vigente antes de constituir tu CDT."
+  },
+  {
+    "id": "03_cdt_caracteristicas_beneficios_PDF__1_Pago_al_Vencimiento_7",
+    "doc": "03_cdt_caracteristicas_beneficios.pdf",
+    "seccion": "[PDF] 1 Pago al Vencimiento",
+    "tags": [
+      "plazo",
+      "xima",
+      "cdts",
+      "corto",
+      "permite"
+    ],
+    "contenido": "para CDTs de corto plazo y permite obtener la máxima capitalización. Los intereses se acumulan durante todo el plazo y se pagan junto con el capital al momento del vencimiento. Es la modalidad más común para CDTs de corto plazo y permite obtener la máxima capitalización."
+  },
+  {
+    "id": "03_cdt_caracteristicas_beneficios_PDF__2_Pago_Periódico_8",
+    "doc": "03_cdt_caracteristicas_beneficios.pdf",
+    "seccion": "[PDF] 2 Pago Periódico",
+    "tags": [
+      "intereses",
+      "ligeramente",
+      "aplicar",
+      "menor",
+      "tasa"
+    ],
+    "contenido": "aplicar una tasa ligeramente menor al no capitalizar los intereses. Los intereses se pagan en períodos regulares (mensual, trimestral o semestral) en la cuenta designada por el cliente. Ideal para personas que buscan un flujo de ingresos complementario. n La modalidad de pago periódico puede aplicar una tasa ligeramente menor al no capitalizar los intereses."
+  },
+  {
+    "id": "03_cdt_caracteristicas_beneficios_PDF__Beneficios_del_CDT_Serfinanza_9",
+    "doc": "03_cdt_caracteristicas_beneficios.pdf",
+    "seccion": "[PDF] Beneficios del CDT Serfinanza",
+    "tags": [
+      "indicas",
+      "hasta",
+      "contrario",
+      "autom",
+      "necesidad"
+    ],
+    "contenido": "si no indicas lo contrario, sin necesidad de trámite adicional.  Rentabilidad garantizada: la tasa es fija y no varía durante el plazo pactado, protegiéndote de fluctuaciones del mercado.  Seguridad Fogafín: hasta $50.000.000 por titular están cubiertos por el fondo de garantías.  Flexibilidad de plazos: elige desde 30 días hasta 5 años según tus metas financieras.  Renovación automática: al vencimiento, el CDT se renueva automáticamente en las condiciones vigentes si no indicas lo contrario, sin necesidad de trámite adicional."
+  },
+  {
+    "id": "03_cdt_caracteristicas_beneficios_PDF__Beneficios_del_CDT_Serfinanza_10",
+    "doc": "03_cdt_caracteristicas_beneficios.pdf",
+    "seccion": "[PDF] Beneficios del CDT Serfinanza",
+    "tags": [
+      "intereses",
+      "costos",
+      "certificado",
+      "administraci",
+      "manejo"
+    ],
+    "contenido": "de manejo: el CDT no tiene costos adicionales por administración.  Aval para crédito: puedes usar tu CDT como garantía (pignoración) para acceder a créditos de libre inversión a tasas preferenciales.  Beneficio tributario: los intereses de los CDTs son rentas de capital y pueden beneficiarse de la deducción por el 35% de intereses declarados en renta.  Certificado electrónico: descarga tu certificado en la App o el portal web en cualquier momento.  Sin cuota de manejo: el CDT no tiene costos adicionales por administración."
+  },
+  {
+    "id": "03_cdt_caracteristicas_beneficios_PDF__1_Desde_la_App_Serfinanza_11",
+    "doc": "03_cdt_caracteristicas_beneficios.pdf",
+    "seccion": "[PDF] 1 Desde la App Serfinanza",
+    "tags": [
+      "digital",
+      "recibes",
+      "certificado",
+      "inmediato",
+      "queda"
+    ],
+    "contenido": "® Tu CDT queda activo de inmediato y recibes el certificado digital. ® Inicia sesión en la App Serfinanza. ® Selecciona 'Productos' ® 'Abrir CDT'. ® Elige el monto y el plazo. ® El simulador te mostrará los intereses estimados. ® Selecciona la cuenta de débito y el método de pago de intereses. ® Confirma la transacción con tu clave digital o biometría. ® Tu CDT queda activo de inmediato y recibes el certificado digital."
+  },
+  {
+    "id": "03_cdt_caracteristicas_beneficios_PDF__2_Desde_el_Portal_Web_12",
+    "doc": "03_cdt_caracteristicas_beneficios.pdf",
+    "seccion": "[PDF] 2 Desde el Portal Web",
+    "tags": [
+      "simulaci",
+      "configuraci",
+      "token",
+      "digital",
+      "confirma"
+    ],
+    "contenido": "de simulación y configuración. ® Confirma con tu token digital. ® Ingresa a www.serfinanza.com ® Banca en Línea. ® Ve a 'Inversiones' ® 'Constituir CDT'. ® Sigue el proceso de simulación y configuración. ® Confirma con tu token digital."
+  },
+  {
+    "id": "03_cdt_caracteristicas_beneficios_PDF__3_En_Sucursal_Física_13",
+    "doc": "03_cdt_caracteristicas_beneficios.pdf",
+    "seccion": "[PDF] 3 En Sucursal Física",
+    "tags": [
+      "efectivo",
+      "pagar",
+      "desde",
+      "serfinanza",
+      "puedes"
+    ],
+    "contenido": "Puedes pagar en efectivo, cheque o traslado desde cuenta Serfinanza. ® Presenta tu cédula de ciudadanía original. ® El asesor te guiará en la configuración del CDT. ® El proceso tarda aproximadamente 15-20 minutos. ® Puedes pagar en efectivo, cheque o traslado desde cuenta Serfinanza."
+  },
+  {
+    "id": "03_cdt_caracteristicas_beneficios_PDF__Retiro_Anticipado_14",
+    "doc": "03_cdt_caracteristicas_beneficios.pdf",
+    "seccion": "[PDF] Retiro Anticipado",
+    "tags": [
+      "anticipado",
+      "retiro",
+      "call",
+      "center",
+      "debe"
+    ],
+    "contenido": "anticipado debe realizarse en sucursal física o por el Call Center. En caso de necesitar el dinero antes del vencimiento del CDT, Serfinanza permite el retiro anticipado con las siguientes condiciones:  Plazo cumplido mayor al 50%: se aplica una penalización del 30% sobre los intereses causados.  Plazo cumplido menor al 50%: se aplica una penalización del 50% sobre los intereses causados.  En ningún caso se afecta el capital invertido.  El trámite de retiro anticipado debe realizarse en sucursal física o por el Call Center."
+  },
+  {
+    "id": "03_cdt_caracteristicas_beneficios_PDF__Simulador_de_Rendimientos_15",
+    "doc": "03_cdt_caracteristicas_beneficios.pdf",
+    "seccion": "[PDF] Simulador de Rendimientos",
+    "tags": [
+      "tasa",
+      "pago",
+      "vencimiento"
+    ],
+    "contenido": "$5.000.000 a 180 días con tasa E.A. del 9,20%, pago al vencimiento: Ejemplo práctico de rendimiento para un CDT de $5.000.000 a 180 días con tasa E.A. del 9,20%, pago al vencimiento:"
+  },
+  {
+    "id": "03_cdt_caracteristicas_beneficios_PDF__Valor_16",
+    "doc": "03_cdt_caracteristicas_beneficios.pdf",
+    "seccion": "[PDF] Valor",
+    "tags": [
+      "capital",
+      "invertido"
+    ],
+    "contenido": "Capital invertido $5.000.000 Capital invertido $5.000.000"
+  },
+  {
+    "id": "03_cdt_caracteristicas_beneficios_PDF__Plazo_17",
+    "doc": "03_cdt_caracteristicas_beneficios.pdf",
+    "seccion": "[PDF] Plazo",
+    "tags": [
+      "serfinanza",
+      "retenci",
+      "atenci",
+      "8000",
+      "intereses"
+    ],
+    "contenido": "D.C· www.serfinanza.com · Línea de atención: 01 8000 123 456 180 días Tasa E.A. 9,20% Intereses brutos generados $218.630 Retención en la fuente (7%) $15.304 Intereses netos recibidos $203.326 Valor total al vencimiento $5.203.326 n La retención en la fuente aplica según la normativa vigente. Los valores son aproximados y pueden variar según la fecha exacta de apertura y vencimiento. Banco Serfinanza S.A· Vigilado Superintendencia Financiera de Colombia · Calle 72 No 10-07, Bogotá D.C· www.serfinanza.com · Línea de atención: 01 8000 123 456"
+  },
+  {
+    "id": "03_cdt_caracteristicas_beneficios_PDF__Plazo_18",
+    "doc": "03_cdt_caracteristicas_beneficios.pdf",
+    "seccion": "[PDF] Plazo",
+    "tags": [
+      "aviso",
+      "entrenamientocondiciones",
+      "sujetas",
+      "cambio",
+      "previo"
+    ],
+    "contenido": "y de entrenamientoCondiciones sujetas a cambio sin previo aviso. Este documento tiene carácter informativo y de entrenamientoCondiciones sujetas a cambio sin previo aviso."
+  },
+  {
+    "id": "04_registro_app_serfinanza_PDF__CANALES_DIGITALES___APP_MÓVIL_0",
+    "doc": "04_registro_app_serfinanza.pdf",
+    "seccion": "[PDF] CANALES DIGITALES · APP MÓVIL",
+    "tags": [
+      "serfinanza",
+      "desde",
+      "servicios",
+      "banco",
+      "celular"
+    ],
+    "contenido": "todos los servicios digitales de Banco Serfinanza desde tu celular. Registro y Activación en la App Serfinanza Guía paso a paso para registrarte, activar tu usuario y empezar a usar todos los servicios digitales de Banco Serfinanza desde tu celular."
+  },
+  {
+    "id": "04_registro_app_serfinanza_PDF___Qué_es_la_App_Serfinanza_1",
+    "doc": "04_registro_app_serfinanza.pdf",
+    "seccion": "[PDF] ¿Qué es la App Serfinanza?",
+    "tags": [
+      "store",
+      "android",
+      "superior",
+      "play",
+      "google"
+    ],
+    "contenido": "y Google Play Store (Android 8.0 o superior). La App es 100% gratuita. La App Serfinanza es la plataforma digital móvil del banco, disponible para dispositivos iOS (iPhone) y Android, que te permite gestionar todos tus productos financieros desde cualquier lugar y en cualquier momento. Con la App puedes consultar saldos, realizar transferencias, pagar créditos, constituir CDTs, solicitar extractos y mucho más. n Disponible en App Store (iOS 14 o superior) y Google Play Store (Android 8.0 o superior). La App es 100% gratuita."
+  },
+  {
+    "id": "04_registro_app_serfinanza_PDF__Requisitos_para_el_Registro_2",
+    "doc": "04_registro_app_serfinanza.pdf",
+    "seccion": "[PDF] Requisitos para el Registro",
+    "tags": [
+      "superior",
+      "dispositivo",
+      "banco",
+      "activo",
+      "tener"
+    ],
+    "contenido": "móvil.  Dispositivo con iOS 14 o superior / Android 8.0 o superior.  Ser cliente activo de Banco Serfinanza con al menos un producto financiero vigente (cuenta de ahorros, crédito, tarjeta de crédito, CDT, etc.).  Tener un número de celular registrado en el banco (el mismo con el que te afiliaste).  Contar con un correo electrónico activo registrado en el banco.  Tener conexión a internet en tu dispositivo móvil.  Dispositivo con iOS 14 o superior / Android 8.0 o superior."
+  },
+  {
+    "id": "04_registro_app_serfinanza_PDF__Pasos_para_Registrarte_en_la_App_3",
+    "doc": "04_registro_app_serfinanza.pdf",
+    "seccion": "[PDF] Pasos para Registrarte en la App",
+    "tags": [
+      "paso",
+      "pantalla",
+      "serfinanza",
+      "inferior",
+      "descarga"
+    ],
+    "contenido": "parte inferior de la pantalla. Paso 3: Ingresa tu Número de Cédula Paso 1: Descarga la App Busca 'Serfinanza' en la App Store o Google Play Store. Verifica que el desarrollador sea 'Banco Serfinanza S.A.' y que el ícono corresponda a la imagen oficial del banco (ícono naranja con logo Serfinanza). Descarga e instala la App. Paso 2: Selecciona 'Registrarme' Al abrir la App por primera vez, verás la pantalla de inicio de sesión. Toca el botón '¿Eres nuevo? Regístrate aquí' ubicado en la parte inferior de la pantalla. Paso 3: Ingresa tu Número de Cédula"
+  },
+  {
+    "id": "04_registro_app_serfinanza_PDF__Pasos_para_Registrarte_en_la_App_4",
+    "doc": "04_registro_app_serfinanza.pdf",
+    "seccion": "[PDF] Pasos para Registrarte en la App",
+    "tags": [
+      "correo",
+      "digo",
+      "registrado",
+      "banco",
+      "nico"
+    ],
+    "contenido": "correo electrónico: código enviado al correo registrado en el banco. Escribe tu número de cédula de ciudadanía sin puntos ni espaciosEl sistema verificará si tienes productos activos con el banco. Paso 4: Verificación de Identidad Para confirmar tu identidad, el sistema realizará una de las siguientes validaciones (o una combinación de ellas):  OTP por SMS: recibirás un código de 6 dígitos en el celular registrado. Tienes 3 minutos para ingresarlo.  OTP por correo electrónico: código enviado al correo registrado en el banco."
+  },
+  {
+    "id": "04_registro_app_serfinanza_PDF__Pasos_para_Registrarte_en_la_App_5",
+    "doc": "04_registro_app_serfinanza.pdf",
+    "seccion": "[PDF] Pasos para Registrarte en la App",
+    "tags": [
+      "clave",
+      "puede",
+      "diferente",
+      "cajero",
+      "autom"
+    ],
+    "contenido": " La clave puede ser diferente a tu clave de cajero automático.  Preguntas de seguridad: el sistema puede solicitar validación adicional mediante preguntas sobre tus productos o datos personales. Paso 5: Creación de Contraseña Digital Crea una contraseña de 6 dígitos numéricos. Esta clave será la que uses para ingresar a la App. Recuerda:  No uses secuencias fáciles como 123456 o tu fecha de nacimiento.  No compartas esta clave con nadie, ni con asesores del banco.  La clave puede ser diferente a tu clave de cajero automático."
+  },
+  {
+    "id": "04_registro_app_serfinanza_PDF__Pasos_para_Registrarte_en_la_App_6",
+    "doc": "04_registro_app_serfinanza.pdf",
+    "seccion": "[PDF] Pasos para Registrarte en la App",
+    "tags": [
+      "paso",
+      "listo",
+      "activa",
+      "activar",
+      "configuraci"
+    ],
+    "contenido": "'Configuración \u003e Seguridad'. Paso 7: ¡Listo! Tu App está activa Paso 6: Activación de Biometría (Opcional) Si tu dispositivo tiene huella dactilar o reconocimiento facial (Face ID), la App te ofrecerá activar el ingreso biométrico. Esto te permite ingresar sin digitar la clave cada vez. Puedes activar o desactivar esta opción en cualquier momento desde 'Configuración \u003e Seguridad'. Paso 7: ¡Listo! Tu App está activa"
+  },
+  {
+    "id": "04_registro_app_serfinanza_PDF__Pasos_para_Registrarte_en_la_App_7",
+    "doc": "04_registro_app_serfinanza.pdf",
+    "seccion": "[PDF] Pasos para Registrarte en la App",
+    "tags": [
+      "electr",
+      "activaci",
+      "correo",
+      "bienvenida",
+      "nico"
+    ],
+    "contenido": "de bienvenida en tu correo electrónico confirmando la activación. Una vez completado el registro, entrarás directamente al inicio de la App donde podrás ver el resumen de todos tus productosRecibirás una notificación de bienvenida en tu correo electrónico confirmando la activación."
+  },
+  {
+    "id": "04_registro_app_serfinanza_PDF__Inicio_8",
+    "doc": "04_registro_app_serfinanza.pdf",
+    "seccion": "[PDF] Inicio",
+    "tags": [
+      "movimientos",
+      "recientes",
+      "accesos",
+      "pidos",
+      "saldo"
+    ],
+    "contenido": "Saldo de productos, movimientos recientes, accesos rápidos Saldo de productos, movimientos recientes, accesos rápidos"
+  },
+  {
+    "id": "04_registro_app_serfinanza_PDF__Transferencias_9",
+    "doc": "04_registro_app_serfinanza.pdf",
+    "seccion": "[PDF] Transferencias",
+    "tags": [
+      "serfinanza",
+      "internacionales",
+      "otros",
+      "bancos",
+      "transferencias"
+    ],
+    "contenido": "Serfinanza, a otros bancos (PSE/ACH), transferencias internacionales Transferencia entre cuentas Serfinanza, a otros bancos (PSE/ACH), transferencias internacionales"
+  },
+  {
+    "id": "04_registro_app_serfinanza_PDF__Pagos_10",
+    "doc": "04_registro_app_serfinanza.pdf",
+    "seccion": "[PDF] Pagos",
+    "tags": [
+      "dito",
+      "servicios",
+      "blicos",
+      "recargas",
+      "pago"
+    ],
+    "contenido": "Pago de créditos, tarjeta de crédito, servicios públicos, recargas Pago de créditos, tarjeta de crédito, servicios públicos, recargas"
+  },
+  {
+    "id": "04_registro_app_serfinanza_PDF__Tarjetas_11",
+    "doc": "04_registro_app_serfinanza.pdf",
+    "seccion": "[PDF] Tarjetas",
+    "tags": [
+      "solicitud",
+      "cuotas",
+      "saldo",
+      "movimientos",
+      "bloqueo"
+    ],
+    "contenido": "Saldo, movimientos, bloqueo/desbloqueo, solicitud de cuotas Saldo, movimientos, bloqueo/desbloqueo, solicitud de cuotas"
+  },
+  {
+    "id": "04_registro_app_serfinanza_PDF__Inversiones_12",
+    "doc": "04_registro_app_serfinanza.pdf",
+    "seccion": "[PDF] Inversiones",
+    "tags": [
+      "inversi",
+      "constituci",
+      "consulta",
+      "cdts",
+      "fondos"
+    ],
+    "contenido": "Constitución y consulta de CDTs, fondos de inversión Constitución y consulta de CDTs, fondos de inversión"
+  },
+  {
+    "id": "04_registro_app_serfinanza_PDF__Créditos_13",
+    "doc": "04_registro_app_serfinanza.pdf",
+    "seccion": "[PDF] Créditos",
+    "tags": [
+      "consulta",
+      "saldo",
+      "cuotas",
+      "salvo",
+      "extractos"
+    ],
+    "contenido": "Consulta de saldo, cuotas, paz y salvo, extractos Consulta de saldo, cuotas, paz y salvo, extractos"
+  },
+  {
+    "id": "04_registro_app_serfinanza_PDF__Extractos_14",
+    "doc": "04_registro_app_serfinanza.pdf",
+    "seccion": "[PDF] Extractos",
+    "tags": [
+      "extractos",
+      "mensuales",
+      "todos",
+      "productos",
+      "descarga"
+    ],
+    "contenido": "Descarga de extractos mensuales en PDF para todos los productos Descarga de extractos mensuales en PDF para todos los productos"
+  },
+  {
+    "id": "04_registro_app_serfinanza_PDF__Atención_15",
+    "doc": "04_registro_app_serfinanza.pdf",
+    "seccion": "[PDF] Atención",
+    "tags": [
+      "radicaci",
+      "pqrs",
+      "agendamiento",
+      "citas",
+      "chat"
+    ],
+    "contenido": "Chat con asesores, radicación de PQRS, agendamiento de citas Chat con asesores, radicación de PQRS, agendamiento de citas"
+  },
+  {
+    "id": "04_registro_app_serfinanza_PDF__Configuración_16",
+    "doc": "04_registro_app_serfinanza.pdf",
+    "seccion": "[PDF] Configuración",
+    "tags": [
+      "actualizaci",
+      "datos",
+      "contacto",
+      "seguridad",
+      "notificaciones"
+    ],
+    "contenido": "Actualización de datos de contacto, seguridad, notificaciones Actualización de datos de contacto, seguridad, notificaciones"
+  },
+  {
+    "id": "04_registro_app_serfinanza_PDF__Solución_17",
+    "doc": "04_registro_app_serfinanza.pdf",
+    "seccion": "[PDF] Solución",
+    "tags": [
+      "center",
+      "call",
+      "digo",
+      "visita",
+      "contrase"
+    ],
+    "contenido": "el Call Center o visita una sucursal. Olvidé mi contraseña de la App No recibo el código OTP por SMS Verifica que el número celular en la App coincide con el registrado en el banco. Revisa que no tengas bloqueados los mensajes de texto. Solicita reenviar el código. Si el problema persiste, llama al Call Center. El sistema dice que mi cédula no existe Puede deberse a que tus datos no están vinculados correctamente. Comunícate con el Call Center o visita una sucursal. Olvidé mi contraseña de la App"
+  },
+  {
+    "id": "04_registro_app_serfinanza_PDF__Solución_18",
+    "doc": "04_registro_app_serfinanza.pdf",
+    "seccion": "[PDF] Solución",
+    "tags": [
+      "fallidos",
+      "versi",
+      "bloque",
+      "intentos",
+      "problema"
+    ],
+    "contenido": "a instalar si el problema continúa. Me bloqueé por intentos fallidos En la pantalla de inicio, toca '¿Olvidaste tu clave?' y sigue el proceso de recuperación mediante OTPTambién puedes restablecerla en sucursal. La App no funciona en mi celular Verifica la versión de tu sistema operativo (mínimo iOS 14 o Android 8.0). Actualiza la App a la última versión disponible. Desinstala y vuelve a instalar si el problema continúa. Me bloqueé por intentos fallidos"
+  },
+  {
+    "id": "04_registro_app_serfinanza_PDF__Solución_19",
+    "doc": "04_registro_app_serfinanza.pdf",
+    "seccion": "[PDF] Solución",
+    "tags": [
+      "call",
+      "sucursal",
+      "disponible",
+      "desde",
+      "center"
+    ],
+    "contenido": "por seguridadDesbloqueo disponible desde el Call Center o en sucursal. Después de 5 intentos fallidos, la App se bloquea por seguridadDesbloqueo disponible desde el Call Center o en sucursal."
+  },
+  {
+    "id": "04_registro_app_serfinanza_PDF__Seguridad_en_la_App_20",
+    "doc": "04_registro_app_serfinanza.pdf",
+    "seccion": "[PDF] Seguridad en la App",
+    "tags": [
+      "transacciones",
+      "extremo",
+      "minutos",
+      "fraude",
+      "inteligencia"
+    ],
+    "contenido": "de 5 minutos.  Detección de fraude con inteligencia artificial 24/7. Banco Serfinanza implementa múltiples capas de seguridad para proteger tus transacciones digitales:  Cifrado de extremo a extremo en todas las comunicaciones.  Autenticación de dos factores (2FA) para transacciones de alto valor.  Notificaciones push y SMS en tiempo real para cada movimiento.  Cierre de sesión automático por inactividad de 5 minutos.  Detección de fraude con inteligencia artificial 24/7."
+  },
+  {
+    "id": "04_registro_app_serfinanza_PDF__Seguridad_en_la_App_21",
+    "doc": "04_registro_app_serfinanza.pdf",
+    "seccion": "[PDF] Seguridad en la App",
+    "tags": [
+      "serfinanza",
+      "sujetas",
+      "cambio",
+      "previo",
+      "banco"
+    ],
+    "contenido": "y de entrenamiento. Condiciones sujetas a cambio sin previo aviso. nn Banco Serfinanza NUNCA te solicitará contraseñas, códigos OTP ni datos personales por llamadas entrantes, correos o mensajes de textoSi recibes una solicitud así, no la atiendas y repórtala al 01 8000 123 456. Banco Serfinanza S.A. · Vigilado Superintendencia Financiera de Colombia · Calle 72 No. 10-07, Bogotá D.C. · www.serfinanza.com · Línea de atención: 01 8000 123 456 Este documento tiene carácter informativo y de entrenamiento. Condiciones sujetas a cambio sin previo aviso."
+  },
+  {
+    "id": "05_extracto_credito_canales_PDF__DOCUMENTOS___CRÉDITO___EXTRACTOS_0",
     "doc": "05_extracto_credito_canales.pdf",
-    "seccion": "4.1 App / 3. Contenido",
-    "tags": ["extracto", "generar", "leer", "factura", "credito"],
-    "contenido": "En la App: selecciona el producto de crédito, 'Documentos'/'Extractos', elige mes y año (hasta 24 meses), 'Generar' → PDF. Contiene: cupo total/disponible/utilizado, movimientos, saldo total a pagar, pago mínimo, fecha límite, intereses y tasa, puntos."
+    "seccion": "[PDF] DOCUMENTOS · CRÉDITO · EXTRACTOS",
+    "tags": [
+      "dito",
+      "canales",
+      "disponibles",
+      "extracto",
+      "hipotecario"
+    ],
+    "contenido": "crédito de consumo, crédito hipotecario) y los canales disponibles. Extracto Bancario de Productos de Crédito Aprende cómo consultar y generar el extracto de tus productos de crédito (tarjeta de crédito, crédito de consumo, crédito hipotecario) y los canales disponibles."
   },
   {
-    "id": "02_actualizacion_canales",
-    "doc": "02_actualizacion_datos_procesos.pdf",
-    "seccion": "4. Resumen de Canales",
-    "tags": ["actualizar", "datos", "canal", "telefono", "laboral"],
-    "contenido": "Teléfono/correo/dirección: App, Web, WhatsApp, Call Center y Sucursal (inmediato). Información laboral/financiera: Web (con documentos) o Sucursal; la App NO. Cédula/estado civil/PEP: solo Sucursal. Gratuito en todos los canales."
-  },
-  {
-    "id": "03_cdt_beneficios",
-    "doc": "03_cdt_caracteristicas_beneficios.pdf",
-    "seccion": "5. Beneficios",
-    "tags": ["cdt", "supercdt", "inversion", "fogafin", "beneficios", "rentabilidad"],
-    "contenido": "El CDT (también llamado superCDT) ofrece: rentabilidad fija, protección Fogafín hasta $50.000.000 por titular, plazos de 30 días a 5 años, renovación automática, uso como garantía para crédito, sin cuota de manejo, certificado electrónico. Monto mínimo $500.000."
-  },
-  {
-    "id": "01_tarjeta_tipos",
-    "doc": "01_tarjeta_credito_beneficios.pdf",
-    "seccion": "2. Tipos de Tarjeta",
-    "tags": ["tarjeta", "tasa", "cupo", "clasica", "gold", "platinum"],
-    "contenido": "Clásica: hasta $3.000.000, 26,22% E.A., cuota $18.900. Gold: hasta $10.000.000, 24,50%, $28.500. Platinum: hasta $30.000.000, 22,00%, $38.000. Respaldo Mastercard."
-  },
-  {
-    "id": "01_tarjeta_bloqueo",
-    "doc": "01_tarjeta_credito_beneficios.pdf",
-    "seccion": "6. FAQ",
-    "tags": ["bloquear", "robo", "perdida", "cupo", "aumento"],
-    "contenido": "Bloqueo por pérdida/robo: App ('Tarjetas > Bloquear'), WhatsApp enviando BLOQUEAR, o Call Center 01 8000 123 456 (instantáneo, sin costo). Aumento de cupo: tras 6 meses de uso responsable, desde App/Web/Sucursal."
-  },
-  {
-    "id": "03_cdt_tasas",
-    "doc": "03_cdt_caracteristicas_beneficios.pdf",
-    "seccion": "3. Tasas",
-    "tags": ["cdt", "tasas", "rentabilidad", "ea", "supercdt"],
-    "contenido": "Tasas E.A. según plazo: 30 días 7,50%-8,10%, 60 días 8,00%-8,60%, 90 días 8,50%-9,10%, 180 días 9,20%-9,80%, 360 días 10,00%-10,60%, 730 días 10,50%-11,10%, 1095+ días 11,00%-11,60%. Rentabilidad fija garantizada."
-  },
-  {
-    "id": "03_cdt_simulador",
-    "doc": "03_cdt_caracteristicas_beneficios.pdf",
-    "seccion": "8. Simulador",
-    "tags": ["simulador", "cdt", "interes", "rentabilidad", "supercdt"],
-    "contenido": "Simulador CDT: para $5.000.000 a 180 días con tasa 9,20% E.A., interés bruto ~$218.630, retención en la fuente 7% ~$15.304, neto ~$203.326, total al vencimiento $5.203.326."
-  },
-  {
-    "id": "02_actualizacion_datos_basicos",
-    "doc": "02_actualizacion_datos_procesos.pdf",
-    "seccion": "2. Datos Básicos",
-    "tags": ["actualizar", "telefono", "correo", "direccion", "datos basicos"],
-    "contenido": "Puedes actualizar teléfono, correo electrónico y dirección desde la App, Web, WhatsApp, Call Center o Sucursal de forma inmediata y sin costo. Solo necesitas tener tus datos registrados actualizados."
-  },
-  {
-    "id": "02_actualizacion_datos_laborales",
-    "doc": "02_actualizacion_datos_procesos.pdf",
-    "seccion": "3. Datos Laborales",
-    "tags": ["actualizar", "laboral", "trabajo", "empresa", "ingresos"],
-    "contenido": "La actualización de información laboral y financiera requiere documentos soporte y se realiza por Web o Sucursal. La App no permite actualizar datos laborales. Tiempo de procesamiento: 24-48 horas."
-  },
-  {
-    "id": "04_app_funciones",
-    "doc": "04_registro_app_serfinanza.pdf",
-    "seccion": "4. Funciones Principales",
-    "tags": ["app", "funciones", "transferencias", "pagos", "consultas"],
-    "contenido": "La App permite: consultar saldos y movimientos, transferencias a otros bancos, pagos de servicios y créditos, gestión de tarjetas, generación de extractos, bloqueo de tarjetas, actualización de datos básicos. Disponible 24/7."
-  },
-  {
-    "id": "05_extracto_canales",
+    "id": "05_extracto_credito_canales_PDF___Qué_es_el_Extracto_de_Crédito_1",
     "doc": "05_extracto_credito_canales.pdf",
-    "seccion": "2. Canales de Consulta",
-    "tags": ["extracto", "canales", "sucursal", "web", "call center"],
-    "contenido": "Puedes consultar tu extracto de crédito en: App (PDF histórico hasta 24 meses), Web (descarga inmediata), Sucursal (asistencia personalizada), Call Center (01 8000 123 456). Todos los canales son gratuitos."
+    "seccion": "[PDF] ¿Qué es el Extracto de Crédito?",
+    "tags": [
+      "financieras",
+      "empleadores",
+      "notar",
+      "instituciones",
+      "otras"
+    ],
+    "contenido": "empleadores, notarías y otras instituciones financieras. El extracto bancario de productos de crédito es un documento oficial expedido por Banco Serfinanza que resume el estado de tu obligación financiera durante un período determinado. Incluye el saldo actual de la deuda, movimientos del período, intereses causados, pagos realizados, cuota a pagar y fecha límite. Es un documento con validez legal y es frecuentemente solicitado por entidades como inmobiliarias, empleadores, notarías y otras instituciones financieras."
   },
   {
-    "id": "01_tarjeta_pagos",
-    "doc": "01_tarjeta_credito_beneficios.pdf",
-    "seccion": "4. Pagos y Cuotas",
-    "tags": ["pago", "cuota", "minimo", "total", "tarjeta"],
-    "contenido": "Pago mínimo: 5% del saldo + intereses causados. Pago total: saldo dispuesto + intereses + seguros. Fecha límite: 20 de cada mes. Puedes pagar por App, Web, ACH, Sucursal o correspondencia bancaria."
+    "id": "05_extracto_credito_canales_PDF__Tipos_de_Extractos_de_Crédito_2",
+    "doc": "05_extracto_credito_canales.pdf",
+    "seccion": "[PDF] Tipos de Extractos de Crédito",
+    "tags": [
+      "extracto",
+      "productos",
+      "cubiertos",
+      "tipo"
+    ],
+    "contenido": "Tipo de Extracto Productos Cubiertos Tipo de Extracto Productos Cubiertos"
   },
   {
-    "id": "01_tarjeta_beneficios_adicionales",
-    "doc": "01_tarjeta_credito_beneficios.pdf",
-    "seccion": "5. Beneficios Adicionales",
-    "tags": ["seguro", "proteccion", "asistencia", "mastercard", "tarjeta"],
-    "contenido": "Todas las tarjetas incluyen: seguro de viaje (en compras >$200.000), asistencia médica en viajes (hasta $1.000.000), protección de compras (90 días), acceso a ofertas Mastercard, líneas de atención 24/7."
+    "id": "05_extracto_credito_canales_PDF__Periodicidad_3",
+    "doc": "05_extracto_credito_canales.pdf",
+    "seccion": "[PDF] Periodicidad",
+    "tags": [
+      "dito",
+      "inversi",
+      "tarjeta",
+      "culo",
+      "compra"
+    ],
+    "contenido": "de Consumo Crédito libre inversión, vehículo, compra de cartera Extracto de Tarjeta de Crédito Tarjeta Clásica, Gold, Platinum Mensual (fecha de corte) Extracto de Crédito de Consumo Crédito libre inversión, vehículo, compra de cartera"
   },
   {
-    "id": "04_app_seguridad",
-    "doc": "04_registro_app_serfinanza.pdf",
-    "seccion": "5. Seguridad",
-    "tags": ["seguridad", "biometria", "clave", "otp", "app"],
-    "contenido": "La App usa: clave de 6 dígitos, biometría (huella/face ID), token dinámico para transacciones mayores. Banco Serfinanza nunca solicita OTP, claves o datos sensibles por teléfono o correo."
+    "id": "05_extracto_credito_canales_PDF__Mensual_4",
+    "doc": "05_extracto_credito_canales.pdf",
+    "seccion": "[PDF] Mensual",
+    "tags": [
+      "dito",
+      "leasing",
+      "habitacional",
+      "hipotecario",
+      "vivienda"
+    ],
+    "contenido": "Hipotecario Crédito vivienda VIS y No VIS, leasing habitacional Extracto de Crédito Hipotecario Crédito vivienda VIS y No VIS, leasing habitacional"
   },
   {
-    "id": "02_debito_automatico",
-    "doc": "02_actualizacion_datos_procesos.pdf",
-    "seccion": "5. Débito Automático",
-    "tags": ["debito automatico", "automatico", "pagos", "cuenta"],
-    "contenido": "Activa débito automático desde tu cuenta Serfinanza para pagar tu crédito de consumo. Así nunca perderás una cuota y evitarás intereses de mora. Puedes activarlo por App, Web o Sucursal."
+    "id": "05_extracto_credito_canales_PDF__Mensual_5",
+    "doc": "05_extracto_credito_canales.pdf",
+    "seccion": "[PDF] Mensual",
+    "tags": [
+      "solicitud",
+      "dito",
+      "cliente",
+      "todos",
+      "productos"
+    ],
+    "contenido": "Todos los productos vigentes y cancelados A solicitud del cliente Certificado de Deuda Todos los productos de crédito A solicitud del cliente Paz y Salvo Crédito cancelado o al día A solicitud (crédito finalizado o al día) Historia de Crédito Serfinanza Todos los productos vigentes y cancelados A solicitud del cliente"
+  },
+  {
+    "id": "05_extracto_credito_canales_PDF__1_Extracto_de_Tarjeta_de_Crédito_6",
+    "doc": "05_extracto_credito_canales.pdf",
+    "seccion": "[PDF] 1 Extracto de Tarjeta de Crédito",
+    "tags": [
+      "cuotas",
+      "saldo",
+      "cupo",
+      "total",
+      "pendiente"
+    ],
+    "contenido": "disponibles.  Cuotas diferidas vigentes y saldo pendiente por cuotas.  Datos del titular y número de tarjeta (enmascarado).  Período de facturación (fecha de corte anterior y actual).  Cupo total, cupo disponible y cupo utilizado.  Movimientos del período: compras nacionales, compras internacionales, avances, pagos.  Saldo total a pagar, pago mínimo y fecha límite de pago.  Intereses cobrados y tasa de interés vigente.  Puntos acumulados y puntos disponibles.  Cuotas diferidas vigentes y saldo pendiente por cuotas."
+  },
+  {
+    "id": "05_extracto_credito_canales_PDF__2_Extracto_de_Crédito_de_Consumo_7",
+    "doc": "05_extracto_credito_canales.pdf",
+    "seccion": "[PDF] 2 Extracto de Crédito de Consumo",
+    "tags": [
+      "mora",
+      "saldo",
+      "intereses",
+      "dito",
+      "aplica"
+    ],
+    "contenido": "desempleo).  Saldo en mora (si aplica) e intereses de mora causados.  Número de obligación y fecha de desembolso.  Monto original del crédito y saldo actual de capital.  Cuota mensual, intereses pagados y capital abonado.  Número de cuotas pagadas y pendientes.  Tasa de interés efectiva anual pactada.  Fecha de pago de la próxima cuota.  Seguros asociados al crédito (vida deudor, desempleo).  Saldo en mora (si aplica) e intereses de mora causados."
+  },
+  {
+    "id": "05_extracto_credito_canales_PDF__1_App_Serfinanza_8",
+    "doc": "05_extracto_credito_canales.pdf",
+    "seccion": "[PDF] 1 App Serfinanza",
+    "tags": [
+      "toca",
+      "documentos",
+      "selecciona",
+      "descarga",
+      "extractos"
+    ],
+    "contenido": "atrás). ® Toca 'Generar' ® el PDF se descarga en tu dispositivo. La App es el canal más rápido y conveniente para obtener tus extractos. El extracto se genera en formato PDF de forma inmediata y queda guardado en el historial de documentos de la App. ® Ingresa a la App y selecciona el producto de crédito en el menú de inicio. ® Toca el ícono de 'Documentos' o 'Extractos'. ® Selecciona el mes y año del extracto que necesitas (disponibles hasta 24 meses atrás). ® Toca 'Generar' ® el PDF se descarga en tu dispositivo."
+  },
+  {
+    "id": "05_extracto_credito_canales_PDF__1_App_Serfinanza_9",
+    "doc": "05_extracto_credito_canales.pdf",
+    "seccion": "[PDF] 1 App Serfinanza",
+    "tags": [
+      "actualizan",
+      "anterior",
+      "curso",
+      "diariamente",
+      "movimientos"
+    ],
+    "contenido": "curso se actualizan diariamente con los movimientos del día anterior. ® Puedes compartirlo directamente por WhatsApp, correo o guardarlo en tu galería. n Los extractos del mes en curso se actualizan diariamente con los movimientos del día anterior."
+  },
+  {
+    "id": "05_extracto_credito_canales_PDF__2_Portal_Web_Serfinanza__Banca_en_Línea_10",
+    "doc": "05_extracto_credito_canales.pdf",
+    "seccion": "[PDF] 2 Portal Web Serfinanza (Banca en Línea)",
+    "tags": [
+      "electr",
+      "disponible",
+      "opciones",
+      "nico",
+      "extractos"
+    ],
+    "contenido": "electrónico. ® Historial disponible: hasta 36 meses anteriores. Accede a www.serfinanza.com con tu usuario y contraseña. Desde el portal puedes gestionar todos tus extractos con opciones avanzadas de descarga y envío. ® Menú principal ® 'Mis Productos' ® selecciona el crédito o tarjeta. ® Sección 'Extractos y Documentos'. ® Filtra por producto, mes y año. ® Opciones disponibles: descargar PDF, descargar Excel (movimientos), enviar por correo electrónico. ® Historial disponible: hasta 36 meses anteriores."
+  },
+  {
+    "id": "05_extracto_credito_canales_PDF__3_WhatsApp_Serfinanza_11",
+    "doc": "05_extracto_credito_canales.pdf",
+    "seccion": "[PDF] 3 WhatsApp Serfinanza",
+    "tags": [
+      "extracto",
+      "actual",
+      "anterior",
+      "menos",
+      "minuto"
+    ],
+    "contenido": "® El bot te enviará el extracto en PDF en menos de 1 minuto. El chatbot de WhatsApp permite solicitar el extracto del mes actual o del mes anterior de forma ágil. El documento se envía directamente al chat como archivo PDF. ® Escribe al +57 300 987 6543. ® Envía la palabra EXTRACTO para iniciar. ® Selecciona el tipo de producto: TARJETA o CRÉDITO. ® Confirma tu identidad con tu número de cédula. ® Selecciona el mes: MES ACTUAL o MES ANTERIOR. ® El bot te enviará el extracto en PDF en menos de 1 minuto."
+  },
+  {
+    "id": "05_extracto_credito_canales_PDF__3_WhatsApp_Serfinanza_12",
+    "doc": "05_extracto_credito_canales.pdf",
+    "seccion": "[PDF] 3 WhatsApp Serfinanza",
+    "tags": [
+      "mesespara",
+      "portal",
+      "ltimos",
+      "meses",
+      "anteriores"
+    ],
+    "contenido": "dos últimos mesesPara meses anteriores, usa la App o el portal web. n Mediante WhatsApp solo están disponibles los dos últimos mesesPara meses anteriores, usa la App o el portal web."
+  },
+  {
+    "id": "05_extracto_credito_canales_PDF__4_Correo_Electrónico_Automático_13",
+    "doc": "05_extracto_credito_canales.pdf",
+    "seccion": "[PDF] 4 Correo Electrónico Automático",
+    "tags": [
+      "extracto",
+      "producto",
+      "digital",
+      "llega",
+      "asunto"
+    ],
+    "contenido": "llega con asunto: 'Tu extracto de [Producto] - Período [mes/año]'. Si tienes activo el envío de extracto digital, recibirás el extracto de cada producto en tu correo electrónico registrado al día siguiente de la fecha de corte. Esta opción reemplaza el extracto físico por correspondencia y no tiene costo adicional. ® Activa el extracto digital en la App: 'Configuración' ® 'Extracto digital'. ® O en sucursal solicitando la activación del servicio al asesor. ® El correo llega con asunto: 'Tu extracto de [Producto] - Período [mes/año]'."
+  },
+  {
+    "id": "05_extracto_credito_canales_PDF__5_Call_Center_14",
+    "doc": "05_extracto_credito_canales.pdf",
+    "seccion": "[PDF] 5 Call Center",
+    "tags": [
+      "xima",
+      "datos",
+      "sicos",
+      "saldo",
+      "cuota"
+    ],
+    "contenido": "puede enviarlo por SMS si son datos básicos (saldo y cuota próxima). Puedes solicitar el envío de tu extracto por correo electrónico llamando al 01 8000 123 456. El asesor lo enviará en tiempo real al correo registrado. También puede enviarlo por SMS si son datos básicos (saldo y cuota próxima)."
+  },
+  {
+    "id": "05_extracto_credito_canales_PDF__6_Sucursal_Física_15",
+    "doc": "05_extracto_credito_canales.pdf",
+    "seccion": "[PDF] 6 Sucursal Física",
+    "tags": [
+      "ximo",
+      "disponible",
+      "meses",
+      "costo",
+      "informaci"
+    ],
+    "contenido": "si la información está disponible, o en máximo 2 días hábiles). En cualquier sucursal Serfinanza puedes solicitar:  Impresión física del extracto de los últimos 12 meses (sin costo).  Extractos de más de 12 meses (costo de $3.000 por extracto adicional).  Certificado de deuda con fecha y sello para trámites oficiales.  Paz y salvo de créditos cancelados (se expide el mismo día si la información está disponible, o en máximo 2 días hábiles)."
+  },
+  {
+    "id": "05_extracto_credito_canales_PDF__WhatsApp_16",
+    "doc": "05_extracto_credito_canales.pdf",
+    "seccion": "[PDF] WhatsApp",
+    "tags": [
+      "correo",
+      "auto",
+      "call",
+      "center"
+    ],
+    "contenido": "Correo Auto. Call Center Correo Auto. Call Center"
+  },
+  {
+    "id": "05_extracto_credito_canales_PDF__Sucursal_17",
+    "doc": "05_extracto_credito_canales.pdf",
+    "seccion": "[PDF] Sucursal",
+    "tags": [
+      "extracto",
+      "cierre",
+      "demanda",
+      "cliente",
+      "cada"
+    ],
+    "contenido": "el extracto al cierre de cada período, no bajo demanda del cliente. Extracto mes actual n n n n* n n Extracto meses anteriores n n n n* n n Historial 24+ meses n n n n n n Certificado de deuda n n n n n n Paz y salvo n n n n n n Extracto con sello oficial n n n n n n n n* El correo automático envía el extracto al cierre de cada período, no bajo demanda del cliente."
+  },
+  {
+    "id": "05_extracto_credito_canales_PDF___Para_qué_se_Usa_el_Extracto_de_Crédito_18",
+    "doc": "05_extracto_credito_canales.pdf",
+    "seccion": "[PDF] ¿Para qué se Usa el Extracto de Crédito?",
+    "tags": [
+      "dito",
+      "sello",
+      "documental",
+      "legales",
+      "extracto"
+    ],
+    "contenido": "legales: el extracto con sello tiene validez como prueba documental.  Verificar pagos realizados y saldos pendientes.  Preparar declaración de renta (intereses de crédito hipotecario son deducibles).  Trámites de vivienda: bancos y constructoras lo solicitan para avalúos o promesas.  Solicitud de otro crédito: para demostrar comportamiento de pago.  Control personal de finanzas y presupuesto mensual.  Reclamaciones por cobros incorrectos o no reconocidos.  Trámites legales: el extracto con sello tiene validez como prueba documental."
+  },
+  {
+    "id": "05_extracto_credito_canales_PDF__Preguntas_Frecuentes_19",
+    "doc": "05_extracto_credito_canales.pdf",
+    "seccion": "[PDF] Preguntas Frecuentes",
+    "tags": [
+      "extracto",
+      "meses",
+      "respuesta",
+      "escrita",
+      "sucursalel"
+    ],
+    "contenido": "escrita en sucursalEl plazo de respuesta es de 5 días hábiles. n ¿Cuánto cuesta generar mi extracto? El extracto de los últimos 12 meses es completamente gratuito en todos los canales digitales (App, web, WhatsApp) y por correo. En sucursal, la impresión tiene costo de $3.000 a partir del extracto número 13 del año. n ¿Puedo solicitar un extracto de un año anterior? SíDesde el portal web puedes acceder hasta 36 meses Para períodos superiores a 36 meses, debes radicar una solicitud escrita en sucursalEl plazo de respuesta es de 5 días hábiles."
+  },
+  {
+    "id": "05_extracto_credito_canales_PDF__Preguntas_Frecuentes_20",
+    "doc": "05_extracto_credito_canales.pdf",
+    "seccion": "[PDF] Preguntas Frecuentes",
+    "tags": [
+      "extracto",
+      "movimiento",
+      "hago",
+      "reconozco",
+      "whatsapp"
+    ],
+    "contenido": "n ¿Qué hago si hay un movimiento en mi extracto que no reconozco? n ¿El extracto del WhatsApp es el mismo que el PDF oficial? Sí, el PDF enviado por WhatsApp es generado por los sistemas del banco y tiene la misma validez que el descargado desde la App o el portal web. Si requieres sello físico, debes solicitarlo en sucursal. n ¿Qué hago si hay un movimiento en mi extracto que no reconozco?"
+  },
+  {
+    "id": "05_extracto_credito_canales_PDF__Preguntas_Frecuentes_21",
+    "doc": "05_extracto_credito_canales.pdf",
+    "seccion": "[PDF] Preguntas Frecuentes",
+    "tags": [
+      "atenci",
+      "serfinanza",
+      "8000",
+      "banco",
+      "biles"
+    ],
+    "contenido": "D.C. · www.serfinanza.com · Línea de atención: 01 8000 123 456 Comunícate con el Call Center al 01 8000 123 456 dentro de los 30 días hábiles siguientes a la fecha del movimientoEl banco investigará y te dará respuesta en máximo 15 días hábiles También puedes radicar la reclamación desde la App en 'Atención ® Reclamaciones'. Banco Serfinanza S.A. · Vigilado Superintendencia Financiera de Colombia · Calle 72 No. 10-07, Bogotá D.C. · www.serfinanza.com · Línea de atención: 01 8000 123 456"
+  },
+  {
+    "id": "05_extracto_credito_canales_PDF__Preguntas_Frecuentes_22",
+    "doc": "05_extracto_credito_canales.pdf",
+    "seccion": "[PDF] Preguntas Frecuentes",
+    "tags": [
+      "sujetas",
+      "cambio",
+      "aviso",
+      "entrenamientocondiciones",
+      "previo"
+    ],
+    "contenido": "y de entrenamientoCondiciones sujetas a cambio sin previo aviso. Este documento tiene carácter informativo y de entrenamientoCondiciones sujetas a cambio sin previo aviso."
   }
 ]

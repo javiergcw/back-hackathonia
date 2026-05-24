@@ -6,31 +6,35 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
 	"math"
 	"net/http"
 	"os"
+	"regexp"
+	"strings"
 	"time"
+	"unicode"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/javierg/hackathon-bqia/internal/auth"
 	"github.com/javierg/hackathon-bqia/internal/domain"
 	"github.com/javierg/hackathon-bqia/internal/llm"
 	"github.com/javierg/hackathon-bqia/internal/rag"
 	"github.com/javierg/hackathon-bqia/internal/session"
-	"github.com/javierg/hackathon-bqia/internal/whatsapp"
 )
 
 type Handler struct {
 	llmClient *llm.Client
 	ragClient *rag.Client
 	store     *session.Store
+	Users     []domain.User
 }
 
-func NewHandler(llmClient *llm.Client, ragClient *rag.Client, store *session.Store) *Handler {
+func NewHandler(llmClient *llm.Client, ragClient *rag.Client, store *session.Store, users []domain.User) *Handler {
 	return &Handler{
 		llmClient: llmClient,
 		ragClient: ragClient,
 		store:     store,
+		Users:     users,
 	}
 }
 
@@ -41,10 +45,32 @@ func (h *Handler) Health(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+func (h *Handler) Identify(w http.ResponseWriter, r *http.Request) {
+	var req domain.IdentifyRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		h.error(w, http.StatusBadRequest, "INVALID_JSON", "cuerpo JSON inválido")
+		return
+	}
+
+	user := auth.IdentifyUser(h.Users, req.Phone, req.ProfileID)
+	if user == nil {
+		user = auth.DefaultUser()
+	}
+
+	h.ok(w, domain.IdentifyResponse{
+		UserID:      user.ID,
+		Nombre:      user.Nombre,
+		Role:        user.Role,
+		ProfileID:   user.ProfileID,
+		AllowedTags: user.AllowedTags,
+	})
+}
+
 type AskRequest struct {
 	Question  string `json:"question"`
+	Channel   string `json:"channel"`
 	SessionID string `json:"sessionId"`
-	ProfileID string `json:"profileId"`
+	UserID    string `json:"userId,omitempty"`
 }
 
 func (h *Handler) Ask(w http.ResponseWriter, r *http.Request) {
@@ -59,26 +85,63 @@ func (h *Handler) Ask(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	channel := req.Channel
+	if channel == "" {
+		channel = "cliente"
+	}
+
 	sessionID := req.SessionID
 	if sessionID == "" {
 		sessionID = fmt.Sprintf("session-%d", time.Now().UnixNano())
 	}
 
-	profile, _ := h.ragClient.GetProfile(req.ProfileID)
-	retrieval := h.ragClient.RetrieveForClient(req.Question, profile, 4)
-	answer := h.generateClientAnswer(r.Context(), req.Question, retrieval, profile, sessionID)
+	var allowedTags []string
+	var profileContext string
 
-	response := map[string]interface{}{
-		"answer":    answer,
-		"citations": extractCitations(retrieval.Chunks),
-		"grounded":  len(retrieval.Chunks) > 0 && rag.IsInScope(req.Question, retrieval),
-		"sessionId": sessionID,
+	if req.UserID != "" {
+		for _, u := range h.Users {
+			if u.ID == req.UserID {
+				allowedTags = auth.GetAllowedTags(&u)
+				if u.ProfileID != "" {
+					profile, _ := h.ragClient.GetProfile(u.ProfileID)
+					if profile != nil {
+						profileContext = buildProfileContext(u.Nombre, profile)
+					}
+				}
+				break
+			}
+		}
 	}
-	if profile != nil {
-		response["cliente"] = profile.Nombre
+	if allowedTags == nil {
+		allowedTags = []string{"publico", "general"}
 	}
 
-	h.ok(w, response)
+	chunks := h.ragClient.RetrieveWithTags(req.Question, 6, allowedTags)
+
+	var answer string
+	var err error
+
+	if profileContext != "" {
+		answer, err = h.llmClient.GenerateWithProfile(r.Context(), req.Question, channel, chunks, profileContext)
+	} else {
+		answer, err = h.llmClient.Generate(r.Context(), req.Question, channel, chunks)
+	}
+
+	if err != nil {
+		answer = buildFallbackAnswer(chunks, channel)
+	}
+
+	h.store.AddMessage(sessionID, "user", req.Question)
+	h.store.AddMessage(sessionID, "assistant", answer)
+
+	citations := extractCitations(chunks)
+
+	h.ok(w, map[string]interface{}{
+		"answer":     answer,
+		"citations":  citations,
+		"grounded":   len(citations) > 0,
+		"sessionId":  sessionID,
+	})
 }
 
 func (h *Handler) SimulateCDT(w http.ResponseWriter, r *http.Request) {
@@ -190,7 +253,33 @@ func (h *Handler) Recommend(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	recomendacion, producto, accion, citations := h.clientRecommendation(profile)
+	var recomendacion, producto, accion string
+	var citations []domain.Citation
+
+	switch {
+	case hasProduct(profile.Productos, "cuenta_ahorros") && !hasAnyProduct(profile.Productos, "cdt"):
+		recomendacion = "Tienes una cuenta de ahorros y aún no inviertes. Un CDT te da rentabilidad fija con protección Fogafín hasta $50.000.000. ¿Te lo simulo?"
+		producto = "cdt"
+		accion = "simulate-cdt"
+		chunks := h.ragClient.Retrieve("beneficios cdt supercdt", 3)
+		citations = extractCitations(chunks)
+	case hasProduct(profile.Productos, "tarjeta_clasica") && profile.MesesTarjeta >= 6:
+		recomendacion = "Veo que tienes tu tarjeta hace más de 6 meses. Puedes solicitar un aumento de cupo. ¿Te ayudo?"
+		producto = "tarjeta"
+		accion = "aumento-cupo"
+		chunks := h.ragClient.Retrieve("aumento cupo tarjeta", 3)
+		citations = extractCitations(chunks)
+	case hasProduct(profile.Productos, "credito_consumo"):
+		recomendacion = "Tienes un crédito de consumo. ¿Ya conoces el débito automático desde tu cuenta Serfinanza para no perderte ningún pago?"
+		producto = "credito_consumo"
+		accion = "info-debito-automatico"
+		chunks := h.ragClient.Retrieve("debito automatico", 3)
+		citations = extractCitations(chunks)
+	default:
+		recomendacion = "Visitaré tu perfil para sugerirte los mejores productos cuando tengas más productos activos."
+		producto = ""
+		accion = ""
+	}
 
 	h.ok(w, domain.RecommendResponse{
 		Recomendacion: recomendacion,
@@ -200,20 +289,24 @@ func (h *Handler) Recommend(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func (h *Handler) clientRecommendation(profile *domain.Profile) (string, string, string, []domain.Citation) {
-	switch {
-	case rag.HasProduct(profile.Productos, "cuenta_ahorros") && !rag.HasAnyProduct(profile.Productos, "cdt"):
-		chunks := h.ragClient.RetrieveForClient("beneficios cdt supercdt", profile, 3).Chunks
-		return "Veo que tienes cuenta de ahorros y aún no inviertes. Con nuestro *superCDT* tu plata crece con rentabilidad fija y protección Fogafín. ¿Te gustaría que te cuente más?", "cdt", "simulate-cdt", extractCitations(chunks)
-	case rag.HasProduct(profile.Productos, "tarjeta_clasica") && profile.MesesTarjeta >= 6:
-		chunks := h.ragClient.RetrieveForClient("aumento cupo tarjeta", profile, 3).Chunks
-		return "Llevas más de 6 meses con tu tarjeta y puedes solicitar un *aumento de cupo* desde la App. ¿Te explico cómo?", "tarjeta", "aumento-cupo", extractCitations(chunks)
-	case rag.HasProduct(profile.Productos, "credito_consumo"):
-		chunks := h.ragClient.RetrieveForClient("debito automatico", profile, 3).Chunks
-		return "Tienes crédito de consumo con nosotros. Te recomiendo activar el *débito automático* para no perder ningún pago. ¿Quieres saber cómo hacerlo?", "credito_consumo", "info-debito-automatico", extractCitations(chunks)
-	default:
-		return "Cuando quieras, con gusto te oriento sobre los productos de Serfinanza.", "", "", nil
+func hasProduct(productos []string, product string) bool {
+	for _, p := range productos {
+		if p == product {
+			return true
+		}
 	}
+	return false
+}
+
+func hasAnyProduct(productos []string, targets ...string) bool {
+	for _, p := range productos {
+		for _, target := range targets {
+			if p == target {
+				return true
+			}
+		}
+	}
+	return false
 }
 
 func (h *Handler) WhatsAppWebhook(w http.ResponseWriter, r *http.Request) {
@@ -222,132 +315,221 @@ func (h *Handler) WhatsAppWebhook(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if keyNumber := chi.URLParam(r, "number"); keyNumber != "" {
-		if whatsapp.NormalizePhone(keyNumber) != whatsapp.AllowedNumber() {
-			h.error(w, http.StatusForbidden, "UNAUTHORIZED_WEBHOOK", "número de webhook no autorizado")
-			return
-		}
-	}
-
-	raw, err := io.ReadAll(r.Body)
-	if err != nil {
-		h.error(w, http.StatusBadRequest, "INVALID_BODY", "no se pudo leer el cuerpo")
+	var payload domain.WhatsAppPayload
+	if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
+		h.error(w, http.StatusBadRequest, "INVALID_JSON", "cuerpo JSON inválido")
 		return
 	}
 
-	incoming, ok := whatsapp.ParseWebhook(raw)
+	phone, incomingText, ok := extractIncomingText(payload)
 	if !ok {
-		log.Printf("whatsapp webhook: payload no reconocido (%d bytes)", len(raw))
 		h.ok(w, map[string]interface{}{"received": true, "action": "ignored"})
 		return
 	}
 
-	if !whatsapp.IsAllowedPhone(incoming.Phone) {
-		log.Printf("whatsapp webhook: número no autorizado %s", incoming.Phone)
+	user := auth.IdentifyUser(h.Users, phone, "")
+	profileContext := ""
+	identified := false
+
+	if user != nil && user.ProfileID != "" {
+		profile, _ := h.ragClient.GetProfile(user.ProfileID)
+		if profile != nil {
+			profileContext = buildProfileContext(user.Nombre, profile)
+			identified = true
+		}
+		h.store.SetSessionUser(phone, user.ID)
+		if user.ProfileID != "" {
+			h.store.SetSessionProfile(phone, user.ProfileID)
+		}
+	}
+
+	if !identified && (strings.Contains(strings.ToLower(incomingText), "identificarme") ||
+		strings.Contains(strings.ToLower(incomingText), "mi número") ||
+		strings.Contains(strings.ToLower(incomingText), "soy ")) {
+
+		answer := h.handleIdentificationRequest(phone, incomingText)
+		mockWhatsapp := os.Getenv("MOCK_WHATSAPP") == "true"
+		if !mockWhatsapp {
+			go h.sendWhatsAppMessage(phone, answer)
+		}
 		h.ok(w, map[string]interface{}{
-			"received": true,
-			"action":   "ignored",
-			"reason":   "unauthorized_number",
+			"received":      true,
+			"from":          phone,
+			"incoming_text": incomingText,
+			"answer":        answer,
+			"identified":    false,
 		})
 		return
 	}
 
-	log.Printf("whatsapp webhook: mensaje de %s: %q", incoming.Phone, incoming.Text)
-
-	profileID := whatsapp.UserProfileID()
-	var payload domain.WhatsAppPayload
-	_ = json.Unmarshal(raw, &payload)
-	if payload.ProfileID != "" {
-		profileID = payload.ProfileID
-	}
-
-	profile, _ := h.ragClient.GetProfile(profileID)
-	answer := h.processClientAsk(incoming.Text, incoming.Phone, profile)
+	allowedTags := auth.GetAllowedTags(user)
+	answer := h.processAskWithProfile(incomingText, "whatsapp", phone, allowedTags, profileContext)
 
 	mockWhatsapp := os.Getenv("MOCK_WHATSAPP") == "true"
 	if !mockWhatsapp {
-		go func(phone, reply string) {
-			if err := h.sendWhatsAppMessage(phone, reply); err != nil {
-				log.Printf("whatsapp send error to %s: %v", phone, err)
-			}
-		}(incoming.Phone, answer)
+		go h.sendWhatsAppMessage(phone, answer)
 	}
 
-	response := map[string]interface{}{
+	h.ok(w, map[string]interface{}{
 		"received":      true,
-		"from":          incoming.Phone,
-		"incoming_text": incoming.Text,
+		"from":          phone,
+		"incoming_text": incomingText,
 		"answer":        answer,
-		"profileId":     profileID,
-	}
-	if profile != nil {
-		response["cliente"] = profile.Nombre
-	}
-
-	h.ok(w, response)
-}
-
-func (h *Handler) processClientAsk(text, sessionID string, profile *domain.Profile) string {
-	retrieval := h.ragClient.RetrieveForClient(text, profile, 4)
-	return h.generateClientAnswer(context.Background(), text, retrieval, profile, sessionID)
-}
-
-func (h *Handler) generateClientAnswer(ctx context.Context, question string, retrieval rag.RetrieveResult, profile *domain.Profile, sessionID string) string {
-	if rag.IsGreeting(question) {
-		answer := llm.FormatForWhatsApp(rag.GreetingReply)
-		h.saveSession(sessionID, question, answer)
-		return answer
-	}
-	if !rag.IsInScope(question, retrieval) {
-		answer := llm.FormatForWhatsApp(rag.OutOfScopeReply)
-		h.saveSession(sessionID, question, answer)
-		return answer
-	}
-
-	history := h.store.GetMessages(sessionID)
-
-	answer, err := h.llmClient.GenerateForClient(ctx, llm.ClientRequest{
-		Question:       question,
-		Chunks:         retrieval.Chunks,
-		ProfileContext: rag.ProfileContext(profile),
-		ProactiveHint:  rag.ProactiveHint(profile, question),
-		History:        history,
+		"userId":        user.ID,
+		"role":          user.Role,
+		"identified":    identified,
 	})
-	if err != nil {
-		answer = buildClientFallback(retrieval.Chunks)
+}
+
+func (h *Handler) handleIdentificationRequest(sessionID, message string) string {
+	phoneRe := regexp.MustCompile(`(?:mi número es|número|teléfono|celular)[\s:]*(\d+)`)
+	profileRe := regexp.MustCompile(`(?i)(?:identificarme como|profile|id)[\s:]*([A-Za-z0-9]+)`)
+	nameRe := regexp.MustCompile(`(?i)soy\s+([A-Za-zÀÉÍÓÚÑáéíóúñ\s]+?)(?:\s|,|\.|!|$)`)
+
+	var phoneMatch, profileMatch, nameMatch []string
+
+	if phoneMatch = phoneRe.FindStringSubmatch(message); len(phoneMatch) > 1 {
+		cleanPhone := "+" + strings.TrimPrefix(phoneMatch[1], "0")
+		if !strings.HasPrefix(cleanPhone, "+57") {
+			cleanPhone = "+57" + phoneMatch[1]
+		}
+		user := auth.IdentifyUser(h.Users, cleanPhone, "")
+		if user != nil {
+			return h.doIdentifyUser(sessionID, user)
+		}
 	}
-	answer = llm.FormatForWhatsApp(answer)
-	h.saveSession(sessionID, question, answer)
+
+	if profileMatch = profileRe.FindStringSubmatch(message); len(profileMatch) > 1 {
+		user := auth.IdentifyUser(h.Users, "", profileMatch[1])
+		if user != nil {
+			return h.doIdentifyUser(sessionID, user)
+		}
+	}
+
+	if nameMatch = nameRe.FindStringSubmatch(message); len(nameMatch) > 1 {
+		name := strings.TrimSpace(nameMatch[1])
+		for _, u := range h.Users {
+			if strings.Contains(strings.ToLower(u.Nombre), strings.ToLower(name)) {
+				return h.doIdentifyUser(sessionID, &u)
+			}
+		}
+	}
+
+	return "No pude identificarte. Por favor verifica tu número de teléfono o ingresa tu ID de cliente (ej: C001)."
+}
+
+func (h *Handler) doIdentifyUser(sessionID string, user *domain.User) string {
+	h.store.SetSessionUser(sessionID, user.ID)
+	if user.ProfileID != "" {
+		h.store.SetSessionProfile(sessionID, user.ProfileID)
+	}
+
+	greeting := fmt.Sprintf("¡Hola %s! Te he identificado correctamente.", user.Nombre)
+
+	profile, _ := h.ragClient.GetProfile(user.ProfileID)
+	if profile != nil && len(profile.Productos) > 0 {
+		productos := strings.Join(profile.Productos, ", ")
+		return fmt.Sprintf("%s Veo que tienes los siguientes productos: %s. ¿En qué puedo ayudarte?", greeting, productos)
+	}
+
+	return fmt.Sprintf("%s ¿En qué puedo ayudarte?", greeting)
+}
+
+func buildProfileContext(nombre string, profile *domain.Profile) string {
+	if profile == nil {
+		return ""
+	}
+
+	var sb strings.Builder
+	sb.WriteString(fmt.Sprintf("- Nombre: %s\n", nombre))
+
+	if len(profile.Productos) > 0 {
+		sb.WriteString(fmt.Sprintf("- Productos actuales: %s\n", strings.Join(profile.Productos, ", ")))
+	}
+
+	if profile.Tarjeta != nil && *profile.Tarjeta != "" {
+		sb.WriteString(fmt.Sprintf("- Tarjeta: %s (hace %d meses)\n", *profile.Tarjeta, profile.MesesTarjeta))
+	}
+
+	return sb.String()
+}
+
+func extractIncomingText(payload domain.WhatsAppPayload) (string, string, bool) {
+	if payload.Message == "" {
+		return "", "", false
+	}
+	return payload.Phone, payload.Message, true
+}
+
+func (h *Handler) processAsk(text, channel, sessionID string) string {
+	return h.processAskWithTags(text, channel, sessionID, nil)
+}
+
+func (h *Handler) processAskWithTags(text, channel, sessionID string, allowedTags []string) string {
+	return h.processAskWithProfile(text, channel, sessionID, allowedTags, "")
+}
+
+func (h *Handler) processAskWithProfile(text, channel, sessionID string, allowedTags []string, profileContext string) string {
+	chunks := h.ragClient.RetrieveWithTags(text, 6, allowedTags)
+
+	var answer string
+	var err error
+
+	if profileContext != "" {
+		answer, err = h.llmClient.GenerateWithProfile(context.Background(), text, channel, chunks, profileContext)
+	} else {
+		answer, err = h.llmClient.Generate(context.Background(), text, channel, chunks)
+	}
+
+	if err != nil {
+		answer = buildFallbackAnswer(chunks, channel)
+	}
+
+	if sessionID != "" {
+		h.store.AddMessage(sessionID, "user", text)
+		h.store.AddMessage(sessionID, "assistant", answer)
+	}
+
 	return answer
 }
 
-func (h *Handler) saveSession(sessionID, question, answer string) {
-	if sessionID != "" {
-		h.store.AddMessage(sessionID, "user", question)
-		h.store.AddMessage(sessionID, "assistant", answer)
+func buildFallbackAnswer(chunks []domain.Chunk, channel string) string {
+	if len(chunks) == 0 {
+		return "No tengo información sobre eso en este momento. ¿Puedes reformular tu pregunta o contactar a un asesor de Serfinanza?"
 	}
+
+	best := chunks[0]
+
+	if !hasUsefulContent(best.Contenido) {
+		return "No tengo información sobre eso en este momento. ¿Puedes reformular tu pregunta o contactar a un asesor de Serfinanza?"
+	}
+
+	return best.Contenido
 }
 
-func buildClientFallback(chunks []domain.Chunk) string {
-	if len(chunks) == 0 {
-		return "No tengo ese dato a la mano, pero un asesor de Banco Serfinanza puede ayudarte con gusto por WhatsApp, la App o en sucursal."
+func hasUsefulContent(content string) bool {
+	if len(content) < 30 {
+		return false
 	}
-	return fmt.Sprintf("Te cuento: %s", chunks[0].Contenido)
+
+	letterCount := 0
+	for _, r := range content {
+		if unicode.IsLetter(r) {
+			letterCount++
+		}
+	}
+
+	if float64(letterCount)/float64(len(content)) < 0.3 {
+		return false
+	}
+
+	return true
 }
 
 func (h *Handler) sendWhatsAppMessage(to, text string) error {
 	evolutionURL := os.Getenv("WHATSAPP_EVOLUTION_URL")
-	if evolutionURL == "" {
-		evolutionURL = os.Getenv("EVOLUTION_API_URL")
-	}
 	instance := os.Getenv("WHATSAPP_EVOLUTION_INSTANCE")
-	if instance == "" {
-		instance = os.Getenv("EVOLUTION_INSTANCE")
-	}
 	token := os.Getenv("WHATSAPP_EVOLUTION_TOKEN")
-	if token == "" {
-		token = os.Getenv("EVOLUTION_API_KEY")
-	}
 
 	if evolutionURL == "" || instance == "" || token == "" {
 		return fmt.Errorf("configuración de WhatsApp incompleta")
@@ -369,10 +551,7 @@ func (h *Handler) sendWhatsAppMessage(to, text string) error {
 		return err
 	}
 	defer resp.Body.Close()
-	respBody, _ := io.ReadAll(resp.Body)
-	if resp.StatusCode >= 300 {
-		return fmt.Errorf("evolution respondió %d: %s", resp.StatusCode, string(respBody))
-	}
+	_, _ = io.ReadAll(resp.Body)
 	return nil
 }
 
@@ -403,4 +582,98 @@ func extractCitations(chunks []domain.Chunk) []domain.Citation {
 		result = append(result, v)
 	}
 	return result
+}
+
+func (h *Handler) ListKnowledge(w http.ResponseWriter, r *http.Request) {
+	items := h.ragClient.ListKnowledge()
+	h.ok(w, domain.KnowledgeListResponse{Items: items})
+}
+
+func (h *Handler) AddKnowledge(w http.ResponseWriter, r *http.Request) {
+	var req domain.AddKnowledgeRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		h.error(w, http.StatusBadRequest, "INVALID_JSON", "cuerpo JSON inválido")
+		return
+	}
+
+	if req.Doc == "" || req.Seccion == "" || req.Contenido == "" {
+		h.error(w, http.StatusBadRequest, "MISSING_FIELDS", "doc, seccion y contenido son requeridos")
+		return
+	}
+
+	id, err := h.ragClient.AddKnowledge(req)
+	if err != nil {
+		h.error(w, http.StatusInternalServerError, "ADD_FAILED", err.Error())
+		return
+	}
+
+	h.ok(w, domain.AddKnowledgeResponse{ID: id})
+}
+
+func (h *Handler) UpdateKnowledge(w http.ResponseWriter, r *http.Request) {
+	id := chi.URLParam(r, "id")
+	if id == "" {
+		h.error(w, http.StatusBadRequest, "MISSING_ID", "id es requerido")
+		return
+	}
+
+	var req domain.UpdateKnowledgeRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		h.error(w, http.StatusBadRequest, "INVALID_JSON", "cuerpo JSON inválido")
+		return
+	}
+
+	id, before, err := h.ragClient.UpdateKnowledge(id, req)
+	if err != nil {
+		h.error(w, http.StatusNotFound, "NOT_FOUND", err.Error())
+		return
+	}
+
+	h.ok(w, domain.UpdateKnowledgeResponse{
+		ID:     id,
+		Before: before,
+		After:  "",
+	})
+}
+
+func (h *Handler) DeleteKnowledge(w http.ResponseWriter, r *http.Request) {
+	id := chi.URLParam(r, "id")
+	if id == "" {
+		h.error(w, http.StatusBadRequest, "MISSING_ID", "id es requerido")
+		return
+	}
+
+	err := h.ragClient.DeleteKnowledge(id)
+	if err != nil {
+		h.error(w, http.StatusNotFound, "NOT_FOUND", err.Error())
+		return
+	}
+
+	h.ok(w, domain.DeleteKnowledgeResponse{Deleted: true})
+}
+
+func (h *Handler) ReloadKnowledge(w http.ResponseWriter, r *http.Request) {
+	count, err := h.ragClient.ReloadKnowledge()
+	if err != nil {
+		h.error(w, http.StatusInternalServerError, "RELOAD_FAILED", err.Error())
+		return
+	}
+
+	h.ok(w, domain.ReloadKnowledgeResponse{Count: count})
+}
+
+func (h *Handler) GetScope(w http.ResponseWriter, r *http.Request) {
+	scope := h.ragClient.GetScope()
+	h.ok(w, scope)
+}
+
+func (h *Handler) SetScope(w http.ResponseWriter, r *http.Request) {
+	var req domain.SetScopeRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		h.error(w, http.StatusBadRequest, "INVALID_JSON", "cuerpo JSON inválido")
+		return
+	}
+
+	scope := h.ragClient.SetScope(req)
+	h.ok(w, scope)
 }

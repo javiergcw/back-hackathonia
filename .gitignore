@@ -1,23 +1,41 @@
 # Binaries
-bin/
 *.exe
 *.exe~
-*.dll
-*.so
-*.dylib
-
-# Test
-*.test
-*.out
+hackathon-api.exe
+hackathon-api
 
 # Go
 vendor/
+*.test
+*.out
 
-# IDE
-.idea/
-.vscode/
-*.swp
-
-# Env local overrides
+# Environment
 .env
 .env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Build
+dist/
+build/
+bin/
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+tmp/
+temp/
+*.tmp

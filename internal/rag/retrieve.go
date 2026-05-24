@@ -2,53 +2,104 @@ package rag
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
+	"path/filepath"
+	"regexp"
 	"strings"
+	"sync"
 	"unicode"
 
 	"github.com/javierg/hackathon-bqia/internal/domain"
 )
 
 type Client struct {
-	chunks []domain.Chunk
+	chunks     []domain.Chunk
+	profiles   []domain.Profile
+	scope      domain.Scope
+	mu         sync.RWMutex
+	filePath   string
 }
 
 func NewRetrieve(path string) *Client {
-	c := &Client{}
-	data, err := os.ReadFile(path)
-	if err != nil {
-		return c
+	c := &Client{
+		filePath: path,
+		scope: domain.Scope{
+			StrictMode: true,
+			ActiveDocs: []string{},
+		},
 	}
-	if err := json.Unmarshal(data, &c.chunks); err != nil {
-		return c
-	}
+	c.loadFromFile()
 	return c
 }
 
-func (c *Client) Retrieve(query string, k int) []domain.Chunk {
-	return c.RetrieveForClient(query, nil, k).Chunks
+func (c *Client) loadFromFile() {
+	data, err := os.ReadFile(c.filePath)
+	if err != nil {
+		return
+	}
+	if err := json.Unmarshal(data, &c.chunks); err != nil {
+		c.chunks = []domain.Chunk{}
+	}
 }
 
-func (c *Client) RetrieveForClient(query string, profile *domain.Profile, k int) RetrieveResult {
+func (c *Client) saveToFile() error {
+	data, err := json.MarshalIndent(c.chunks, "", "  ")
+	if err != nil {
+		return err
+	}
+	return os.WriteFile(c.filePath, data, 0644)
+}
+
+func (c *Client) Retrieve(query string, k int) []domain.Chunk {
+	return c.RetrieveWithTags(query, k, nil)
+}
+
+const MIN_SCORE_THRESHOLD = 2
+
+func (c *Client) RetrieveWithTags(query string, k int, allowedTags []string) []domain.Chunk {
+	c.mu.RLock()
+	defer c.mu.RUnlock()
+
 	if len(c.chunks) == 0 {
-		return RetrieveResult{}
+		return nil
 	}
 
 	queryNorm := normalize(query)
-	queryTerms := expandTerms(tokenize(queryNorm))
-	profileTags := ProfileBoostTags(profile)
+	queryTerms := tokenize(queryNorm)
+
+	filteredChunks := c.chunks
+
+	if len(c.scope.ActiveDocs) > 0 {
+		filteredChunks = make([]domain.Chunk, 0)
+		for _, chunk := range c.chunks {
+			if isDocActive(chunk.Doc, c.scope.ActiveDocs) {
+				filteredChunks = append(filteredChunks, chunk)
+			}
+		}
+		if len(filteredChunks) == 0 {
+			filteredChunks = c.chunks
+		}
+	}
+
+	if allowedTags != nil && len(allowedTags) > 0 {
+		filteredChunks = c.filterByTags(filteredChunks, allowedTags)
+		if len(filteredChunks) == 0 {
+			return nil
+		}
+	}
 
 	scored := make([]struct {
 		chunk *domain.Chunk
 		score float64
-	}, len(c.chunks))
+	}, len(filteredChunks))
 
-	for i := range c.chunks {
-		score := c.scoreChunk(&c.chunks[i], queryTerms, profileTags)
+	for i := range filteredChunks {
+		score := c.scoreChunk(&filteredChunks[i], queryTerms)
 		scored[i] = struct {
 			chunk *domain.Chunk
 			score float64
-		}{&c.chunks[i], score}
+		}{&filteredChunks[i], score}
 	}
 
 	for i := 0; i < len(scored); i++ {
@@ -59,53 +110,70 @@ func (c *Client) RetrieveForClient(query string, profile *domain.Profile, k int)
 		}
 	}
 
-	topScore := 0.0
-	if len(scored) > 0 {
-		topScore = scored[0].score
-	}
-
 	result := make([]domain.Chunk, 0, k)
+	hasRelevant := false
+
 	for i := 0; i < k && i < len(scored); i++ {
-		if scored[i].score > 0 {
+		if scored[i].score >= MIN_SCORE_THRESHOLD {
 			result = append(result, *scored[i].chunk)
+			hasRelevant = true
 		}
 	}
 
-	return RetrieveResult{Chunks: result, TopScore: topScore}
+	if !hasRelevant && len(scored) > 0 && scored[0].score > 0 {
+		return nil
+	}
+
+	return result
 }
 
-func (c *Client) scoreChunk(chunk *domain.Chunk, queryTerms []string, profileTags []string) float64 {
-	var score float64
+func (c *Client) filterByTags(chunks []domain.Chunk, allowedTags []string) []domain.Chunk {
+	var result []domain.Chunk
+	for _, chunk := range chunks {
+		if canViewChunkTags(allowedTags, chunk.Tags) {
+			result = append(result, chunk)
+		}
+	}
+	return result
+}
 
-	for _, term := range queryTerms {
-		for _, tag := range chunk.Tags {
-			tagLower := strings.ToLower(tag)
-			if strings.Contains(tagLower, term) || strings.Contains(term, tagLower) {
-				score += 2.0
+func canViewChunkTags(allowedTags []string, chunkTags []string) bool {
+	for _, allowed := range allowedTags {
+		if allowed == "*" {
+			return true
+		}
+	}
+	for _, chunkTag := range chunkTags {
+		for _, allowed := range allowedTags {
+			if chunkTag == allowed {
+				return true
 			}
 		}
 	}
+	return false
+}
+
+func (c *Client) scoreChunk(chunk *domain.Chunk, queryTerms []string) float64 {
+	var score float64
+
+	tagScore := 0
+	for _, term := range queryTerms {
+		for _, tag := range chunk.Tags {
+			if strings.Contains(strings.ToLower(tag), term) {
+				tagScore++
+			}
+		}
+	}
+	score += float64(tagScore) * 2.0
 
 	contentNorm := normalize(chunk.Contenido)
 	for _, term := range queryTerms {
-		if len(term) < 3 {
-			continue
-		}
 		count := countOccurrences(contentNorm, term)
-		score += float64(count) * 1.5
+		score += float64(count)
 	}
 
 	if containsSuperCDT(queryTerms) && hasSuperCDTTag(chunk.Tags) {
 		score += 5.0
-	}
-
-	for _, pTag := range profileTags {
-		for _, tag := range chunk.Tags {
-			if strings.Contains(strings.ToLower(tag), pTag) {
-				score += 3.0
-				break
-			}
-		}
 	}
 
 	return score
@@ -127,24 +195,8 @@ func tokenize(s string) []string {
 }
 
 func countOccurrences(text, term string) int {
-	if term == "" {
-		return 0
-	}
-	lower := strings.ToLower(text)
-	needle := strings.ToLower(term)
-	n := 0
-	for {
-		i := strings.Index(lower, needle)
-		if i < 0 {
-			return n
-		}
-		n++
-		start := i + len(needle)
-		if start >= len(lower) {
-			return n
-		}
-		lower = lower[start:]
-	}
+	re := regexp.MustCompile(`(?i)` + term)
+	return len(re.FindAllStringIndex(text, -1))
 }
 
 func containsSuperCDT(terms []string) bool {
@@ -165,11 +217,210 @@ func hasSuperCDTTag(tags []string) bool {
 	return false
 }
 
+func isDocActive(doc string, activeDocs []string) bool {
+	for _, active := range activeDocs {
+		if strings.Contains(doc, active) {
+			return true
+		}
+	}
+	return false
+}
+
 func min(a, b int) int {
 	if a < b {
 		return a
 	}
 	return b
+}
+
+func (c *Client) ListKnowledge() []domain.KnowledgeItem {
+	c.mu.RLock()
+	defer c.mu.RUnlock()
+
+	items := make([]domain.KnowledgeItem, len(c.chunks))
+	for i, chunk := range c.chunks {
+		items[i] = domain.KnowledgeItem{
+			ID:        chunk.ID,
+			Doc:       chunk.Doc,
+			Seccion:   chunk.Seccion,
+			Tags:      chunk.Tags,
+			Contenido: chunk.Contenido,
+		}
+	}
+	return items
+}
+
+func (c *Client) AddKnowledge(req domain.AddKnowledgeRequest) (string, error) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+
+	id := generateID(req.Doc, req.Seccion)
+
+	for _, chunk := range c.chunks {
+		if chunk.ID == id {
+			return "", fmt.Errorf("chunk ya existe para ese doc y sección")
+		}
+	}
+
+	newChunk := domain.Chunk{
+		ID:        id,
+		Doc:       req.Doc,
+		Seccion:   req.Seccion,
+		Tags:      req.Tags,
+		Contenido: req.Contenido,
+	}
+
+	c.chunks = append(c.chunks, newChunk)
+
+	if err := c.saveToFile(); err != nil {
+		c.chunks = c.chunks[:len(c.chunks)-1]
+		return "", err
+	}
+
+	return id, nil
+}
+
+func (c *Client) AddChunk(chunk domain.Chunk) error {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+
+	c.chunks = append(c.chunks, chunk)
+
+	return c.saveToFile()
+}
+
+func (c *Client) UpdateKnowledge(id string, req domain.UpdateKnowledgeRequest) (string, string, error) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+
+	var before string
+	found := false
+
+	for i, chunk := range c.chunks {
+		if chunk.ID == id {
+			before = chunk.Contenido
+			if req.Contenido != "" {
+				c.chunks[i].Contenido = req.Contenido
+			}
+			if req.Tags != nil {
+				c.chunks[i].Tags = req.Tags
+			}
+			found = true
+			break
+		}
+	}
+
+	if !found {
+		return "", "", fmt.Errorf("chunk no encontrado")
+	}
+
+	if err := c.saveToFile(); err != nil {
+		return "", "", err
+	}
+
+	return id, before, nil
+}
+
+func (c *Client) DeleteKnowledge(id string) error {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+
+	found := false
+	var idx int
+	for i, chunk := range c.chunks {
+		if chunk.ID == id {
+			found = true
+			idx = i
+			break
+		}
+	}
+
+	if !found {
+		return fmt.Errorf("chunk no encontrado")
+	}
+
+	c.chunks = append(c.chunks[:idx], c.chunks[idx+1:]...)
+
+	return c.saveToFile()
+}
+
+func (c *Client) RemoveChunksByDoc(docName string) (int, error) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+
+	initial := len(c.chunks)
+	var remaining []domain.Chunk
+	for _, chunk := range c.chunks {
+		if chunk.Doc != docName {
+			remaining = append(remaining, chunk)
+		}
+	}
+	c.chunks = remaining
+
+	if err := c.saveToFile(); err != nil {
+		return 0, err
+	}
+	return initial - len(c.chunks), nil
+}
+
+func (c *Client) ClearAllChunks() (int, error) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+
+	count := len(c.chunks)
+	c.chunks = []domain.Chunk{}
+
+	if err := c.saveToFile(); err != nil {
+		return 0, err
+	}
+	return count, nil
+}
+
+func (c *Client) ReloadKnowledge() (int, error) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+
+	c.loadFromFile()
+
+	return len(c.chunks), nil
+}
+
+func (c *Client) GetScope() domain.Scope {
+	c.mu.RLock()
+	defer c.mu.RUnlock()
+
+	return domain.Scope{
+		StrictMode: c.scope.StrictMode,
+		ActiveDocs:  c.scope.ActiveDocs,
+	}
+}
+
+func (c *Client) SetScope(req domain.SetScopeRequest) domain.Scope {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+
+	if req.StrictMode != nil {
+		c.scope.StrictMode = *req.StrictMode
+	}
+	if req.ActiveDocs != nil {
+		c.scope.ActiveDocs = req.ActiveDocs
+	}
+
+	return domain.Scope{
+		StrictMode: c.scope.StrictMode,
+		ActiveDocs:  c.scope.ActiveDocs,
+	}
+}
+
+func generateID(doc, seccion string) string {
+	docName := strings.TrimSuffix(filepath.Base(doc), filepath.Ext(doc))
+	seccionSlug := strings.Map(func(r rune) rune {
+		if unicode.IsLetter(r) || unicode.IsDigit(r) {
+			return r
+		}
+		return '_'
+	}, seccion)
+	return docName + "_" + seccionSlug
 }
 
 var profiles []domain.Profile
@@ -192,4 +443,19 @@ func (c *Client) GetProfile(id string) (*domain.Profile, error) {
 		}
 	}
 	return nil, nil
+}
+
+func (c *Client) GetAllProfiles() []domain.Profile {
+	if len(profiles) == 0 {
+		c.LoadProfiles("data/profiles.json")
+	}
+	return profiles
+}
+
+func (c *Client) ListChunks() []domain.Chunk {
+	c.mu.RLock()
+	defer c.mu.RUnlock()
+	result := make([]domain.Chunk, len(c.chunks))
+	copy(result, c.chunks)
+	return result
 }

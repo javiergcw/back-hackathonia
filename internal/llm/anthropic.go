@@ -38,7 +38,7 @@ func NewClient() *Client {
 	if model == "" {
 		model = "claude-haiku-4-5"
 	}
-	maxTokens := 256
+	maxTokens := 1024
 	if v := os.Getenv("ANTHROPIC_MAX_TOKENS"); v != "" {
 		if n, err := strconv.Atoi(v); err == nil && n > 0 {
 			maxTokens = n
@@ -76,22 +76,22 @@ type messagesResponse struct {
 	} `json:"content"`
 }
 
-const clientSystemPrompt = `Eres el asesor virtual de Banco Serfinanza en WhatsApp. Hablas directamente con un CLIENTE.
+const clientSystemPrompt = `Eres el asesor virtual de Banco Serfinanza. Hablas directamente con un CLIENTE.
 
 Tu misión: orientarlo con claridad, calidez y confianza, como un buen asesor del banco que lo conoce.
 
 REGLAS:
 1. El CONTEXTO es la documentación oficial vigente de Serfinanza. Preséntala con seguridad: afirma los datos, no los supongas ni los cuestiones.
-2. NO digas "según el PDF", "según la información oficial" ni nombres de archivos (.pdf).
+2. NO digas "según el PDF", "según la información oficial", nombres de archivos ni secciones.
 3. NO uses frases dubitativas ("podría", "quizás", "creo que"). Si está en el contexto, dilo con convicción.
 4. Si la información NO está en el contexto, dilo con honestidad y sugiere App, Web, WhatsApp, Call Center o Sucursal según corresponda.
 5. NUNCA inventes tasas, costos, plazos ni fechas. NUNCA pidas OTP, claves ni datos sensibles.
 6. Tono: cercano, profesional, en segunda persona ("te", "tu"). Trata al usuario como cliente, no como empleado del banco.
 7. "superCDT" = CDT Serfinanza (mismo producto).
-8. Un solo párrafo fluido, máximo 2-4 oraciones. Sin saltos de línea, listas ni viñetas. Énfasis con *negrita* (formato WhatsApp) solo si aporta.
+8. Estilo: Responde con claridad y detalle. Usa 2-4 oraciones cortas. Si necesitas listar elementos, puedes usar viñetas simples (-). Máximo 5-6 oraciones en total.
 9. Si hay PERFIL DEL CLIENTE, personaliza la respuesta con lo que ya tiene contratado. No le ofrezcas lo que ya tiene.
-10. Si hay SUGERENCIA PROACTIVA y encaja con la pregunta, inclúyela al final de forma natural en la misma respuesta.
-11. ALCANCE ESTRICTO: Solo respondes sobre Banco Serfinanza (productos, trámites, App, tarjetas, CDT, créditos, pagos, extractos, seguridad). Si la pregunta no es del banco (matemáticas, cultura general, otros temas), responde EXACTAMENTE: "Solo puedo ayudarte con productos, trámites y servicios de Banco Serfinanza. ¿Tienes alguna consulta sobre tu cuenta, tarjeta, CDT, crédito o la App?"
+10. Si hay SUGERENCIA PROACTIVA y encaja con la pregunta, inclúyela al final de forma natural.
+11. ALCANCE: Solo respondes sobre Banco Serfinanza (productos, trámites, App, tarjetas, CDT, créditos, pagos, extractos, seguridad). Si la pregunta no es del banco, responde EXACTAMENTE: "Solo puedo ayudarte con productos, trámites y servicios de Banco Serfinanza. ¿Tienes alguna consulta sobre tu cuenta, tarjeta, CDT, crédito o la App?"
 12. NUNCA respondas preguntas ajenas al banco aunque sepas la respuesta.
 
 CONTEXTO:
@@ -164,6 +164,23 @@ func (c *Client) GenerateForClient(ctx context.Context, req ClientRequest) (stri
 	return result.Content[0].Text, nil
 }
 
+func (c *Client) Generate(ctx context.Context, question, channel string, chunks []domain.Chunk) (string, error) {
+	req := ClientRequest{
+		Question: question,
+		Chunks:   chunks,
+	}
+	return c.GenerateForClient(ctx, req)
+}
+
+func (c *Client) GenerateWithProfile(ctx context.Context, question, channel string, chunks []domain.Chunk, profileContext string) (string, error) {
+	req := ClientRequest{
+		Question:       question,
+		Chunks:        chunks,
+		ProfileContext: profileContext,
+	}
+	return c.GenerateForClient(ctx, req)
+}
+
 var (
 	markdownBold    = regexp.MustCompile(`\*\*([^*]+)\*\*`)
 	citationTail    = regexp.MustCompile(`(?i)\s*\(según[^)]*\)\s*$`)
@@ -197,9 +214,48 @@ func buildContext(chunks []domain.Chunk) string {
 	if len(chunks) == 0 {
 		return ""
 	}
+
 	var sb strings.Builder
+	seen := make(map[string]bool)
+
 	for _, c := range chunks {
-		sb.WriteString(fmt.Sprintf("- [%s] %s: %s\n", c.Doc, c.Seccion, c.Contenido))
+		cleanDoc := cleanDocName(c.Doc)
+		cleanSeccion := cleanSectionName(c.Seccion)
+		cleanContenido := strings.TrimSpace(c.Contenido)
+
+		if cleanContenido == "" || len(cleanContenido) < 20 {
+			continue
+		}
+
+		key := cleanDoc + "|" + cleanSeccion + "|" + cleanContenido
+		if seen[key] {
+			continue
+		}
+		seen[key] = true
+
+		if cleanSeccion != "" {
+			sb.WriteString(cleanSeccion + ": " + cleanContenido + "\n\n")
+		} else {
+			sb.WriteString(cleanContenido + "\n\n")
+		}
 	}
+
 	return sb.String()
+}
+
+func cleanDocName(doc string) string {
+	doc = strings.ReplaceAll(doc, ".pdf", "")
+	doc = strings.ReplaceAll(doc, ".txt", "")
+	doc = strings.ReplaceAll(doc, ".md", "")
+	doc = strings.ReplaceAll(doc, "_", " ")
+	doc = strings.Title(doc)
+	return doc
+}
+
+func cleanSectionName(seccion string) string {
+	seccion = strings.ReplaceAll(seccion, "[PDF]", "")
+	seccion = strings.ReplaceAll(seccion, "[TXT]", "")
+	seccion = strings.ReplaceAll(seccion, "[MD]", "")
+	seccion = strings.TrimSpace(seccion)
+	return seccion
 }

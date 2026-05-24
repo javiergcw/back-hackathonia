@@ -1,0 +1,34 @@
+[
+  {
+    "id": "U001",
+    "nombre": "María López",
+    "phone": "573001234567",
+    "role": "cliente",
+    "profileId": "C001",
+    "allowedTags": ["cdt", "tarjetas", "cuentas", "general"]
+  },
+  {
+    "id": "U002",
+    "nombre": "Carlos Ruiz",
+    "phone": "573009876543",
+    "role": "cliente",
+    "profileId": "C002",
+    "allowedTags": ["cdt", "tarjetas", "cuentas", "general"]
+  },
+  {
+    "id": "U003",
+    "nombre": "Javier Asesor",
+    "phone": "573005551111",
+    "role": "asesor",
+    "profileId": "A001",
+    "allowedTags": ["*"]
+  },
+  {
+    "id": "U004",
+    "nombre": "Ana Coordinadora",
+    "phone": "573005552222",
+    "role": "coordinador",
+    "profileId": "C000",
+    "allowedTags": ["*"]
+  }
+]
