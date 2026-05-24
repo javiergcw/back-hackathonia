@@ -66,7 +66,7 @@ func (c *Client) RetrieveWithTags(query string, k int, allowedTags []string) []d
 	}
 
 	queryNorm := normalize(query)
-	queryTerms := tokenize(queryNorm)
+	queryTerms := expandTerms(tokenize(queryNorm))
 
 	filteredChunks := c.chunks
 
@@ -84,9 +84,6 @@ func (c *Client) RetrieveWithTags(query string, k int, allowedTags []string) []d
 
 	if allowedTags != nil && len(allowedTags) > 0 {
 		filteredChunks = c.filterByTags(filteredChunks, allowedTags)
-		if len(filteredChunks) == 0 {
-			return nil
-		}
 	}
 
 	scored := make([]struct {
@@ -130,27 +127,11 @@ func (c *Client) RetrieveWithTags(query string, k int, allowedTags []string) []d
 func (c *Client) filterByTags(chunks []domain.Chunk, allowedTags []string) []domain.Chunk {
 	var result []domain.Chunk
 	for _, chunk := range chunks {
-		if canViewChunkTags(allowedTags, chunk.Tags) {
+		if chunkAllowedForTags(allowedTags, chunk) {
 			result = append(result, chunk)
 		}
 	}
 	return result
-}
-
-func canViewChunkTags(allowedTags []string, chunkTags []string) bool {
-	for _, allowed := range allowedTags {
-		if allowed == "*" {
-			return true
-		}
-	}
-	for _, chunkTag := range chunkTags {
-		for _, allowed := range allowedTags {
-			if chunkTag == allowed {
-				return true
-			}
-		}
-	}
-	return false
 }
 
 func (c *Client) scoreChunk(chunk *domain.Chunk, queryTerms []string) float64 {

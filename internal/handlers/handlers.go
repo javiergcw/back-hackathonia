@@ -465,6 +465,9 @@ func (h *Handler) processAskWithProfile(text, channel, sessionID string, allowed
 func (h *Handler) generateChatAnswer(ctx context.Context, question, sessionID string, allowedTags []string, profileContext string) (string, []domain.Chunk) {
 	retrieveQuery := rag.RetrieveQuery(question)
 	chunks := h.ragClient.RetrieveWithTags(retrieveQuery, 6, allowedTags)
+	if len(chunks) == 0 && rag.HasBankIntent(question) {
+		chunks = h.ragClient.RetrieveWithTags(question, 8, allowedTags)
+	}
 
 	history := h.store.GetMessages(sessionID)
 
@@ -485,12 +488,27 @@ func (h *Handler) generateChatAnswer(ctx context.Context, question, sessionID st
 
 func buildFallbackAnswer(question string, chunks []domain.Chunk) string {
 	switch {
+	case rag.IsUrgentCard(question):
+		if text := rag.BestChunkForKeywords(chunks, "bloque", "robo", "BLOQUEAR"); text != "" {
+			return formatUrgentCardAnswer(text)
+		}
+		return rag.UrgentCardReply
 	case rag.IsGreeting(question):
 		return rag.GreetingReply
 	case rag.IsThanks(question):
 		return rag.ThanksReply
 	case rag.IsFarewell(question):
 		return rag.FarewellReply
+	case rag.IsAcknowledgment(question):
+		return rag.AckReply
+	case rag.IsConfused(question):
+		return rag.ConfusedReply
+	}
+
+	if rag.HasBankIntent(question) {
+		if text := rag.BestChunkForKeywords(chunks, "bloque", "tarjeta", "cdt", "app", "extracto"); text != "" {
+			return truncateFallback(text, 520)
+		}
 	}
 
 	for _, chunk := range chunks {
@@ -500,6 +518,14 @@ func buildFallbackAnswer(question string, chunks []domain.Chunk) string {
 	}
 
 	return rag.CasualFallbackReply
+}
+
+func formatUrgentCardAnswer(raw string) string {
+	const prefix = "Entiendo, es urgente. "
+	if idx := strings.Index(strings.ToLower(raw), "bloque"); idx >= 0 {
+		raw = raw[idx:]
+	}
+	return prefix + truncateFallback(raw, 460)
 }
 
 func truncateFallback(text string, maxLen int) string {

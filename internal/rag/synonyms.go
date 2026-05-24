@@ -5,8 +5,11 @@ import "strings"
 var querySynonyms = map[string][]string{
 	"cdt":           {"supercdt", "inversion", "invertir", "rentabilidad", "fogafin"},
 	"supercdt":      {"cdt", "inversion", "rentabilidad"},
-	"tarjeta":       {"cupo", "credito", "mastercard", "plastico"},
-	"bloquear":      {"robo", "perdida", "bloqueo"},
+	"tarjeta":       {"cupo", "credito", "mastercard", "plastico", "tarjetas"},
+	"tarjetas":      {"tarjeta", "cupo", "credito"},
+	"bloquear":      {"robo", "perdida", "bloqueo", "reportar", "robar", "robado", "robaron"},
+	"robo":          {"robar", "robado", "robaron", "hurto", "extraviada", "perdida"},
+	"reportar":      {"reporte", "reportarlo", "denunciar"},
 	"extracto":      {"factura", "estado", "movimientos"},
 	"app":           {"aplicacion", "celular", "movil", "serfinanza virtual"},
 	"registro":      {"registrarme", "crear cuenta", "nuevo usuario"},
