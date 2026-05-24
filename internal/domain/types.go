@@ -189,3 +189,159 @@ type PreguntaFrecuente struct {
 type AnalyticsTopPreguntas struct {
 	Preguntas []PreguntaFrecuente `json:"preguntas"`
 }
+
+type ExecutionStatus string
+
+const (
+	ExecutionStatusPending     ExecutionStatus = "pending"
+	ExecutionStatusInProgress  ExecutionStatus = "in_progress"
+	ExecutionStatusCompleted   ExecutionStatus = "completed"
+	ExecutionStatusFailed      ExecutionStatus = "failed"
+	ExecutionStatusCancelled   ExecutionStatus = "cancelled"
+)
+
+type Execution struct {
+	ID            string            `json:"id"`
+	JobName       string            `json:"jobName"`
+	CampaignName  string            `json:"campaignName,omitempty"`
+	Status        ExecutionStatus   `json:"status"`
+	TotalItems    int               `json:"totalItems"`
+	ProcessedItems int              `json:"processedItems"`
+	CreatedAt     string            `json:"createdAt"`
+	UpdatedAt     string            `json:"updatedAt"`
+	CreatedBy     string            `json:"createdBy,omitempty"`
+	Metadata      map[string]interface{} `json:"metadata,omitempty"`
+}
+
+type IssueSeverity string
+
+const (
+	IssueSeverityLow      IssueSeverity = "low"
+	IssueSeverityMedium   IssueSeverity = "medium"
+	IssueSeverityHigh     IssueSeverity = "high"
+	IssueSeverityCritical IssueSeverity = "critical"
+)
+
+type Issue struct {
+	ID          string                  `json:"id"`
+	ExecutionID string                  `json:"executionId"`
+	IssueType   string                  `json:"issueType"`
+	Severity    IssueSeverity           `json:"severity"`
+	Description string                  `json:"description"`
+	EntityID    string                  `json:"entityId,omitempty"`
+	CreatedAt   string                  `json:"createdAt"`
+	Resolved    bool                    `json:"resolved"`
+	ResolvedAt  string                  `json:"resolvedAt,omitempty"`
+	ResolvedBy  string                  `json:"resolvedBy,omitempty"`
+	Metadata    map[string]interface{}  `json:"metadata,omitempty"`
+}
+
+type SEOAnalysis struct {
+	ID                 string                  `json:"id"`
+	ExecutionID        string                  `json:"executionId"`
+	ContentHash        string                  `json:"contentHash,omitempty"`
+	Title              string                  `json:"title,omitempty"`
+	MetaDescription   string                  `json:"metaDescription,omitempty"`
+	Keywords          string                  `json:"keywords,omitempty"`
+	WordCount         int                     `json:"wordCount"`
+	ReadabilityScore  float64                 `json:"readabilityScore"`
+	SEOScore          float64                 `json:"seoScore"`
+	Suggestions       []string                `json:"suggestions,omitempty"`
+	CreatedAt         string                  `json:"createdAt"`
+	Metadata          map[string]interface{}  `json:"metadata,omitempty"`
+}
+
+type ApprovalState string
+
+const (
+	ApprovalStatePending   ApprovalState = "pending"
+	ApprovalStateApproved ApprovalState = "approved"
+	ApprovalStateRejected ApprovalState = "rejected"
+)
+
+type ApprovalItem struct {
+	ID           string                  `json:"id"`
+	ExecutionID  string                  `json:"executionId"`
+	ItemType     string                  `json:"itemType"`
+	Title        string                  `json:"title"`
+	Description  string                  `json:"description,omitempty"`
+	RequestedBy  string                  `json:"requestedBy"`
+	RequestedAt  string                  `json:"requestedAt"`
+	State        ApprovalState          `json:"state"`
+	ReviewedBy   string                  `json:"reviewedBy,omitempty"`
+	ReviewedAt   string                  `json:"reviewedAt,omitempty"`
+	ReviewNotes  string                  `json:"reviewNotes,omitempty"`
+	Priority     string                  `json:"priority,omitempty"`
+	Metadata     map[string]interface{} `json:"metadata,omitempty"`
+}
+
+type CreateExecutionRequest struct {
+	JobName      string `json:"jobName"`
+	CampaignName string `json:"campaignName,omitempty"`
+	CreatedBy    string `json:"createdBy,omitempty"`
+	Metadata     map[string]interface{} `json:"metadata,omitempty"`
+}
+
+type UpdateExecutionRequest struct {
+	Status        ExecutionStatus `json:"status,omitempty"`
+	TotalItems    *int           `json:"totalItems,omitempty"`
+	ProcessedItems *int          `json:"processedItems,omitempty"`
+	Metadata      map[string]interface{} `json:"metadata,omitempty"`
+}
+
+type BulkIssueRequest struct {
+	Issues []CreateIssueRequest `json:"issues"`
+}
+
+type CreateIssueRequest struct {
+	ExecutionID string            `json:"executionId"`
+	IssueType   string            `json:"issueType"`
+	Severity    IssueSeverity     `json:"severity"`
+	Description string            `json:"description"`
+	EntityID    string            `json:"entityId,omitempty"`
+	Metadata    map[string]interface{} `json:"metadata,omitempty"`
+}
+
+type UpdateIssueRequest struct {
+	Resolved   *bool   `json:"resolved,omitempty"`
+	ResolvedBy string  `json:"resolvedBy,omitempty"`
+	Metadata   map[string]interface{} `json:"metadata,omitempty"`
+}
+
+type BulkSEORequest struct {
+	Analyses []CreateSEORequest `json:"analyses"`
+}
+
+type CreateSEORequest struct {
+	ExecutionID       string                  `json:"executionId"`
+	ContentHash       string                  `json:"contentHash,omitempty"`
+	Title             string                  `json:"title,omitempty"`
+	MetaDescription  string                  `json:"metaDescription,omitempty"`
+	Keywords         string                  `json:"keywords,omitempty"`
+	WordCount        int                     `json:"wordCount"`
+	ReadabilityScore float64                 `json:"readabilityScore"`
+	SEOScore         float64                 `json:"seoScore"`
+	Suggestions      []string                `json:"suggestions,omitempty"`
+	Metadata         map[string]interface{}  `json:"metadata,omitempty"`
+}
+
+type BulkApprovalRequest struct {
+	Items []CreateApprovalRequest `json:"items"`
+}
+
+type CreateApprovalRequest struct {
+	ExecutionID  string `json:"executionId"`
+	ItemType     string `json:"itemType"`
+	Title        string `json:"title"`
+	Description  string `json:"description,omitempty"`
+	RequestedBy  string `json:"requestedBy"`
+	Priority     string `json:"priority,omitempty"`
+	Metadata     map[string]interface{} `json:"metadata,omitempty"`
+}
+
+type UpdateApprovalRequest struct {
+	State       ApprovalState `json:"state,omitempty"`
+	ReviewedBy  string        `json:"reviewedBy,omitempty"`
+	ReviewNotes string        `json:"reviewNotes,omitempty"`
+	Metadata    map[string]interface{} `json:"metadata,omitempty"`
+}

@@ -1,0 +1,513 @@
+{
+	"info": {
+		"_postman_id": "hackathon-serfinanza-agente360",
+		"name": "Serfinanza Agente 360 API",
+		"description": "API para el chatbot Agente 360 de Serfinanza Bank con RAG, job tracking y approval workflow",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "Health",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "{{baseUrl}}/health"
+			}
+		},
+		{
+			"name": "Ask",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"question\": \"¿Cuáles son los beneficios de un CDT?\",\n  \"channel\": \"cliente\",\n  \"sessionId\": \"session-001\"\n}"
+				},
+				"url": "{{baseUrl}}/ask"
+			}
+		},
+		{
+			"name": "Simulate CDT",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"monto\": 10000000,\n  \"plazoDias\": 90\n}"
+				},
+				"url": "{{baseUrl}}/simulate-cdt"
+			}
+		},
+		{
+			"name": "Recommend",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"profileId\": \"C001\"\n}"
+				},
+				"url": "{{baseUrl}}/recommend"
+			}
+		},
+		{
+			"name": "Auth - Identify",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"phone\": \"573001234567\",\n  \"profileId\": \"C001\"\n}"
+				},
+				"url": "{{baseUrl}}/auth/identify"
+			}
+		},
+		{
+			"name": "WhatsApp Webhook - GET (verification)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "{{baseUrl}}/whatsapp/webhook"
+			}
+		},
+		{
+			"name": "WhatsApp Webhook - POST",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"event\": \"message\",\n  \"instance\": \"default\",\n  \"phone\": \"573001234567\",\n  \"message\": \"Hola, quiero información sobre CDT\"\n}"
+				},
+				"url": "{{baseUrl}}/whatsapp/webhook"
+			}
+		},
+		{
+			"name": "Knowledge - List All",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "{{baseUrl}}/knowledge"
+			}
+		},
+		{
+			"name": "Knowledge - Add",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"doc\": \"FAQ\",\n  \"seccion\": \"[TXT] Preguntas Frecuentes\",\n  \"tags\": [\"faq\", \"cdt\"],\n  \"contenido\": \"¿Cuál es el monto mínimo para abrir un CDT? El monto mínimo es de $500.000 pesos colombianos.\"\n}"
+				},
+				"url": "{{baseUrl}}/knowledge"
+			}
+		},
+		{
+			"name": "Knowledge - Update",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"tags\": [\"faq\", \"cdt\", \"actualizado\"],\n  \"contenido\": \"Contenido actualizado\"\n}"
+				},
+				"url": "{{baseUrl}}/knowledge/{id}"
+			}
+		},
+		{
+			"name": "Knowledge - Delete",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": "{{baseUrl}}/knowledge/{id}"
+			}
+		},
+		{
+			"name": "Knowledge - Reload",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": "{{baseUrl}}/knowledge/reload"
+			}
+		},
+		{
+			"name": "Knowledge - Upload File",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": []
+						}
+					]
+				},
+				"url": "{{baseUrl}}/knowledge/upload"
+			}
+		},
+		{
+			"name": "Knowledge - Scan Folder",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": "{{baseUrl}}/knowledge/scan-folder"
+			}
+		},
+		{
+			"name": "Knowledge - Status",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "{{baseUrl}}/knowledge/status"
+			}
+		},
+		{
+			"name": "Knowledge - Delete By Doc",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": "{{baseUrl}}/knowledge/doc/{docName}"
+			}
+		},
+		{
+			"name": "Knowledge - Clear All",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": "{{baseUrl}}/knowledge/clear"
+			}
+		},
+		{
+			"name": "Scope - Get",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "{{baseUrl}}/scope"
+			}
+		},
+		{
+			"name": "Scope - Set",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"strictMode\": true,\n  \"activeDocs\": [\"cdt_beneficios.pdf\"]\n}"
+				},
+				"url": "{{baseUrl}}/scope"
+			}
+		},
+		{
+			"name": "Analytics - Morosidad",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "{{baseUrl}}/analytics/morosidad"
+			}
+		},
+		{
+			"name": "Analytics - Proyeccion",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "{{baseUrl}}/analytics/proyeccion"
+			}
+		},
+		{
+			"name": "Analytics - Top Preguntas",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "{{baseUrl}}/analytics/top-preguntas"
+			}
+		},
+		{
+			"name": "Mercadeo - Executions - List",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/mercadeo/executions?limit=20&offset=0",
+					"query": [
+						{
+							"key": "limit",
+							"value": "20"
+						},
+						{
+							"key": "offset",
+							"value": "0"
+						}
+					]
+				}
+			}
+		},
+		{
+			"name": "Mercadeo - Executions - Create",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"jobName\": \"Campaña Mayo 2026\",\n  \"campaignName\": \"CDT Promocional\",\n  \"createdBy\": \"asesor001\"\n}"
+				},
+				"url": "{{baseUrl}}/mercadeo/executions"
+			}
+		},
+		{
+			"name": "Mercadeo - Executions - Get By ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "{{baseUrl}}/mercadeo/executions/{id}"
+			}
+		},
+		{
+			"name": "Mercadeo - Executions - Update",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"status\": \"completed\",\n  \"totalItems\": 100,\n  \"processedItems\": 100\n}"
+				},
+				"url": "{{baseUrl}}/mercadeo/executions/{id}"
+			}
+		},
+		{
+			"name": "Mercadeo - Executions - Delete",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": "{{baseUrl}}/mercadeo/executions/{id}"
+			}
+		},
+		{
+			"name": "Mercadeo - Issues - Create",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"executionId\": \"{execution_id}\",\n  \"issueType\": \"validacion_datos\",\n  \"severity\": \"high\",\n  \"description\": \"Cliente con datos incompletos en el sistema\",\n  \"entityId\": \"CLI-001\"\n}"
+				},
+				"url": "{{baseUrl}}/mercadeo/issues"
+			}
+		},
+		{
+			"name": "Mercadeo - Issues - Bulk Create",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"issues\": [\n    {\n      \"executionId\": \"{execution_id}\",\n      \"issueType\": \"validacion_datos\",\n      \"severity\": \"high\",\n      \"description\": \"Cliente con datos incompletos\"\n    },\n    {\n      \"executionId\": \"{execution_id}\",\n      \"issueType\": \"formato_invalido\",\n      \"severity\": \"medium\",\n      \"description\": \"El campo email no tiene formato válido\"\n    }\n  ]\n}"
+				},
+				"url": "{{baseUrl}}/mercadeo/issues/bulk"
+			}
+		},
+		{
+			"name": "Mercadeo - Issues - List By Execution",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "{{baseUrl}}/mercadeo/issues/{executionID}"
+			}
+		},
+		{
+			"name": "Mercadeo - Issues - Update",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"resolved\": true,\n  \"resolvedBy\": \"coordinador001\"\n}"
+				},
+				"url": "{{baseUrl}}/mercadeo/issues/{id}"
+			}
+		},
+		{
+			"name": "Mercadeo - SEO - Create",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"executionId\": \"{execution_id}\",\n  \"title\": \"Campaña CDT Mayo 2026\",\n  \"metaDescription\": \"Invierte en CDT con las mejores tasas del mercado\",\n  \"keywords\": \"cdt, inversión, rentabilidad\",\n  \"wordCount\": 500,\n  \"readabilityScore\": 75.5,\n  \"seoScore\": 82.3,\n  \"suggestions\": [\"Agregar más palabras clave\", \"Mejorar meta description\"]\n}"
+				},
+				"url": "{{baseUrl}}/mercadeo/seo"
+			}
+		},
+		{
+			"name": "Mercadeo - SEO - Bulk Create",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"analyses\": [\n    {\n      \"executionId\": \"{execution_id}\",\n      \"title\": \"Campaña Principal\",\n      \"seoScore\": 85.0\n    },\n    {\n      \"executionId\": \"{execution_id}\",\n      \"title\": \"Campaña Alternativa\",\n      \"seoScore\": 78.0\n    }\n  ]\n}"
+				},
+				"url": "{{baseUrl}}/mercadeo/seo/bulk"
+			}
+		},
+		{
+			"name": "Mercadeo - SEO - List By Execution",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "{{baseUrl}}/mercadeo/seo/{executionID}"
+			}
+		},
+		{
+			"name": "Mercadeo - Approvals - Create",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"executionId\": \"{execution_id}\",\n  \"itemType\": \"campania\",\n  \"title\": \"Aprobar campaña CDT Mayo 2026\",\n  \"description\": \"Solicitud de aprobación para campaña promocional de CDT\",\n  \"requestedBy\": \"asesor001\",\n  \"priority\": \"high\"\n}"
+				},
+				"url": "{{baseUrl}}/mercadeo/approvals"
+			}
+		},
+		{
+			"name": "Mercadeo - Approvals - Bulk Create",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"items\": [\n    {\n      \"executionId\": \"{execution_id}\",\n      \"itemType\": \"campania\",\n      \"title\": \"Aprobar campaña principal\",\n      \"requestedBy\": \"asesor001\"\n    },\n    {\n      \"executionId\": \"{execution_id}\",\n      \"itemType\": \"presupuesto\",\n      \"title\": \"Aprobar presupuesto adicional\",\n      \"requestedBy\": \"asesor001\"\n    }\n  ]\n}"
+				},
+				"url": "{{baseUrl}}/mercadeo/approvals/bulk"
+			}
+		},
+		{
+			"name": "Mercadeo - Approvals - List By Execution",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "{{baseUrl}}/mercadeo/approvals/{executionID}"
+			}
+		},
+		{
+			"name": "Mercadeo - Approvals - List Pending",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "{{baseUrl}}/mercadeo/approvals/pending"
+			}
+		},
+		{
+			"name": "Mercadeo - Approvals - Update (Approve/Reject)",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"state\": \"approved\",\n  \"reviewedBy\": \"coordinador001\",\n  \"reviewNotes\": \"Aprobado para proceder con la campaña\"\n}"
+				},
+				"url": "{{baseUrl}}/mercadeo/approvals/{id}"
+			}
+		}
+	]
+}

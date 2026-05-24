@@ -10,7 +10,7 @@ import (
 	"github.com/javierg/hackathon-bqia/internal/handlers"
 )
 
-func NewRouter(h *handlers.Handler) *chi.Mux {
+func NewRouter(h *handlers.Handler, execH *handlers.ExecutionHandler) *chi.Mux {
 	r := chi.NewRouter()
 
 	r.Use(middleware.RequestID)
@@ -60,6 +60,31 @@ func NewRouter(h *handlers.Handler) *chi.Mux {
 	r.Get("/analytics/morosidad", h.GetMorosidad)
 	r.Get("/analytics/proyeccion", h.GetProyeccion)
 	r.Get("/analytics/top-preguntas", h.GetTopPreguntas)
+
+	if execH != nil {
+		r.Route("/mercadeo", func(r chi.Router) {
+			r.Get("/executions", execH.ListExecutions)
+			r.Post("/executions", execH.CreateExecution)
+			r.Get("/executions/{id}", execH.GetExecution)
+			r.Put("/executions/{id}", execH.UpdateExecution)
+			r.Delete("/executions/{id}", execH.DeleteExecution)
+
+			r.Post("/issues", execH.CreateIssue)
+			r.Post("/issues/bulk", execH.BulkCreateIssues)
+			r.Get("/issues/{executionID}", execH.ListIssuesByExecution)
+			r.Put("/issues/{id}", execH.UpdateIssue)
+
+			r.Post("/seo", execH.CreateSEO)
+			r.Post("/seo/bulk", execH.BulkCreateSEO)
+			r.Get("/seo/{executionID}", execH.ListSEOByExecution)
+
+			r.Post("/approvals", execH.CreateApproval)
+			r.Post("/approvals/bulk", execH.BulkCreateApprovals)
+			r.Get("/approvals/{executionID}", execH.ListApprovalsByExecution)
+			r.Get("/approvals/pending", execH.ListPendingApprovals)
+			r.Put("/approvals/{id}", execH.UpdateApproval)
+		})
+	}
 
 	return r
 }

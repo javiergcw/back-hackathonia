@@ -16,6 +16,7 @@ import (
 	"github.com/javierg/hackathon-bqia/internal/rag"
 	"github.com/javierg/hackathon-bqia/internal/server"
 	"github.com/javierg/hackathon-bqia/internal/session"
+	"github.com/javierg/hackathon-bqia/internal/store"
 	"github.com/joho/godotenv"
 )
 
@@ -30,7 +31,7 @@ func main() {
 		log.Printf("warning: could not create knowledge folder: %v", err)
 	}
 
-	store := session.NewStore()
+	sessionStore := session.NewStore()
 	ragClient := rag.NewRetrieve("data/knowledge.json")
 	if err := ragClient.LoadProfiles("data/profiles.json"); err != nil {
 		log.Printf("profiles: %v", err)
@@ -44,9 +45,18 @@ func main() {
 	}
 	log.Printf("loaded %d users", len(users))
 
-	h := handlers.NewHandler(llmClient, ragClient, store, users)
+	h := handlers.NewHandler(llmClient, ragClient, sessionStore, users)
 
-	r := server.NewRouter(h)
+	var execHandler *handlers.ExecutionHandler
+	db, err := store.NewDB()
+	if err != nil {
+		log.Printf("database: %v (continuing without execution tracking)", err)
+	} else {
+		execHandler = handlers.NewExecutionHandler(db)
+		log.Println("database connected for execution tracking")
+	}
+
+	r := server.NewRouter(h, execHandler)
 	srv := server.NewServer(r)
 
 	port := os.Getenv("PORT")
