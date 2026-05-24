@@ -41,7 +41,7 @@ func NewHandler(llmClient *llm.Client, ragClient *rag.Client, store *session.Sto
 func (h *Handler) Health(w http.ResponseWriter, r *http.Request) {
 	h.ok(w, map[string]string{
 		"status":  "ok",
-		"version": "1.0.0",
+		"version": "1.0.1",
 	})
 }
 
@@ -119,10 +119,10 @@ func (h *Handler) Ask(w http.ResponseWriter, r *http.Request) {
 	citations := extractCitations(chunks)
 
 	h.ok(w, map[string]interface{}{
-		"answer":     answer,
-		"citations":  citations,
-		"grounded":   len(citations) > 0,
-		"sessionId":  sessionID,
+		"answer":    answer,
+		"citations": citations,
+		"grounded":  len(citations) > 0,
+		"sessionId": sessionID,
 	})
 }
 
