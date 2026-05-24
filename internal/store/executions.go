@@ -20,15 +20,17 @@ func (s *ExecutionStore) Create(req domain.CreateExecutionRequest) (*domain.Exec
 	id := generateUUID()
 
 	var exec domain.Execution
+	var metaBytes []byte
 	err := s.db.QueryRow(`
 		INSERT INTO executions (id, job_name, campaign_name, status, created_by, metadata)
 		VALUES ($1, $2, $3, $4, $5, $6)
 		RETURNING id, job_name, campaign_name, status, total_items, processed_items, created_at, updated_at, created_by, metadata
 	`, id, req.JobName, req.CampaignName, domain.ExecutionStatusInProgress, req.CreatedBy, metadata).
-		Scan(&exec.ID, &exec.JobName, &exec.CampaignName, &exec.Status, &exec.TotalItems, &exec.ProcessedItems, &exec.CreatedAt, &exec.UpdatedAt, &exec.CreatedBy, &exec.Metadata)
+		Scan(&exec.ID, &exec.JobName, &exec.CampaignName, &exec.Status, &exec.TotalItems, &exec.ProcessedItems, &exec.CreatedAt, &exec.UpdatedAt, &exec.CreatedBy, &metaBytes)
 	if err != nil {
 		return nil, err
 	}
+	json.Unmarshal(metaBytes, &exec.Metadata)
 	return &exec, nil
 }
 
@@ -56,7 +58,7 @@ func (s *ExecutionStore) List(limit, offset int) ([]domain.Execution, error) {
 	}
 	defer rows.Close()
 
-	var executions []domain.Execution
+	executions := []domain.Execution{}
 	for rows.Next() {
 		var exec domain.Execution
 		var metadata []byte

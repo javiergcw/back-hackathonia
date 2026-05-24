@@ -94,7 +94,7 @@ func (s *ApprovalStore) ListPending() ([]domain.ApprovalItem, error) {
 	}
 	defer rows.Close()
 
-	var items []domain.ApprovalItem
+	items := []domain.ApprovalItem{}
 	for rows.Next() {
 		var item domain.ApprovalItem
 		var metadata []byte

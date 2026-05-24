@@ -21,20 +21,22 @@ func (s *IssueStore) Create(req domain.CreateIssueRequest) (*domain.Issue, error
 	id := generateUUID()
 
 	var issue domain.Issue
+	var metaBytes []byte
 	err := s.db.QueryRow(`
 		INSERT INTO issues (id, execution_id, issue_type, severity, description, entity_id, metadata)
 		VALUES ($1, $2, $3, $4, $5, $6, $7)
 		RETURNING id, execution_id, issue_type, severity, description, entity_id, created_at, resolved, resolved_at, resolved_by, metadata
 	`, id, req.ExecutionID, req.IssueType, req.Severity, req.Description, req.EntityID, metadata).
-		Scan(&issue.ID, &issue.ExecutionID, &issue.IssueType, &issue.Severity, &issue.Description, &issue.EntityID, &issue.CreatedAt, &issue.Resolved, &issue.ResolvedAt, &issue.ResolvedBy, &issue.Metadata)
+		Scan(&issue.ID, &issue.ExecutionID, &issue.IssueType, &issue.Severity, &issue.Description, &issue.EntityID, &issue.CreatedAt, &issue.Resolved, &issue.ResolvedAt, &issue.ResolvedBy, &metaBytes)
 	if err != nil {
 		return nil, err
 	}
+	json.Unmarshal(metaBytes, &issue.Metadata)
 	return &issue, nil
 }
 
 func (s *IssueStore) BulkCreate(reqs []domain.CreateIssueRequest) ([]domain.Issue, error) {
-	var issues []domain.Issue
+	issues := []domain.Issue{}
 	for _, req := range reqs {
 		issue, err := s.Create(req)
 		if err != nil {
@@ -69,7 +71,7 @@ func (s *IssueStore) ListByExecution(executionID string) ([]domain.Issue, error)
 	}
 	defer rows.Close()
 
-	var issues []domain.Issue
+	issues := []domain.Issue{}
 	for rows.Next() {
 		var issue domain.Issue
 		var metadata []byte

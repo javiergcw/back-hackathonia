@@ -231,8 +231,8 @@ type Issue struct {
 	EntityID    string                  `json:"entityId,omitempty"`
 	CreatedAt   string                  `json:"createdAt"`
 	Resolved    bool                    `json:"resolved"`
-	ResolvedAt  string                  `json:"resolvedAt,omitempty"`
-	ResolvedBy  string                  `json:"resolvedBy,omitempty"`
+	ResolvedAt  *string                 `json:"resolvedAt,omitempty"`
+	ResolvedBy  *string                 `json:"resolvedBy,omitempty"`
 	Metadata    map[string]interface{}  `json:"metadata,omitempty"`
 }
 
@@ -268,9 +268,9 @@ type ApprovalItem struct {
 	RequestedBy  string                  `json:"requestedBy"`
 	RequestedAt  string                  `json:"requestedAt"`
 	State        ApprovalState          `json:"state"`
-	ReviewedBy   string                  `json:"reviewedBy,omitempty"`
-	ReviewedAt   string                  `json:"reviewedAt,omitempty"`
-	ReviewNotes  string                  `json:"reviewNotes,omitempty"`
+	ReviewedBy   *string                 `json:"reviewedBy,omitempty"`
+	ReviewedAt   *string                 `json:"reviewedAt,omitempty"`
+	ReviewNotes  *string                 `json:"reviewNotes,omitempty"`
 	Priority     string                  `json:"priority,omitempty"`
 	Metadata     map[string]interface{} `json:"metadata,omitempty"`
 }
