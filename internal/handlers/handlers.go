@@ -507,26 +507,26 @@ func buildFallbackAnswer(question string, chunks []domain.Chunk, intent rag.Quer
 
 	switch intent.ID {
 	case "portal_access":
-		if text := rag.SelectBestChunk(intent, chunks); text != "" {
-			return formatHelpfulAnswer("Para ingresar a Serfinanza Virtual / Banca en Línea:", text)
+		if text := formatHelpfulAnswer("Para ingresar a Serfinanza Virtual / Banca en Línea:", rag.SelectBestChunk(intent, chunks)); text != "" {
+			return text
 		}
 		return rag.PortalAccessReply
 	case "plan_ahorro":
-		if text := rag.SelectBestChunk(intent, chunks); text != "" {
-			return formatHelpfulAnswer("Sobre plan de ahorro y débito automático:", text)
+		if text := formatHelpfulAnswer("Sobre plan de ahorro y débito automático:", rag.SelectBestChunk(intent, chunks)); text != "" {
+			return text
 		}
 		return rag.PlanAhorroReply
 	case "extracto":
-		if text := rag.SelectBestChunk(intent, chunks); text != "" {
-			return formatHelpfulAnswer("Para generar y leer tu extracto:", text)
+		if text := formatHelpfulAnswer("Para generar y leer tu extracto:", rag.SelectBestChunk(intent, chunks)); text != "" {
+			return text
 		}
 	case "actualizacion_datos":
-		if text := rag.SelectBestChunk(intent, chunks); text != "" {
-			return formatHelpfulAnswer("Puedes actualizar tus datos por estos canales:", text)
+		if text := formatHelpfulAnswer("Puedes actualizar tus datos por estos canales:", rag.SelectBestChunk(intent, chunks)); text != "" {
+			return text
 		}
 	case "cdt_beneficios":
-		if text := rag.SelectBestChunk(intent, chunks); text != "" {
-			return formatHelpfulAnswer("Estos son los beneficios del CDT Serfinanza (superCDT):", text)
+		if text := formatHelpfulAnswer("Estos son los beneficios del CDT Serfinanza (superCDT):", rag.SelectBestChunk(intent, chunks)); text != "" {
+			return text
 		}
 	}
 
@@ -541,7 +541,13 @@ func buildFallbackAnswer(question string, chunks []domain.Chunk, intent rag.Quer
 
 func formatHelpfulAnswer(prefix, body string) string {
 	body = cleanChunkForDisplay(body)
+	if rag.IsBoilerplate(body) || strings.Contains(strings.ToLower(body), "sarlaft") {
+		return ""
+	}
 	body = truncateFallback(body, 520)
+	if body == "" {
+		return ""
+	}
 	if prefix == "" {
 		return body
 	}

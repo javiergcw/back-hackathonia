@@ -26,7 +26,13 @@ func IsBoilerplate(content string) bool {
 	if strings.Count(lower, "www.serfinanza.com") >= 2 && strings.Contains(lower, "8000 123 456") {
 		return true
 	}
-	if strings.Contains(lower, "sarlaft") && strings.Contains(lower, "bogotá d.c.") && len(content) < 600 {
+	if strings.Contains(lower, "sarlaft") && strings.Contains(lower, "bogotá") {
+		return true
+	}
+	if strings.HasPrefix(strings.TrimSpace(content), "D.C.") || strings.HasPrefix(strings.TrimSpace(content), "d.c.") {
+		return true
+	}
+	if strings.Contains(lower, "bloqueados por sarlaft") {
 		return true
 	}
 	return false

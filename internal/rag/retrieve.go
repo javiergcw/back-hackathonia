@@ -113,12 +113,10 @@ func (c *Client) RetrieveWithTags(query string, k int, allowedTags []string) []d
 	}
 
 	result := make([]domain.Chunk, 0, k)
-	hasRelevant := false
 
 	for i := 0; i < k && i < len(scored); i++ {
-		if scored[i].score >= MIN_SCORE_THRESHOLD {
+		if scored[i].score >= MIN_SCORE_THRESHOLD && !IsBoilerplate(scored[i].chunk.Contenido) {
 			result = append(result, *scored[i].chunk)
-			hasRelevant = true
 		}
 	}
 
