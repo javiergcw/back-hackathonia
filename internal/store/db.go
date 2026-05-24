@@ -27,8 +27,12 @@ func getDSN() string {
 	if dbname == "" {
 		dbname = "hackathon"
 	}
-	return fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
-		host, port, user, password, dbname)
+	sslMode := os.Getenv("DB_SSLMODE")
+	if sslMode == "" {
+		sslMode = "disable"
+	}
+	return fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
+		host, port, user, password, dbname, sslMode)
 }
 
 func NewDB() (*sql.DB, error) {
