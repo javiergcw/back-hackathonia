@@ -4,7 +4,7 @@ Backend del Agente 360 para Banco Serfinanza.
 
 ## Stack
 
-- Go 1.22+ (chi router)
+- Go 1.25+ (chi router)
 - Anthropic Claude API (LLM)
 - RAG con knowledge.json
 

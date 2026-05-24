@@ -39,7 +39,10 @@ func NewHandler(llmClient *llm.Client, ragClient *rag.Client, store *session.Sto
 }
 
 func (h *Handler) Health(w http.ResponseWriter, r *http.Request) {
-	h.ok(w, map[string]string{"status": "ok"})
+	h.ok(w, map[string]string{
+		"status":  "ok",
+		"version": "1.0.0",
+	})
 }
 
 func (h *Handler) Identify(w http.ResponseWriter, r *http.Request) {
