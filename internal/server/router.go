@@ -2,7 +2,6 @@ package server
 
 import (
 	"net/http"
-	"os"
 	"time"
 
 	"github.com/go-chi/chi/v5"
@@ -18,16 +17,21 @@ func NewRouter(h *handlers.Handler, execH *handlers.ExecutionHandler) *chi.Mux {
 	r.Use(middleware.Logger)
 	r.Use(middleware.Timeout(30 * time.Second))
 
-	allowedOrigin := os.Getenv("ALLOWED_ORIGIN")
-	if allowedOrigin == "" {
-		allowedOrigin = "*"
-	}
-
 	r.Use(func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			w.Header().Set("Access-Control-Allow-Origin", allowedOrigin)
-			w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-			w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+			if origin := r.Header.Get("Origin"); origin != "" {
+				w.Header().Set("Access-Control-Allow-Origin", origin)
+				w.Header().Add("Vary", "Origin")
+			} else {
+				w.Header().Set("Access-Control-Allow-Origin", "*")
+			}
+			w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS, HEAD")
+			w.Header().Set("Access-Control-Allow-Headers", "Accept, Authorization, Content-Type, X-Requested-With, X-CSRF-Token")
+			if reqHeaders := r.Header.Get("Access-Control-Request-Headers"); reqHeaders != "" {
+				w.Header().Set("Access-Control-Allow-Headers", reqHeaders)
+			}
+			w.Header().Set("Access-Control-Max-Age", "86400")
+
 			if r.Method == http.MethodOptions {
 				w.WriteHeader(http.StatusNoContent)
 				return
