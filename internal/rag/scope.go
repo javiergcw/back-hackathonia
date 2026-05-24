@@ -37,7 +37,23 @@ const OutOfScopeReply = "Ese tema no lo manejo yo, pero con gusto te ayudo con S
 
 const CasualFallbackReply = "Cuéntame qué necesitas y te oriento: CDT, tarjeta, crédito, pagos, extractos o la App de Serfinanza. También puedes llamar al 01 8000 123 456 o escribir por WhatsApp oficial del banco."
 
-const PlanAhorroReply = "Para radicar un plan de ahorro con débito automático, un asesor puede confirmarte el proceso vigente: llama al 01 8000 123 456 o visita una sucursal. Si ya tienes cuenta de ahorros, también puedes revisar domiciliaciones en la App o en Banca en Línea en www.serfinanza.com."
+const PlanAhorroReply = "Sobre la radicación de un plan de ahorro con débito automático: en la guía digital no está el paso a paso de ese producto específico (no confundirlo con el pago automático de la tarjeta de crédito). Para radicarlo correctamente: llama al 01 8000 123 456, visita una sucursal, o consulta en la App / Banca en Línea (www.serfinanza.com) si tienes habilitada la opción de ahorro programado en tu cuenta de ahorros."
+
+const ActualizacionDatosReply = `Puedes actualizar tus datos por estos canales de Serfinanza:
+
+1) App Serfinanza — datos básicos (dirección, celular, correo), actualización inmediata: menú Mi Perfil → Actualizar datos de contacto → confirma con OTP. No sirve para cambios laborales, financieros o de identificación con documentos.
+
+2) Portal web — www.serfinanza.com, Banca en Línea, 24/7: datos de contacto y formulario para trámites con documentación (carga en Mis Trámites; respuesta hasta 3 días hábiles).
+
+3) WhatsApp — +57 300 987 6543: escribe ACTUALIZAR; actualiza dirección, correo y teléfono. Trámites complejos te pasan con un asesor.
+
+4) Call Center — 01 8000 123 456 o (601) 321-0000 (Bogotá), lun–sáb 7:00 a.m.–9:00 p.m.: teléfono y correo al instante; otros datos con ticket (1–2 días hábiles).
+
+5) Sucursal — 45 sucursales a nivel nacional: canal para TODAS las actualizaciones, incluso con documentos originales; la mayoría se resuelve el mismo día.
+
+¿Qué dato quieres cambiar? Te indico el canal más rápido.`
+
+const ExtractoGuideReply = "Para generar tu extracto del mes en la App Serfinanza: (1) ingresa y elige tu producto (tarjeta o crédito), (2) toca Documentos o Extractos, (3) selecciona mes y año (hasta 24 meses atrás), (4) toca Generar y descarga el PDF. También puedes usar Banca en Línea en www.serfinanza.com o WhatsApp escribiendo EXTRACTO al +57 300 987 6543.\n\nPara leerlo, revisa: período de facturación, saldo total y pago mínimo, movimientos del mes, intereses y fecha límite de pago. Si no reconoces un cobro, reclama en máximo 30 días por Call Center (01 8000 123 456) o en la App en Atención → Reclamaciones."
 
 const PortalAccessReply = "Para ingresar a Serfinanza Virtual (Banca en Línea): entra a www.serfinanza.com, sección Banca en Línea, con tu usuario y contraseña. Si aún no tienes acceso, regístrate primero en la App Serfinanza (descárgala en App Store o Google Play) con tu cédula y el celular registrado en el banco."
 

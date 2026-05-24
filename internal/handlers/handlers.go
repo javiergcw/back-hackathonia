@@ -469,6 +469,8 @@ func (h *Handler) generateChatAnswer(ctx context.Context, question, sessionID st
 		chunks = h.ragClient.RetrieveWithTags(rag.RetrieveQuery(question), 8, allowedTags)
 	}
 
+	chunks = rag.FilterChunksForIntent(intent, chunks)
+
 	history := h.store.GetMessages(sessionID)
 
 	req := llm.ClientRequest{
@@ -507,23 +509,18 @@ func buildFallbackAnswer(question string, chunks []domain.Chunk, intent rag.Quer
 
 	switch intent.ID {
 	case "portal_access":
-		if text := formatHelpfulAnswer("Para ingresar a Serfinanza Virtual / Banca en Línea:", rag.SelectBestChunk(intent, chunks)); text != "" {
-			return text
+		if chunk := rag.SelectBestChunk(intent, chunks); chunk != "" && rag.IsPortalLoginChunk(chunk) {
+			if text := formatHelpfulAnswer("Para ingresar a Serfinanza Virtual / Banca en Línea:", chunk); text != "" {
+				return text
+			}
 		}
 		return rag.PortalAccessReply
 	case "plan_ahorro":
-		if text := formatHelpfulAnswer("Sobre plan de ahorro y débito automático:", rag.SelectBestChunk(intent, chunks)); text != "" {
-			return text
-		}
 		return rag.PlanAhorroReply
 	case "extracto":
-		if text := formatHelpfulAnswer("Para generar y leer tu extracto:", rag.SelectBestChunk(intent, chunks)); text != "" {
-			return text
-		}
+		return rag.ExtractoGuideReply
 	case "actualizacion_datos":
-		if text := formatHelpfulAnswer("Puedes actualizar tus datos por estos canales:", rag.SelectBestChunk(intent, chunks)); text != "" {
-			return text
-		}
+		return rag.ActualizacionDatosReply
 	case "cdt_beneficios":
 		if text := formatHelpfulAnswer("Estos son los beneficios del CDT Serfinanza (superCDT):", rag.SelectBestChunk(intent, chunks)); text != "" {
 			return text
@@ -541,7 +538,8 @@ func buildFallbackAnswer(question string, chunks []domain.Chunk, intent rag.Quer
 
 func formatHelpfulAnswer(prefix, body string) string {
 	body = cleanChunkForDisplay(body)
-	if rag.IsBoilerplate(body) || strings.Contains(strings.ToLower(body), "sarlaft") {
+	lower := strings.ToLower(body)
+	if rag.IsBoilerplate(body) || strings.Contains(lower, "sarlaft") || strings.Contains(lower, "extractos y documentos") {
 		return ""
 	}
 	body = truncateFallback(body, 520)
@@ -555,9 +553,34 @@ func formatHelpfulAnswer(prefix, body string) string {
 }
 
 func cleanChunkForDisplay(text string) string {
+	lower := strings.ToLower(text)
+	startMarkers := []string{
+		"ingresa a la app",
+		"accede a www.serfinanza",
+		"escribe al +57",
+		"la app es el canal",
+		"para generar",
+		"desde el portal",
+	}
+	best := len(text)
+	for _, m := range startMarkers {
+		if i := strings.Index(lower, m); i >= 0 && i < best {
+			best = i
+		}
+	}
+	if best > 0 && best < len(text) {
+		text = text[best:]
+	}
+
 	text = strings.ReplaceAll(text, " n ", ". ")
 	text = strings.ReplaceAll(text, "® ", "\n• ")
 	text = strings.ReplaceAll(text, " ", "")
+	// Fragmentos cortados al inicio (ej. "atrás).")
+	if idx := strings.Index(text, ")."); idx >= 0 && idx < 40 {
+		if rest := strings.TrimSpace(text[idx+2:]); rest != "" {
+			text = rest
+		}
+	}
 	for strings.Contains(text, "  ") {
 		text = strings.ReplaceAll(text, "  ", " ")
 	}

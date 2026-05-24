@@ -203,6 +203,32 @@ func (c *Client) scoreChunk(chunk *domain.Chunk, queryTerms []string, intent Que
 	if intent.ID == "cdt_beneficios" && strings.Contains(docLower, "03_cdt") {
 		score += 6
 	}
+	if intent.ID == "plan_ahorro" {
+		if strings.Contains(docLower, "01_tarjeta") || strings.Contains(docLower, "tarjeta_credito") {
+			score -= 30
+		}
+		if strings.Contains(contentNorm, "pago minimo") || strings.Contains(contentNorm, "pago total") ||
+			strings.Contains(contentNorm, "factura") {
+			score -= 25
+		}
+	}
+	if intent.ID == "extracto" && strings.Contains(docLower, "05_extracto") {
+		score += 8
+	}
+	if intent.ID == "portal_access" {
+		if strings.Contains(docLower, "05_extracto") {
+			score -= 25
+		}
+		if strings.Contains(contentNorm, "extractos y documentos") {
+			score -= 20
+		}
+		if strings.Contains(contentNorm, "banca en linea") || strings.Contains(contentNorm, "banca en línea") {
+			score += 12
+		}
+		if strings.Contains(docLower, "04_registro") {
+			score += 10
+		}
+	}
 
 	return score
 }
