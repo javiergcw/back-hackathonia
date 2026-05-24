@@ -21,7 +21,11 @@ import (
 )
 
 func main() {
-	_ = godotenv.Load(".env.dev")
+	envFile := os.Getenv("ENV_FILE")
+	if envFile == "" {
+		envFile = ".env.dev"
+	}
+	_ = godotenv.Load(envFile)
 
 	knowledgeFolder := os.Getenv("KNOWLEDGE_FOLDER")
 	if knowledgeFolder == "" {

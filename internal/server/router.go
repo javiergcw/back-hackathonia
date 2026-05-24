@@ -44,7 +44,10 @@ func NewRouter(h *handlers.Handler, execH *handlers.ExecutionHandler) *chi.Mux {
 	r.Post("/ask", h.Ask)
 	r.Post("/simulate-cdt", h.SimulateCDT)
 	r.Post("/recommend", h.Recommend)
+	r.Get("/whatsapp/webhook", h.WhatsAppWebhook)
 	r.Post("/whatsapp/webhook", h.WhatsAppWebhook)
+	r.Get("/whatsapp/webhook/{phone}", h.WhatsAppWebhook)
+	r.Post("/whatsapp/webhook/{phone}", h.WhatsAppWebhook)
 
 	r.Get("/knowledge", h.ListKnowledge)
 	r.Post("/knowledge", h.AddKnowledge)
@@ -84,8 +87,8 @@ func NewRouter(h *handlers.Handler, execH *handlers.ExecutionHandler) *chi.Mux {
 
 			r.Post("/approvals", execH.CreateApproval)
 			r.Post("/approvals/bulk", execH.BulkCreateApprovals)
-			r.Get("/approvals/{executionID}", execH.ListApprovalsByExecution)
 			r.Get("/approvals/pending", execH.ListPendingApprovals)
+			r.Get("/approvals/{executionID}", execH.ListApprovalsByExecution)
 			r.Put("/approvals/{id}", execH.UpdateApproval)
 		})
 	}

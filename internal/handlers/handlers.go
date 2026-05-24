@@ -20,6 +20,7 @@ import (
 	"github.com/javierg/hackathon-bqia/internal/llm"
 	"github.com/javierg/hackathon-bqia/internal/rag"
 	"github.com/javierg/hackathon-bqia/internal/session"
+	"github.com/javierg/hackathon-bqia/internal/whatsapp"
 )
 
 type Handler struct {
@@ -292,22 +293,30 @@ func hasAnyProduct(productos []string, targets ...string) bool {
 }
 
 func (h *Handler) WhatsAppWebhook(w http.ResponseWriter, r *http.Request) {
-	if r.Method == http.MethodGet {
+	if r.Method == http.MethodGet || r.Method == http.MethodHead {
 		h.ok(w, map[string]string{"status": "webhook_verified"})
 		return
 	}
 
-	var payload domain.WhatsAppPayload
-	if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
-		h.error(w, http.StatusBadRequest, "INVALID_JSON", "cuerpo JSON inválido")
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		h.error(w, http.StatusBadRequest, "INVALID_BODY", "no se pudo leer el cuerpo")
 		return
 	}
 
-	phone, incomingText, ok := extractIncomingText(payload)
+	msg, ok := whatsapp.ParseWebhook(body)
 	if !ok {
 		h.ok(w, map[string]interface{}{"received": true, "action": "ignored"})
 		return
 	}
+
+	if !whatsapp.IsAllowedPhone(msg.Phone) {
+		h.ok(w, map[string]interface{}{"received": true, "action": "ignored", "reason": "unauthorized_number"})
+		return
+	}
+
+	phone := msg.Phone
+	incomingText := msg.Text
 
 	user := auth.IdentifyUser(h.Users, phone, "")
 	profileContext := ""
@@ -434,13 +443,6 @@ func buildProfileContext(nombre string, profile *domain.Profile) string {
 	}
 
 	return sb.String()
-}
-
-func extractIncomingText(payload domain.WhatsAppPayload) (string, string, bool) {
-	if payload.Message == "" {
-		return "", "", false
-	}
-	return payload.Phone, payload.Message, true
 }
 
 func (h *Handler) processAsk(text, channel, sessionID string) string {
@@ -629,10 +631,17 @@ func hasUsefulContent(content string) bool {
 	return true
 }
 
+func envOr(key, fallback string) string {
+	if v := os.Getenv(key); v != "" {
+		return v
+	}
+	return os.Getenv(fallback)
+}
+
 func (h *Handler) sendWhatsAppMessage(to, text string) error {
-	evolutionURL := os.Getenv("WHATSAPP_EVOLUTION_URL")
-	instance := os.Getenv("WHATSAPP_EVOLUTION_INSTANCE")
-	token := os.Getenv("WHATSAPP_EVOLUTION_TOKEN")
+	evolutionURL := envOr("WHATSAPP_EVOLUTION_URL", "EVOLUTION_API_URL")
+	instance := envOr("WHATSAPP_EVOLUTION_INSTANCE", "EVOLUTION_INSTANCE")
+	token := envOr("WHATSAPP_EVOLUTION_TOKEN", "EVOLUTION_API_KEY")
 
 	if evolutionURL == "" || instance == "" || token == "" {
 		return fmt.Errorf("configuración de WhatsApp incompleta")
